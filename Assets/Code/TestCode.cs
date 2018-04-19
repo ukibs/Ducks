@@ -5,6 +5,7 @@ using UnityEngine;
 public class TestCode : MonoBehaviour {
 
     int foo;
+    bool dolor;
 
 	// Use this for initialization
 	void Start () {
