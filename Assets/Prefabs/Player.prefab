@@ -277,9 +277,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046,
     type: 2}
   myPrefab: {fileID: 1357841904451440, guid: c7425afb8ed65e44bb01c5e6aab42f00, type: 2}
-  weapons:
-  - {fileID: 114454771410030434, guid: 618fdfe19dc6f7447920b929e62662ed, type: 2}
-  - {fileID: 114355343754954468, guid: 77b377ac44922bb42b3e6747a16c382c, type: 2}
+  weaponPrefabs:
+  - {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed, type: 2}
+  - {fileID: 1953701121832436, guid: 77b377ac44922bb42b3e6747a16c382c, type: 2}
   weaponPoint: {fileID: 4294000598380074}
   gravity: {x: 0, y: -9.81, z: 0}
 --- !u!124 &124560644315771574

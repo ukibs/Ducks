@@ -22,7 +22,7 @@ public class PlayerController : NetworkBehaviour {
     public Camera cam;
     public GameObject bulletPrefab;
     public GameObject myPrefab;
-    public BaseWeapon[] weapons;
+    public List<GameObject> weaponPrefabs;
 	public Transform weaponPoint;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
@@ -31,8 +31,9 @@ public class PlayerController : NetworkBehaviour {
 	private MovementStates movementState = MovementStates.Walking;
 	private CharacterController controller;
 	private float verticalSpeed = 0.0f;
-    private BaseWeapon currentWeapon = null;
+    // private BaseWeapon currentWeapon = null;
     private int currentWeaponIndex = 0;
+    private List<GameObject> weapons;
 
 
 	private float vAxis;
@@ -47,12 +48,18 @@ public class PlayerController : NetworkBehaviour {
 	private bool mouseLeft;
 	private bool mouseRight;
 
-	// Use this for initialization
-	void Start () {
+    #region Properties
+
+    public BaseWeapon CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>(); } }
+
+    #endregion
+
+    // Use this for initialization
+    void Start () {
 		cam = GetComponentInChildren<Camera> ();
 		cam.enabled = true;
 		controller = GetComponent<CharacterController>();
-        InitiateWeapon();
+        InitializeWeapons();
 	}
 	
 	// Update is called once per frame
@@ -83,7 +90,8 @@ public class PlayerController : NetworkBehaviour {
 
     private void OnGUI()
     {
-        GUI.Label(new Rect(20, 20, 100, 20), currentWeapon.CurrentWeaponAmmo + "/" + currentWeapon.CurrentReserveAmmo);
+        BaseWeapon weaponData = weapons[currentWeaponIndex].GetComponent<BaseWeapon>();
+        GUI.Label(new Rect(20, 20, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.CurrentReserveAmmo);
     }
 
     void ChangeStates()
@@ -155,24 +163,33 @@ public class PlayerController : NetworkBehaviour {
 
     void ChangeWeapon()
     {
-        Destroy(currentWeapon.gameObject);
+        weapons[currentWeaponIndex].SetActive(false);
         currentWeaponIndex++;
-        if (currentWeaponIndex >= weapons.Length) currentWeaponIndex = 0;
-        InitiateWeapon();
+        if (currentWeaponIndex >= weapons.Count) currentWeaponIndex = 0;
+        // InitiateWeapon();
+        weapons[currentWeaponIndex].SetActive(true);
     }
 
-    void InitiateWeapon()
+    void InitializeWeapons()
     {
         //Debug.Log(weapons[currentWeaponIndex]);
-        GameObject newWeapon = Instantiate(weapons[currentWeaponIndex].gameObject, weaponPoint);
+        /*GameObject newWeapon = Instantiate(weapons[currentWeaponIndex].gameObject, weaponPoint);
         newWeapon.transform.localPosition = Vector3.zero;
-        currentWeapon = newWeapon.GetComponent<BaseWeapon>();
+        currentWeapon = newWeapon.GetComponent<BaseWeapon>();*/
+        weapons = new List<GameObject>(weaponPrefabs.Count);
+        for(int i = 0; i < weaponPrefabs.Count; i++)
+        {
+            GameObject newWeapon = Instantiate(weaponPrefabs[i], weaponPoint);
+            newWeapon.transform.localPosition = Vector3.zero;
+            if(i > 0) newWeapon.SetActive(false);
+            weapons.Add(newWeapon);
+        }
     }
 		
 	void SimpleShoot(float dt)
 	{
 		
-        if(currentWeapon.OrderFire()) CmdFire();
+        if(CurrentWeapon.OrderFire()) CmdFire();
     }
 
 	void ApplyGravity(float dt)
@@ -202,8 +219,8 @@ public class PlayerController : NetworkBehaviour {
         //Debug.Log("Shootpoint: " + currentWeapon.shootPoint.position + ", " + currentWeapon.shootPoint.rotation);
 
 		GameObject newBullet = GameObject.Instantiate(bulletPrefab, 
-            currentWeapon.shootPoint.position, 
-            currentWeapon.shootPoint.rotation);
+            CurrentWeapon.shootPoint.position, 
+            CurrentWeapon.shootPoint.rotation);
 
         newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
 
