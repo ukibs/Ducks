@@ -22,7 +22,8 @@ public class PlayerController : NetworkBehaviour {
     public Camera cam;
     public GameObject bulletPrefab;
     public GameObject myPrefab;
-	public Transform shootPoint;
+    public BaseWeapon[] weapons;
+	public Transform weaponPoint;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
     private float fireRate = 0.5f;
@@ -30,6 +31,8 @@ public class PlayerController : NetworkBehaviour {
 	private MovementStates movementState = MovementStates.Walking;
 	private CharacterController controller;
 	private float verticalSpeed = 0.0f;
+    private BaseWeapon currentWeapon = null;
+    private int currentWeaponIndex = 0;
 
 
 	private float vAxis;
@@ -37,6 +40,7 @@ public class PlayerController : NetworkBehaviour {
 	private bool shiftKey;
 	private bool ctrlKey;
 	private bool spaceKey;
+    private bool tabKey;
 
 	private float mouseX;
 	private float mouseY;
@@ -48,6 +52,7 @@ public class PlayerController : NetworkBehaviour {
 		cam = GetComponentInChildren<Camera> ();
 		cam.enabled = true;
 		controller = GetComponent<CharacterController>();
+        InitiateWeapon();
 	}
 	
 	// Update is called once per frame
@@ -70,12 +75,18 @@ public class PlayerController : NetworkBehaviour {
 			{
 				Jump ();
 			}
+            if (tabKey) ChangeWeapon();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
         }
 	}
 
-	void ChangeStates()
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(20, 20, 100, 20), currentWeapon.CurrentWeaponAmmo + "/" + currentWeapon.CurrentReserveAmmo);
+    }
+
+    void ChangeStates()
 	{
 		if (shiftKey){
 			if(movementState == MovementStates.Walking) {
@@ -122,6 +133,7 @@ public class PlayerController : NetworkBehaviour {
 		shiftKey = Input.GetKeyDown (KeyCode.LeftShift);
 		ctrlKey = Input.GetKeyDown (KeyCode.LeftControl);
 		spaceKey = Input.GetKeyDown (KeyCode.Space);
+        tabKey = Input.GetKeyDown(KeyCode.Tab);
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
@@ -140,17 +152,28 @@ public class PlayerController : NetworkBehaviour {
 		transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
 		cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
 	}
+
+    void ChangeWeapon()
+    {
+        Destroy(currentWeapon.gameObject);
+        currentWeaponIndex++;
+        if (currentWeaponIndex >= weapons.Length) currentWeaponIndex = 0;
+        InitiateWeapon();
+    }
+
+    void InitiateWeapon()
+    {
+        //Debug.Log(weapons[currentWeaponIndex]);
+        GameObject newWeapon = Instantiate(weapons[currentWeaponIndex].gameObject, weaponPoint);
+        newWeapon.transform.localPosition = Vector3.zero;
+        currentWeapon = newWeapon.GetComponent<BaseWeapon>();
+    }
 		
 	void SimpleShoot(float dt)
 	{
-		// Shoot
-		if (fireCooldown < fireRate) fireCooldown += dt;
-		if(Input.GetAxis("Fire1") != 0.0f && fireCooldown >= fireRate)
-		{
-			CmdFire();
-			fireCooldown = 0.0f;
-		}
-	}
+		
+        if(currentWeapon.OrderFire()) CmdFire();
+    }
 
 	void ApplyGravity(float dt)
 	{
@@ -176,7 +199,12 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     void CmdFire()
     {
-		GameObject newBullet = GameObject.Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+        //Debug.Log("Shootpoint: " + currentWeapon.shootPoint.position + ", " + currentWeapon.shootPoint.rotation);
+
+		GameObject newBullet = GameObject.Instantiate(bulletPrefab, 
+            currentWeapon.shootPoint.position, 
+            currentWeapon.shootPoint.rotation);
+
         newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
 
         NetworkServer.Spawn(newBullet);
