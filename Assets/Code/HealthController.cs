@@ -10,13 +10,15 @@ public class HealthController : NetworkBehaviour {
 
     [SyncVar(hook = "OnChangeHealth")]
     private int currentHealth = maxHealth;
+	private NetworkStartPosition[] spawnPoints;
 
     //
     public RectTransform healthBar;
+	public RectTransform healthBarScreen;
 
 	// Use this for initialization
 	void Start () {
-
+		spawnPoints = FindObjectsOfType<NetworkStartPosition> ();
 	}
 	
 	// Update is called once per frame
@@ -52,8 +54,11 @@ public class HealthController : NetworkBehaviour {
 
     void OnChangeHealth(int _currentHealth)
     {
-        Debug.Log("Health change");
-        //healthBar.sizeDelta = new Vector2(_currentHealth, )
+		currentHealth = _currentHealth;
+		healthBar.sizeDelta = new Vector2 (currentHealth, healthBar.sizeDelta.y);
+		healthBar.localPosition = new Vector3 (maxHealth - currentHealth, 0, 0);
+		healthBarScreen = healthBar;
+
     }
 
     [ClientRpc]
@@ -61,7 +66,12 @@ public class HealthController : NetworkBehaviour {
     {
         if(isLocalPlayer)
         {
-            transform.position = Vector3.zero;
+			Vector3 spawnPoint = Vector3.zero;
+			if (spawnPoints != null && spawnPoints.Length > 0)
+			{
+				spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+			}
+			transform.position = spawnPoint;
         }
     }
 }

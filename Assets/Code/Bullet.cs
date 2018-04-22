@@ -20,7 +20,7 @@ public class Bullet : NetworkBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         var hit = collision.gameObject;
-        if (hit.CompareTag("Player"))
+		if (hit.CompareTag("Player") || hit.CompareTag("Enemy"))
         {
             var health = hit.GetComponent<HealthController>();
             health.TakeDamage(damage);
