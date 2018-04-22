@@ -48,7 +48,7 @@ public class BaseWeapon : NetworkBehaviour {
     //
     public bool OrderFire()
     {
-        if (Input.GetAxis("Fire1") != 0.0f && fireCooldown >= fireRate && currentWeaponAmmo > 0)
+		if (!Input.GetMouseButtonDown (0) && fireCooldown >= fireRate && currentWeaponAmmo > 0)
         {
 
             // CmdFire();

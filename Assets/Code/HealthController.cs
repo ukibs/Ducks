@@ -7,6 +7,7 @@ public class HealthController : NetworkBehaviour {
 
     public const int maxHealth = 100;
     public bool destroyOnDeath;
+	public Texture t;
 
     [SyncVar(hook = "OnChangeHealth")]
     private int currentHealth = maxHealth;
@@ -14,7 +15,6 @@ public class HealthController : NetworkBehaviour {
 
     //
     public RectTransform healthBar;
-	public RectTransform healthBarScreen;
 
 	// Use this for initialization
 	void Start () {
@@ -22,8 +22,12 @@ public class HealthController : NetworkBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update () {		
+	}
+
+	private void OnGUI()
+	{
+		GUI.DrawTexture (new Rect (Screen.width * 8 / 10, Screen.height / 10, 100, 10), t, ScaleMode.StretchToFill);
 	}
 
     public void TakeDamage(int amount)
@@ -56,9 +60,7 @@ public class HealthController : NetworkBehaviour {
     {
 		currentHealth = _currentHealth;
 		healthBar.sizeDelta = new Vector2 (currentHealth, healthBar.sizeDelta.y);
-		healthBar.localPosition = new Vector3 (maxHealth - currentHealth, 0, 0);
-		healthBarScreen = healthBar;
-
+		healthBar.localPosition = new Vector3 (0, 0, 0);
     }
 
     [ClientRpc]

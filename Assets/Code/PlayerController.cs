@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+
 public enum MovementStates
 {
 	Invalid = -1,
@@ -11,6 +12,7 @@ public enum MovementStates
 	Inmovile,
 	Count
 }
+
 
 public class PlayerController : NetworkBehaviour {
 
@@ -42,6 +44,7 @@ public class PlayerController : NetworkBehaviour {
 	private bool ctrlKey;
 	private bool spaceKey;
     private bool tabKey;
+	private bool rKey;
 
 	private float mouseX;
 	private float mouseY;
@@ -82,6 +85,8 @@ public class PlayerController : NetworkBehaviour {
 			{
 				Jump ();
 			}
+			if (rKey)
+				CurrentWeapon.Reload ();
             if (tabKey) ChangeWeapon();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
@@ -90,8 +95,10 @@ public class PlayerController : NetworkBehaviour {
 
     private void OnGUI()
     {
-        BaseWeapon weaponData = weapons[currentWeaponIndex].GetComponent<BaseWeapon>();
-        GUI.Label(new Rect(20, 20, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.CurrentReserveAmmo);
+		if (isLocalPlayer) {
+			BaseWeapon weaponData = weapons [currentWeaponIndex].GetComponent<BaseWeapon> ();
+			GUI.Label (new Rect (20, 20, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.CurrentReserveAmmo);
+		}
     }
 
     void ChangeStates()
@@ -142,6 +149,7 @@ public class PlayerController : NetworkBehaviour {
 		ctrlKey = Input.GetKeyDown (KeyCode.LeftControl);
 		spaceKey = Input.GetKeyDown (KeyCode.Space);
         tabKey = Input.GetKeyDown(KeyCode.Tab);
+		rKey = Input.GetKeyDown (KeyCode.R);
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
