@@ -6,15 +6,14 @@ using UnityEngine.Networking;
 public class EnemyControl : NetworkBehaviour {
 
     private CharacterController cc;
-    private NetworkManager netMgr;
+    // private NetworkManager netMgr;
     private List<PlayerController> players;
     private PlayerController objectivePlayer;
 
 	// Use this for initialization
 	void Start () {
         cc = GetComponent<CharacterController>();
-        netMgr = FindObjectOfType<NetworkManager>();
-        //players = FindObjectsOfType<PlayerController>();
+        // netMgr = FindObjectOfType<NetworkManager>();
         players = new List<PlayerController>();
         GetPlayers();
         objectivePlayer = GetNearestPlayer();
@@ -63,6 +62,5 @@ public class EnemyControl : NetworkBehaviour {
             }
         }
         return nearestPlayer;
-        return null;
     }
 }

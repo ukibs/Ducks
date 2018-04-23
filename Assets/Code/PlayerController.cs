@@ -29,8 +29,8 @@ public class PlayerController : NetworkBehaviour {
 	public Transform weaponPoint;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
-    private float fireRate = 0.5f;
-    private float fireCooldown = 0.0f;
+    // private float fireRate = 0.5f;
+    // private float fireCooldown = 0.0f;
 	private MovementStates movementState = MovementStates.Walking;
 	private CharacterController controller;
 	private float verticalSpeed = 0.0f;
@@ -49,7 +49,7 @@ public class PlayerController : NetworkBehaviour {
 
 	private float mouseX;
 	private float mouseY;
-	private bool mouseLeft;
+	// private bool mouseLeft;
 	private bool mouseRight;
 
     #region Properties
@@ -155,7 +155,7 @@ public class PlayerController : NetworkBehaviour {
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
-		mouseLeft = Input.GetMouseButtonDown (0);
+		//mouseLeft = Input.GetMouseButtonDown (0);
 		mouseRight = Input.GetMouseButtonDown (1);
 	}
 
