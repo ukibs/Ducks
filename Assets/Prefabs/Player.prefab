@@ -52,7 +52,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4115637110854536}
   - component: {fileID: 33582437001078280}
-  - component: {fileID: 136909485832853796}
   - component: {fileID: 23651259831876964}
   - component: {fileID: 114093798656794420}
   - component: {fileID: 114297755770596800}
@@ -126,7 +125,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1435399472651118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.546904, y: 0.5, z: -3.874652}
+  m_LocalPosition: {x: 42.063606, y: 0.25, z: 10.808806}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4139809914962798}
@@ -436,19 +435,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1991342396138126}
   m_Enabled: 1
---- !u!136 &136909485832853796
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1435399472651118}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!143 &143711797364698250
 CharacterController:
   m_ObjectHideFlags: 1

@@ -230,8 +230,8 @@ public class PlayerController : NetworkBehaviour {
     {
         base.OnStartLocalPlayer();
         this.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
-        GameObject enemySkin = Instantiate(myPrefab, transform.position, transform.rotation);
-        enemySkin.transform.parent = gameObject.transform;
+        //GameObject enemySkin = Instantiate(myPrefab, transform.position, transform.rotation);
+        //enemySkin.transform.parent = gameObject.transform;
     }
 
     [Command]
