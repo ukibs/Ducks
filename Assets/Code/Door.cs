@@ -5,52 +5,45 @@ using UnityEngine.Networking;
 
 public class Door : NetworkBehaviour
 {
-	public bool open = false;
+	//public bool open = false;
 	public bool enter = false;
 
-
-	public float movementSpeed = 0.5f;
+    
+    public float journeyDuration = 0.5f;
 	public Vector3 displacedPosition;
 	private Vector3 originalPosition;
-	private float distCovered;
-	private float fracJourney;
-	private float journeyLength, startTime;
-	private Vector3 nextPosition, previousPosition;
+    // 0 closed, 1 opened
+    private float status = 0.0f;
+    private int direction = -1;
 
 	void Start()
 	{
 		originalPosition = transform.position;
 		displacedPosition += originalPosition;
-		nextPosition = displacedPosition;
-		previousPosition = originalPosition;
-		//
-		journeyLength = Vector3.Distance(originalPosition, displacedPosition);
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-			distCovered = (Time.time - startTime) * movementSpeed;
-			fracJourney = distCovered / journeyLength;
-			if (open == true) {
-				transform.position = Vector3.Lerp (previousPosition, nextPosition, fracJourney);
-			}
+        if (isServer)
+        {
+            status += direction * Time.deltaTime / journeyDuration;
+            status = Mathf.Clamp01(status);
 
-			if (open == false) {
-				transform.position = Vector3.Lerp (nextPosition, previousPosition, fracJourney);
-			}
+            transform.position = Vector3.Lerp(originalPosition, displacedPosition, status);
 
-		if(enter == true)
-		{
-			if(Input.GetKeyDown(KeyCode.E))
-			{
-				open = !open;
-			}
-		}
+            if (enter == true)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    direction *= -1;
+                }
+            }
+        }
 	}
 
 	//Activate the Main function when player is near the door
-	[RPC]  
+	//[Command]  
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Player")
@@ -61,7 +54,7 @@ public class Door : NetworkBehaviour
 	}
 
 	//Deactivate the Main function when player is go away from door
-	[RPC]
+	//[Command]
 	void OnTriggerExit (Collider other)
 	{
 		if (other.gameObject.tag == "Player")
