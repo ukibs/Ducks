@@ -25,6 +25,7 @@ public class PlayerController : NetworkBehaviour {
     public GameObject bulletPrefab;
     public GameObject myPrefab;
     public List<GameObject> weaponPrefabs;
+    public GameObject grenadePrefab;
 	public Transform weaponPoint;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
@@ -88,6 +89,7 @@ public class PlayerController : NetworkBehaviour {
 			if (rKey)
 				CurrentWeapon.Reload ();
             if (tabKey) ChangeWeapon();
+            if (mouseRight) ThrowGrenade();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
         }
@@ -192,6 +194,17 @@ public class PlayerController : NetworkBehaviour {
             if(i > 0) newWeapon.SetActive(false);
             weapons.Add(newWeapon);
         }
+    }
+
+    void ThrowGrenade()
+    {
+        Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
+        Quaternion grenadeOrientation = weaponPoint.rotation;
+        grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
+        GameObject newGrenade = Instantiate(grenadePrefab, grenadePosition, grenadeOrientation);
+        newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
+
+        //Destroy(newGrenade, 4);
     }
 		
 	void SimpleShoot(float dt)
