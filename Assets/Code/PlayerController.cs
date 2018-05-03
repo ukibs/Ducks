@@ -52,6 +52,9 @@ public class PlayerController : NetworkBehaviour {
 	// private bool mouseLeft;
 	private bool mouseRight;
 
+    // Variable de prueba
+    public Door door;
+
     #region Properties
 
     public BaseWeapon CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>(); } }
@@ -92,6 +95,11 @@ public class PlayerController : NetworkBehaviour {
             if (mouseRight) ThrowGrenade();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
+            //
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                CmdUseObject();
+            }
         }
 	}
 
@@ -248,5 +256,12 @@ public class PlayerController : NetworkBehaviour {
         NetworkServer.Spawn(newBullet);
 
         Destroy(newBullet, 4.0f);
+    }
+    
+    [Command]
+    public void CmdUseObject()
+    {
+        if (door != null)
+            door.CmdSwitchDirection();
     }
 }

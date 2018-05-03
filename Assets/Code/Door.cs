@@ -27,41 +27,65 @@ public class Door : NetworkBehaviour
 	{
         if (isServer)
         {
+            Debug.Log("In server");
             status += direction * Time.deltaTime / journeyDuration;
             status = Mathf.Clamp01(status);
 
             transform.position = Vector3.Lerp(originalPosition, displacedPosition, status);
+            
+        }
 
+        /*if (!isLocalPlayer)
+        {
+            Debug.Log("Not Local player");
             if (enter == true)
             {
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    direction *= -1;
+                    Debug.Log("Key pressed");
+                    // direction *= -1;
+                    CmdSwitchDirection();
                 }
             }
+        }*/
+
+        if (isLocalPlayer)
+        {
+            Debug.Log("In local player");
         }
 	}
 
 	//Activate the Main function when player is near the door
 	//[Command]  
+    //[RPC]
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			//Debug.Log("Trigger Enter");
+			Debug.Log("Trigger Enter");
 			(enter) = true;
+            other.GetComponent<PlayerController>().door = this;
 		}
 	}
 
 	//Deactivate the Main function when player is go away from door
 	//[Command]
+    //[RPC]
 	void OnTriggerExit (Collider other)
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			//Debug.Log("Trigger Exit");
+			Debug.Log("Trigger Exit");
 			(enter) = false;
-		}
+            other.GetComponent<PlayerController>().door = null;
+        }
 	}
+
+    [Command]
+    public void CmdSwitchDirection()
+    {
+        Debug.Log("Switching direction");
+        direction *= -1;
+    }
 
 }
