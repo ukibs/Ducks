@@ -12,6 +12,7 @@ public class HealthController : NetworkBehaviour {
     [SyncVar(hook = "OnChangeHealth")]
     private int currentHealth = maxHealth;
 	private NetworkStartPosition[] spawnPoints;
+	private PlayerController player;
 
     //
     public RectTransform healthBar;
@@ -19,6 +20,7 @@ public class HealthController : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
 		spawnPoints = FindObjectsOfType<NetworkStartPosition> ();
+		player = FindObjectOfType<PlayerController> ();
 	}
 	
 	// Update is called once per frame
@@ -41,6 +43,7 @@ public class HealthController : NetworkBehaviour {
             currentHealth -= amount;
             if(currentHealth <= 0)
             {
+				player.CmdThrowItems ();
                 if(destroyOnDeath)
                 {
                     Destroy(gameObject);
@@ -55,6 +58,11 @@ public class HealthController : NetworkBehaviour {
             }
         }
     }
+
+	public void receiveLife(int amount)
+	{
+		currentHealth += amount;
+	}
 
     void OnChangeHealth(int _currentHealth)
     {

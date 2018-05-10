@@ -22,6 +22,8 @@ public class PlayerController : NetworkBehaviour {
 	public float jumpForce = 13.0f;
 
     public Camera cam;
+	public GameObject lifePrefab;
+	public GameObject ammunition;
     public GameObject bulletPrefab;
     public GameObject myPrefab;
     public List<GameObject> weaponPrefabs;
@@ -92,7 +94,7 @@ public class PlayerController : NetworkBehaviour {
 			if (rKey)
 				CurrentWeapon.Reload ();
             if (tabKey) ChangeWeapon();
-            if (mouseRight) ThrowGrenade();
+			if (mouseRight) CmdThrowGrenade();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
             //
@@ -204,7 +206,8 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    void ThrowGrenade()
+	[Command]
+    void CmdThrowGrenade()
     {
         Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
         Quaternion grenadeOrientation = weaponPoint.rotation;
@@ -212,6 +215,7 @@ public class PlayerController : NetworkBehaviour {
         GameObject newGrenade = Instantiate(grenadePrefab, grenadePosition, grenadeOrientation);
         newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
 
+		NetworkServer.Spawn (newGrenade);
         //Destroy(newGrenade, 4);
     }
 		
@@ -241,6 +245,14 @@ public class PlayerController : NetworkBehaviour {
         //GameObject enemySkin = Instantiate(myPrefab, transform.position, transform.rotation);
         //enemySkin.transform.parent = gameObject.transform;
     }
+
+	[Command]
+	public void CmdThrowItems()
+	{
+		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
+
+		NetworkServer.Spawn(itemLife);
+	}
 
     [Command]
     void CmdFire()
