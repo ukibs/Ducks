@@ -250,8 +250,10 @@ public class PlayerController : NetworkBehaviour {
 	public void CmdThrowItems()
 	{
 		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
-
+		GameObject ammunitionItem = GameObject.Instantiate(weaponPrefabs[currentWeaponIndex], CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
+		ammunitionItem.GetComponent<ammunitionItem> ().IsItem = true;
 		NetworkServer.Spawn(itemLife);
+		NetworkServer.Spawn (ammunitionItem);
 	}
 
     [Command]

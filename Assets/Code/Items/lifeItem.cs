@@ -22,6 +22,7 @@ public class lifeItem : NetworkBehaviour {
 		{
 			var health = hit.GetComponent<HealthController>();
 			health.receiveLife (5);
+			Destroy (this);
 		}
 	}
 }

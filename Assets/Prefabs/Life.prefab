@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 54667863203676666}
   - component: {fileID: 114023406084181750}
   - component: {fileID: 114951085618929910}
+  - component: {fileID: 114914867072943588}
   m_Layer: 0
   m_Name: Life
   m_TagString: Untagged
@@ -133,6 +134,17 @@ MonoBehaviour:
     i15: 113
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114914867072943588
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1159388425108010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16cb156ea47b80c4b981d254650e1120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114951085618929910
 MonoBehaviour:
   m_ObjectHideFlags: 1
