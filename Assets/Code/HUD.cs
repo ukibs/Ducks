@@ -18,6 +18,6 @@ public class HUD : MonoBehaviour {
 	}
 
 	void NesxtScene(){
-		NetworkManager.ServerChangeScene ("TestScene");
+		//NetworkManager.ServerChangeScene ("TestScene");
 	}
 }

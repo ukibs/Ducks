@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Door : NetworkBehaviour
+public class Door : BaseUsable
 {
 	//public bool open = false;
 	public bool enter = false;
@@ -27,7 +27,7 @@ public class Door : NetworkBehaviour
 	{
         if (isServer)
         {
-            Debug.Log("In server");
+            //Debug.Log("In server");
             status += direction * Time.deltaTime / journeyDuration;
             status = Mathf.Clamp01(status);
 
@@ -84,6 +84,14 @@ public class Door : NetworkBehaviour
     [Command]
     public void CmdSwitchDirection()
     {
+        Debug.Log("Switching direction");
+        direction *= -1;
+    }
+
+    [Command]
+    public override void CmdUse()
+    {
+        base.CmdUse();
         Debug.Log("Switching direction");
         direction *= -1;
     }

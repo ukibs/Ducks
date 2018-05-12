@@ -13,6 +13,16 @@ public enum MovementStates
 	Count
 }
 
+public enum PlayerStates
+{
+    Invalid = -1,
+    Normal,
+    InVehicle,
+    Trapped,
+    Count
+}
+
+// TODO: Trabajar cegado
 
 public class PlayerController : NetworkBehaviour {
 
@@ -97,10 +107,11 @@ public class PlayerController : NetworkBehaviour {
 			if (mouseRight) CmdThrowGrenade();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
-            //
+            // Cehqueo guarro, luego lo metemos en update input
             if (Input.GetKeyDown(KeyCode.E))
             {
-                CmdUseObject();
+                //CmdUseObject();
+                CmdCheckAndUse();
             }
         }
 	}
@@ -246,12 +257,34 @@ public class PlayerController : NetworkBehaviour {
         //enemySkin.transform.parent = gameObject.transform;
     }
 
+    [Command]
+    void CmdCheckAndUse()
+    {
+        Debug.Log("Checking with ray");
+        RaycastHit hit;
+        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.0f))
+        {
+            Debug.Log("Checking object to use: " + hit.transform.name);
+            BaseUsable usable = hit.transform.GetComponent<BaseUsable>();
+            if (usable != null)
+            {
+                //TODO: Preguntar a Nestor sobre esto
+
+                //usable.CmdUse();
+                usable.SendMessage("CmdUse");
+                //hit.transform.SendMessage("CmdUse");
+                //CmdUseObject(usable);
+                Debug.Log("Using object " + usable);
+            }
+        }
+    }
+
 	[Command]
 	public void CmdThrowItems()
 	{
 		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 		GameObject ammunitionItem = GameObject.Instantiate(weaponPrefabs[currentWeaponIndex], CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
-		ammunitionItem.GetComponent<ammunitionItem> ().IsItem = true;
+		ammunitionItem.GetComponent<AmmunitionItem> ().IsItem = true;
 		NetworkServer.Spawn(itemLife);
 		NetworkServer.Spawn (ammunitionItem);
 	}
@@ -272,10 +305,11 @@ public class PlayerController : NetworkBehaviour {
         Destroy(newBullet, 4.0f);
     }
     
-    [Command]
-    public void CmdUseObject()
+    /*[Command]
+    public void CmdUseObject(BaseUsable usable)
     {
-        if (door != null)
-            door.CmdSwitchDirection();
-    }
+        usable.CmdUse();
+        //if (door != null)
+        //    door.CmdSwitchDirection();
+    }*/
 }
