@@ -44,6 +44,7 @@ public class PlayerController : NetworkBehaviour {
     // private float fireRate = 0.5f;
     // private float fireCooldown = 0.0f;
 	private MovementStates movementState = MovementStates.Walking;
+	private PlayerStates state = PlayerStates.Normal;
 	private CharacterController controller;
 	private float verticalSpeed = 0.0f;
     // private BaseWeapon currentWeapon = null;
@@ -70,6 +71,7 @@ public class PlayerController : NetworkBehaviour {
     #region Properties
 
     public BaseWeapon CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>(); } }
+	public PlayerStates State { set { state = value; } }
 
     #endregion
 
@@ -120,7 +122,8 @@ public class PlayerController : NetworkBehaviour {
     {
 		if (isLocalPlayer) {
 			BaseWeapon weaponData = weapons [currentWeaponIndex].GetComponent<BaseWeapon> ();
-			GUI.Label (new Rect (20, 20, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.CurrentReserveAmmo);
+			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 8.8f / 10, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
+			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 9 / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
 		}
     }
 
@@ -285,6 +288,7 @@ public class PlayerController : NetworkBehaviour {
 		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 		GameObject ammunitionItem = GameObject.Instantiate(weaponPrefabs[currentWeaponIndex], CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 		ammunitionItem.GetComponent<AmmunitionItem> ().IsItem = true;
+		ammunitionItem.GetComponent<AmmunitionItem> ().Bullets = CurrentWeapon.CurrentWeaponAmmo;
 		NetworkServer.Spawn(itemLife);
 		NetworkServer.Spawn (ammunitionItem);
 	}
@@ -312,4 +316,15 @@ public class PlayerController : NetworkBehaviour {
         //if (door != null)
         //    door.CmdSwitchDirection();
     }*/
+
+	public void takeWeapon(BaseWeapon weapon, int bullets)
+	{
+		for (int i = 0; i < weapons.Count; i++) 
+		{
+			if (weapons [i].tag.Equals (weapon.tag)) 
+			{
+				weapons [i].GetComponent<BaseWeapon> ().addAmmo (bullets);
+			}
+		}
+	}
 }

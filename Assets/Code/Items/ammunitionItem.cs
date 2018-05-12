@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ammunitionItem : NetworkBehaviour {
+public class AmmunitionItem : NetworkBehaviour {
 
 	private bool isItem = false;
+	private int amountBullets = 0;
 
 	public bool IsItem
 	{
 		set { isItem = value;}
+	}
+
+	public int Bullets {
+		set { amountBullets = value; }
 	}
 	// Use this for initialization
 	void Start () {
@@ -26,7 +31,8 @@ public class ammunitionItem : NetworkBehaviour {
 		var hit = collision.gameObject;
 		if (hit.CompareTag("Player") && isItem)
 		{
-			Destroy (this);
+			var player = hit.GetComponent<PlayerController> ().takeWeapon ( this.gameObject,amountBullets);
+			Destroy (this.gameObject);
 		}
 	}
 }

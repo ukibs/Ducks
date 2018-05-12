@@ -62,10 +62,27 @@ public class BaseWeapon : NetworkBehaviour {
     //
     public void Reload()
     {
+		//Ese max devuelve el valor más alto
         int amountToReload = Mathf.Max(currentReserveAmmo, maxWeaponAmmo);
         currentWeaponAmmo = amountToReload;
         currentReserveAmmo -= amountToReload;
     }
 
-    
+	public void addAmmo(int amount)
+	{
+		int dif = maxWeaponAmmo - CurrentWeaponAmmo;
+		if (dif >= amount) {
+			currentWeaponAmmo += amount;
+			amount = 0;
+		} else {
+			currentWeaponAmmo += dif;
+			amount -= dif;
+		}
+
+		//add the rest of the bullets
+		currentReserveAmmo += amount;
+		//check that it doesn't exceed the limit
+		if (currentReserveAmmo > maxReserveAmmo)
+			currentReserveAmmo = maxReserveAmmo;
+	}
 }

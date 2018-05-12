@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class LifeItem : NetworkBehaviour {
+public class InmovilTrapItem : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -20,8 +19,7 @@ public class LifeItem : NetworkBehaviour {
 		var hit = collision.gameObject;
 		if (hit.CompareTag("Player") )
 		{
-			var health = hit.GetComponent<HealthController>();
-			health.receiveLife (5);
+			hit.GetComponent<PlayerController> ().State = PlayerStates.Trapped;
 			Destroy (this.gameObject);
 		}
 	}

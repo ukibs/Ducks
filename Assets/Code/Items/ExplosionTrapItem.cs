@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class LifeItem : NetworkBehaviour {
+public class ExplosionTrapItem : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -20,8 +19,9 @@ public class LifeItem : NetworkBehaviour {
 		var hit = collision.gameObject;
 		if (hit.CompareTag("Player") )
 		{
-			var health = hit.GetComponent<HealthController>();
-			health.receiveLife (5);
+			var player = hit.GetComponent<HealthController> ();
+			//TO DO: change 100 to the player max life
+			player.TakeDamage (100);
 			Destroy (this.gameObject);
 		}
 	}
