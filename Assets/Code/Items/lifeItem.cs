@@ -18,11 +18,12 @@ public class LifeItem : NetworkBehaviour {
 	private void OnCollisionEnter(Collision collision)
 	{
 		var hit = collision.gameObject;
-		if (hit.CompareTag("Player") )
+		if (hit.CompareTag("Player"))
 		{
 			var health = hit.GetComponent<HealthController>();
 			health.receiveLife (5);
-			Destroy (this.gameObject);
+			Debug.Log ("hola");
+			Network.Destroy (gameObject);
 		}
 	}
 }

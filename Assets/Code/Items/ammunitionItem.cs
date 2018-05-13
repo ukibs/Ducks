@@ -10,6 +10,7 @@ public class AmmunitionItem : NetworkBehaviour {
 
 	public bool IsItem
 	{
+		get { return isItem; }
 		set { isItem = value;}
 	}
 
@@ -18,7 +19,7 @@ public class AmmunitionItem : NetworkBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		
+		isItem = false;
 	}
 	
 	// Update is called once per frame
@@ -29,9 +30,11 @@ public class AmmunitionItem : NetworkBehaviour {
 	private void OnCollisionEnter(Collision collision)
 	{
 		var hit = collision.gameObject;
+		Debug.Log ("Estoy: " + isItem);
 		if (hit.CompareTag("Player") && isItem)
 		{
-			var player = hit.GetComponent<PlayerController> ().takeWeapon ( this.gameObject,amountBullets);
+			Debug.Log ("Cojo municion");
+			hit.GetComponent<PlayerController> ().takeWeapon ( this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
 			Destroy (this.gameObject);
 		}
 	}

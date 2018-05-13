@@ -63,7 +63,7 @@ public class BaseWeapon : NetworkBehaviour {
     public void Reload()
     {
 		//Ese max devuelve el valor más alto
-        int amountToReload = Mathf.Max(currentReserveAmmo, maxWeaponAmmo);
+        int amountToReload = Mathf.Min(currentReserveAmmo, maxWeaponAmmo);
         currentWeaponAmmo = amountToReload;
         currentReserveAmmo -= amountToReload;
     }
