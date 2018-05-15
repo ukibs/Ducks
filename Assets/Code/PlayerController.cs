@@ -17,7 +17,8 @@ public enum PlayerStates
 {
     Invalid = -1,
     Normal,
-    InVehicle,
+    InVehicleDriving,
+    InVehicleTurret,
     Trapped,
     Count
 }
@@ -50,6 +51,7 @@ public class PlayerController : NetworkBehaviour {
     // private BaseWeapon currentWeapon = null;
     private int currentWeaponIndex = 0;
     private List<GameObject> weapons;
+    private VehicleController currentVehicle;
 
 
 	private float vAxis;
@@ -59,6 +61,7 @@ public class PlayerController : NetworkBehaviour {
 	private bool spaceKey;
     private bool tabKey;
 	private bool rKey;
+    private bool eKey;
 
 	private float mouseX;
 	private float mouseY;
@@ -176,6 +179,7 @@ public class PlayerController : NetworkBehaviour {
 		spaceKey = Input.GetKeyDown (KeyCode.Space);
         tabKey = Input.GetKeyDown(KeyCode.Tab);
 		rKey = Input.GetKeyDown (KeyCode.R);
+        eKey = Input.GetKeyDown(KeyCode.E);
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
@@ -187,12 +191,19 @@ public class PlayerController : NetworkBehaviour {
 
 	void Movement(float dt, float speed)
 	{
-		Vector3 rightMovement = transform.right * hAxis * speed;
-		Vector3 forwardMovement = transform.forward * vAxis * speed;
-		Vector3 yMovement = transform.up * verticalSpeed;
-		controller.Move((rightMovement + forwardMovement + yMovement)* dt);
-		transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
-		cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+        if (state == PlayerStates.Normal)
+        {
+            Vector3 rightMovement = transform.right * hAxis * speed;
+            Vector3 forwardMovement = transform.forward * vAxis * speed;
+            Vector3 yMovement = transform.up * verticalSpeed;
+            controller.Move((rightMovement + forwardMovement + yMovement) * dt);
+            transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
+            cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+        }
+        else if(state == PlayerStates.InVehicleDriving)
+        {
+            currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
+        }
 	}
 
     void ChangeWeapon()
@@ -267,6 +278,7 @@ public class PlayerController : NetworkBehaviour {
         RaycastHit hit;
         if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.0f))
         {
+
             Debug.Log("Checking object to use: " + hit.transform.name);
             BaseUsable usable = hit.transform.GetComponent<BaseUsable>();
             if (usable != null)
@@ -278,6 +290,15 @@ public class PlayerController : NetworkBehaviour {
                 //hit.transform.SendMessage("CmdUse");
                 //CmdUseObject(usable);
                 Debug.Log("Using object " + usable);
+                //return;
+            }
+
+            VehicleController vehicleController = hit.transform.GetComponent<VehicleController>();
+            Debug.Log("Is it a vehicle? " + vehicleController != null);
+            if (vehicleController != null)
+            {
+                
+                vehicleController.CmdUse(this);
             }
         }
     }
