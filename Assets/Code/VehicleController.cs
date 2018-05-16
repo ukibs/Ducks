@@ -28,12 +28,20 @@ public class VehicleController : NetworkBehaviour {
     public void CmdMove(Vector2 controlAxis)
     {
         transform.Translate(transform.forward * controlAxis.y * 20.0f * Time.deltaTime);
-        transform.Rotate(transform.forward * controlAxis.y * 90.0f * Time.deltaTime);
+        transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
     }
 
     [Command]
-    public void CmdUse(PlayerController playerController)
+    public void CmdUse(GameObject player)
     {
-        playerController.State = PlayerStates.InVehicleDriving;
+        // Check that there isn't currently a driver
+        if (driver == null)
+        {
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            driver = playerController;
+            playerController.transform.position = driverPlace.position;
+            playerController.State = PlayerStates.InVehicleDriving;
+            playerController.CurrentVehicle = this;
+        }
     }
 }

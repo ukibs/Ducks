@@ -75,6 +75,7 @@ public class PlayerController : NetworkBehaviour {
 
     public BaseWeapon CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>(); } }
 	public PlayerStates State { set { state = value; } }
+    public VehicleController CurrentVehicle { set { currentVehicle = value; } }
 
     #endregion
 
@@ -298,7 +299,7 @@ public class PlayerController : NetworkBehaviour {
             if (vehicleController != null)
             {
                 
-                vehicleController.CmdUse(this);
+                vehicleController.CmdUse(gameObject);
             }
         }
     }
