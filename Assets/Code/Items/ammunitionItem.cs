@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class AmmunitionItem : NetworkBehaviour {
+public class AmmunitionItem : MonoBehaviour {
 
-	private bool isItem = false;
+	public bool isItem = false;
 	private int amountBullets = 0;
 
 	public bool IsItem
@@ -19,7 +19,7 @@ public class AmmunitionItem : NetworkBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		isItem = false;
+		//isItem = false;
 	}
 	
 	// Update is called once per frame
@@ -27,7 +27,7 @@ public class AmmunitionItem : NetworkBehaviour {
 		
 	}
 
-	private void OnCollisionEnter(Collision collision)
+	/*private void OnCollisionEnter(Collision collision)
 	{
 		var hit = collision.gameObject;
 		Debug.Log ("Estoy: " + isItem);
@@ -37,5 +37,17 @@ public class AmmunitionItem : NetworkBehaviour {
 			hit.GetComponent<PlayerController> ().takeWeapon ( this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
 			Destroy (this.gameObject);
 		}
-	}
+	}*/
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        var hit = collider.gameObject;
+        Debug.Log("Estoy: " + isItem + ", collider: " + hit.name);
+        if (hit.CompareTag("Player") && isItem)
+        {
+            Debug.Log("Cojo municion");
+            hit.GetComponent<PlayerController>().takeWeapon(this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
+            Destroy(this.gameObject);
+        }
+    }
 }

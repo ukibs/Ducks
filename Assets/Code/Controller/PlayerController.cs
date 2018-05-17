@@ -328,9 +328,10 @@ public class PlayerController : NetworkBehaviour {
 		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 		GameObject ammunitionItem = GameObject.Instantiate(weaponPrefabs[currentWeaponIndex], CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 
-		/*AmmunitionItem ammo = */ammunitionItem.GetComponent<AmmunitionItem> ().Bullets = CurrentWeapon.CurrentWeaponAmmo;
-		//ammo.IsItem = true;
-		//ammo.Bullets = CurrentWeapon.CurrentWeaponAmmo;
+        //ammunitionItem.GetComponent<ammunitionItem> ().Bullets = CurrentWeapon.CurrentWeaponAmmo;
+        AmmunitionItem ammo = ammunitionItem.GetComponent<AmmunitionItem> ();
+		ammo.IsItem = true;
+		ammo.Bullets = CurrentWeapon.CurrentWeaponAmmo;
 
 		//Debug.Log(ammo.IsItem);
 		NetworkServer.Spawn(itemLife);

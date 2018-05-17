@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114454771410030434}
   - component: {fileID: 114905675595118186}
   - component: {fileID: 114473746341859346}
-  - component: {fileID: 114358081787420036}
+  - component: {fileID: 114799898523567614}
   m_Layer: 0
   m_Name: Nose
   m_TagString: Untagged
@@ -116,17 +116,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1578046892124282}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114358081787420036
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1578046892124282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6d575b820a08e1429b1aa1faadc965b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114454771410030434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -155,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 1
-  m_SendInterval: 0.1
+  m_SendInterval: 0.11111111
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -164,6 +153,18 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114799898523567614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1578046892124282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d575b820a08e1429b1aa1faadc965b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isItem: 0
 --- !u!114 &114905675595118186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,9 +204,9 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1578046892124282}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

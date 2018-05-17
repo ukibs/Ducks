@@ -61,7 +61,14 @@ public class HealthController : NetworkBehaviour {
 
 	public void receiveLife(int amount)
 	{
-		currentHealth += amount;
+        if (!isServer)
+        {
+            return;
+        }
+        else
+        {
+            currentHealth += amount;
+        }
 	}
 
     void OnChangeHealth(int _currentHealth)
