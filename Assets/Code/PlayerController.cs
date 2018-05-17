@@ -74,7 +74,10 @@ public class PlayerController : NetworkBehaviour {
     #region Properties
 
     public BaseWeapon CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>(); } }
-	public PlayerStates State { set { state = value; } }
+	public PlayerStates State {
+        set { state = value; }
+        get { return state; }
+    }
     public VehicleController CurrentVehicle { set { currentVehicle = value; } }
 
     #endregion
@@ -103,22 +106,14 @@ public class PlayerController : NetworkBehaviour {
 			UpdateInput ();
 			ChangeStates ();
 			ApplyGravity (dt);
-			if (controller.isGrounded && spaceKey) 
-			{
-				Jump ();
-			}
+			
 			if (rKey)
 				CurrentWeapon.Reload ();
             if (tabKey) ChangeWeapon();
 			if (mouseRight) CmdThrowGrenade();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
-            // Cehqueo guarro, luego lo metemos en update input
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                //CmdUseObject();
-                CmdCheckAndUse();
-            }
+            
         }
 	}
 
@@ -192,18 +187,39 @@ public class PlayerController : NetworkBehaviour {
 
 	void Movement(float dt, float speed)
 	{
-        if (state == PlayerStates.Normal)
-        {
-            Vector3 rightMovement = transform.right * hAxis * speed;
-            Vector3 forwardMovement = transform.forward * vAxis * speed;
-            Vector3 yMovement = transform.up * verticalSpeed;
-            controller.Move((rightMovement + forwardMovement + yMovement) * dt);
-            transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
-            cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
-        }
-        else if(state == PlayerStates.InVehicleDriving)
-        {
-            currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
+        switch (state) {
+            case PlayerStates.Normal:
+                Vector3 rightMovement = transform.right * hAxis * speed;
+                Vector3 forwardMovement = transform.forward * vAxis * speed;
+                Vector3 yMovement = transform.up * verticalSpeed;
+                controller.Move((rightMovement + forwardMovement + yMovement) * dt);
+                transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
+                cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+                //
+                if (controller.isGrounded && spaceKey)
+                {
+                    Jump();
+                }
+                // Cehqueo guarro, luego lo metemos en update input
+                if (eKey)
+                {
+                    //CmdUseObject();
+                    CmdCheckAndUse();
+                }
+                break;
+            case PlayerStates.InVehicleDriving:
+                currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
+                cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+                transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
+                if (spaceKey) currentVehicle.CmdSwitchPlace(gameObject);
+                if (eKey) currentVehicle.CmdQuitVehicle(gameObject);
+                break;
+            case PlayerStates.InVehicleTurret:
+                cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+                transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
+                if (spaceKey) currentVehicle.CmdSwitchPlace(gameObject);
+                if (eKey) currentVehicle.CmdQuitVehicle(gameObject);
+                break;
         }
 	}
 
@@ -247,8 +263,10 @@ public class PlayerController : NetworkBehaviour {
 		
 	void SimpleShoot(float dt)
 	{
-		
-        if(CurrentWeapon.OrderFire()) CmdFire();
+        if (state == PlayerStates.Normal || state == PlayerStates.InVehicleTurret)
+        {
+            if (CurrentWeapon.OrderFire()) CmdFire();
+        }
     }
 
 	void ApplyGravity(float dt)

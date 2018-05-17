@@ -20,14 +20,13 @@ public class VehicleController : NetworkBehaviour {
 	void Update () {
 		if(driver != null)
         {
-            driver.transform.position = driverPlace.position;
         }
 	}
 
     [Command]
     public void CmdMove(Vector2 controlAxis)
     {
-        transform.Translate(transform.forward * controlAxis.y * 20.0f * Time.deltaTime);
+        transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
         transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
     }
 
@@ -42,6 +41,51 @@ public class VehicleController : NetworkBehaviour {
             playerController.transform.position = driverPlace.position;
             playerController.State = PlayerStates.InVehicleDriving;
             playerController.CurrentVehicle = this;
+            playerController.transform.SetParent(gameObject.transform);
         }
+        else if(turretGuy == null)
+        {
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            turretGuy = playerController;
+            playerController.transform.position = turretGuyPlace.position;
+            playerController.State = PlayerStates.InVehicleTurret;
+            playerController.CurrentVehicle = this;
+            playerController.transform.SetParent(gameObject.transform);
+        }
+    }
+
+    [Command]
+    public void CmdSwitchPlace(GameObject player)
+    {
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        switch (playerController.State)
+        {
+            case PlayerStates.InVehicleDriving:
+                // First check the other place is free
+                if (turretGuy != null) return;
+                playerController.transform.position = turretGuyPlace.position;
+                playerController.State = PlayerStates.InVehicleTurret;
+                driver = null;
+                break;
+            case PlayerStates.InVehicleTurret:
+                //
+                if (driver != null) return;
+                playerController.transform.position = driverPlace.position;
+                playerController.State = PlayerStates.InVehicleDriving;
+                turretGuy = null;
+                break;
+        }
+    }
+
+    [Command]
+    public void CmdQuitVehicle(GameObject player)
+    {
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        if (playerController.State == PlayerStates.InVehicleDriving) driver = null;
+        else if (playerController.State == PlayerStates.InVehicleTurret) turretGuy = null;
+        playerController.State = PlayerStates.Normal;
+        playerController.CurrentVehicle = null;
+        playerController.transform.position += Vector3.up;
+        playerController.transform.SetParent(null);
     }
 }
