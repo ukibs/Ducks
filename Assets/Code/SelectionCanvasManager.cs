@@ -5,22 +5,22 @@ using UnityEngine.Networking;
 
 public class SelectionCanvasManager : NetworkBehaviour {
 
-    public GameObject selectionButton;
-    public GameObject loadingText;
+    public GameObject canvasHost;
+    public GameObject canvasClient;
 
 	// Use this for initialization
 	void Start () {
         if (isServer)
         {
             Debug.Log("In Server");
-            loadingText.SetActive(false);
-            selectionButton.SetActive(true);
+			canvasHost.SetActive(true);
+			canvasClient.SetActive(false);
         }
         else if (isClient)
         {
             Debug.Log("In Client");
-            selectionButton.SetActive(false);
-            loadingText.SetActive(true);
+			canvasHost.SetActive(false);
+			canvasClient.SetActive(true);
         }
         else
         {
