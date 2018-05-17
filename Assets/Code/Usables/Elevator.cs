@@ -14,7 +14,8 @@ public class Elevator : NetworkBehaviour
 	private Vector3 originalPosition;
 	// 0 closed, 1 opened
 	private float status = 0.0f;
-	private int direction = -1;
+	private int direction = 1;
+	private Vector3 previousPos;
 
 	void Start()
 	{
@@ -23,13 +24,15 @@ public class Elevator : NetworkBehaviour
 	}
 
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
 	{
 		if (isServer)
 		{
 			Debug.Log("In server");
 			status += direction * Time.deltaTime / journeyDuration;
 			status = Mathf.Clamp01(status);
+
+			previousPos = transform.position;
 
 			transform.position = Vector3.Lerp(originalPosition, displacedPosition, status);
 
@@ -53,6 +56,14 @@ public class Elevator : NetworkBehaviour
 		{
 			Debug.Log("In local player");
 		}
+	}
+
+
+	void OnTriggerStay(Collider other){
+
+		other.transform.position += (transform.position - previousPos);
+		Debug.Log ("estoy dentrp");
+		
 	}
 
 	//Activate the Main function when player is near the door
