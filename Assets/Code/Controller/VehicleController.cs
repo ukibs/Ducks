@@ -11,47 +11,49 @@ public class VehicleController : NetworkBehaviour {
     private PlayerController driver;
     private PlayerController turretGuy;
 
+    private Vector2 controlAxis;
+
 	// Use this for initialization
 	void Start () {
-		
+        controlAxis = Vector2.zero;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(driver != null)
-        {
-        }
-	}
-
-    [Command]
-    public void CmdMove(Vector2 controlAxis)
-    {
         transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
         transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
     }
 
     [Command]
+    public void CmdMove(Vector2 controlAxis)
+    {
+        this.controlAxis = controlAxis;
+    }
+
+    [Command]
     public void CmdUse(GameObject player)
     {
+        Debug.Log("Trying to use");
         // Check that there isn't currently a driver
         if (driver == null)
         {
-            PlayerController playerController = player.GetComponent<PlayerController>();
-            driver = playerController;
-            playerController.transform.position = driverPlace.position;
-            playerController.State = PlayerStates.InVehicleDriving;
-            playerController.CurrentVehicle = this;
-            playerController.transform.SetParent(gameObject.transform);
+            AssignPosition(player, driver, driverPlace);
         }
         else if(turretGuy == null)
         {
-            PlayerController playerController = player.GetComponent<PlayerController>();
-            turretGuy = playerController;
-            playerController.transform.position = turretGuyPlace.position;
-            playerController.State = PlayerStates.InVehicleTurret;
-            playerController.CurrentVehicle = this;
-            playerController.transform.SetParent(gameObject.transform);
+            AssignPosition(player, turretGuy, turretGuyPlace);
         }
+    }
+
+    void AssignPosition(GameObject player, PlayerController role, Transform rolePlace)
+    {
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        role = playerController;
+        playerController.transform.position = rolePlace.position;
+        if(rolePlace == driverPlace) playerController.State = PlayerStates.InVehicleDriving;
+        else playerController.State = PlayerStates.InVehicleTurret;
+        playerController.CurrentVehicle = this;
+        playerController.transform.SetParent(gameObject.transform);
     }
 
     [Command]
