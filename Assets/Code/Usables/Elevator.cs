@@ -60,9 +60,12 @@ public class Elevator : NetworkBehaviour
 
 
 	void OnTriggerStay(Collider other){
-
-		other.transform.position += (transform.position - previousPos);
-		Debug.Log ("estoy dentrp");
+        // Chequeo adicional específico para el ascensor
+        Vector3 positionOffset = (transform.position - previousPos);
+        positionOffset.x = 0;
+        positionOffset.z = 0;
+        other.transform.position += positionOffset;
+		//Debug.Log ("estoy dentrp");
 		
 	}
 
