@@ -24,7 +24,9 @@ public class EnemyControl : NetworkBehaviour {
         //
         if(objectivePlayer != null)
         {
-            transform.LookAt(objectivePlayer.transform);
+            Vector3 objectiveOffset = objectivePlayer.transform.position - transform.position;
+            objectiveOffset.y = 0;
+            transform.rotation = Quaternion.LookRotation(objectiveOffset);
             cc.Move(transform.forward * Time.deltaTime);
         }
         else

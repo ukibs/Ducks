@@ -189,18 +189,22 @@ public class PlayerController : NetworkBehaviour {
 	{
         switch (state) {
             case PlayerStates.Normal:
+
+                //
+                //if (spaceKey) Debug.Log("Controller: " + controller.isGrounded);
+                if (controller.isGrounded && spaceKey)
+                {
+                    Jump();
+                }
+                
+                //
                 Vector3 rightMovement = transform.right * hAxis * speed;
                 Vector3 forwardMovement = transform.forward * vAxis * speed;
                 Vector3 yMovement = transform.up * verticalSpeed;
                 controller.Move((rightMovement + forwardMovement + yMovement) * dt);
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
                 cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
-                //
-                if (controller.isGrounded && spaceKey)
-                {
-                    Jump();
-                }
-                // Cehqueo guarro, luego lo metemos en update input
+                // 
                 if (eKey)
                 {
                     //CmdUseObject();
