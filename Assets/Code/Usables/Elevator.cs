@@ -28,7 +28,7 @@ public class Elevator : NetworkBehaviour
 	{
 		if (isServer)
 		{
-			Debug.Log("In server");
+			//Debug.Log("In server");
 			status += direction * Time.deltaTime / journeyDuration;
 			status = Mathf.Clamp01(status);
 

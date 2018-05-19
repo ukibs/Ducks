@@ -120,10 +120,14 @@ public class PlayerController : NetworkBehaviour {
     private void OnGUI()
     {
 		if (isLocalPlayer) {
+            // Weapon info
 			BaseWeapon weaponData = weapons [currentWeaponIndex].GetComponent<BaseWeapon> ();
 			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 8.8f / 10, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
 			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 9 / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
-		}
+            //
+            GUI.Label(new Rect(10, 10, 350, 20), "State: " + state + ", movement state: " + movementState);
+
+        }
     }
 
     void ChangeStates()
@@ -187,6 +191,8 @@ public class PlayerController : NetworkBehaviour {
 
 	void Movement(float dt, float speed)
 	{
+        // TODO: Preguntar a Nestor que coño apsa con esto
+        //Debug.Log("Applying movement");
         switch (state) {
             case PlayerStates.Normal:
 
@@ -212,11 +218,19 @@ public class PlayerController : NetworkBehaviour {
                 }
                 break;
             case PlayerStates.InVehicleDriving:
+                Debug.Log("In vehicle driving");
                 currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
                 cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
-                if (spaceKey) currentVehicle.CmdSwitchPlace(gameObject);
-                if (eKey) currentVehicle.CmdQuitVehicle(gameObject);
+                if (spaceKey) {
+                    Debug.Log("Trying to switch place");
+                    currentVehicle.CmdSwitchPlace(gameObject);
+                }
+                if (eKey)
+                {
+                    Debug.Log("Trying to quit vehicle");
+                    currentVehicle.CmdQuitVehicle(gameObject);
+                }
                 break;
             case PlayerStates.InVehicleTurret:
                 cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
@@ -275,10 +289,13 @@ public class PlayerController : NetworkBehaviour {
 
 	void ApplyGravity(float dt)
 	{
-		if (controller.isGrounded)
-			verticalSpeed = 0.0f;
-		else
-			verticalSpeed += gravity.y * dt;
+        if (state == PlayerStates.Normal)
+        {
+            if (controller.isGrounded)
+                verticalSpeed = 0.0f;
+            else
+                verticalSpeed += gravity.y * dt;
+        }
 	}
 
 	void Jump()
@@ -297,12 +314,12 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     void CmdCheckAndUse()
     {
-        Debug.Log("Checking with ray");
+        //Debug.Log("Checking with ray");
         RaycastHit hit;
         if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.0f))
         {
 
-            Debug.Log("Checking object to use: " + hit.transform.name);
+            //Debug.Log("Checking object to use: " + hit.transform.name);
             BaseUsable usable = hit.transform.GetComponent<BaseUsable>();
             if (usable != null)
             {
@@ -317,7 +334,7 @@ public class PlayerController : NetworkBehaviour {
             }
 
             VehicleController vehicleController = hit.transform.GetComponent<VehicleController>();
-            Debug.Log("Is it a vehicle? " + vehicleController != null);
+            //Debug.Log("Is it a vehicle? " + vehicleController != null);
             if (vehicleController != null)
             {
                 
@@ -376,4 +393,55 @@ public class PlayerController : NetworkBehaviour {
 			}
 		}
 	}
+
+    [ClientRpc]
+    public void RpcEnterVehicle(GameObject vehicle, VehiclePlace vehiclePlace)
+    {
+        
+        VehicleController vehicleController = vehicle.GetComponent<VehicleController>();
+        //
+        switch (vehiclePlace)
+        {
+            case VehiclePlace.Driver:
+                transform.position = vehicleController.driverPlace.position;
+                state = PlayerStates.InVehicleDriving;
+                break;
+            case VehiclePlace.Gunner:
+                transform.position = vehicleController.turretGuyPlace.position;
+                state = PlayerStates.InVehicleTurret;
+                break;
+        }
+        //
+        currentVehicle = vehicleController;
+        transform.SetParent(vehicle.transform);
+        //
+        Debug.Log("Entering vehicle, state: " + state + ", vehicle: " + currentVehicle);
+    }
+
+    [ClientRpc]
+    public void RpcSwitchVehiclePosition()
+    {
+        Debug.Log("Switching place");
+        switch (state)
+        {
+            case PlayerStates.InVehicleDriving:
+                transform.position = currentVehicle.turretGuyPlace.position;
+                state = PlayerStates.InVehicleTurret;
+                break;
+            case PlayerStates.InVehicleTurret:
+                transform.position = currentVehicle.driverPlace.position;
+                state = PlayerStates.InVehicleDriving;
+                break;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcQuitVehicle()
+    {
+        Debug.Log("Quitting vehicle");
+        state = PlayerStates.Normal;
+        currentVehicle = null;
+        transform.position += Vector3.up;
+        transform.SetParent(null);
+    }
 }

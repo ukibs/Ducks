@@ -12,13 +12,13 @@ public class SelectionCanvasManager : NetworkBehaviour {
 	void Start () {
         if (isServer)
         {
-            Debug.Log("In Server");
+            //Debug.Log("In Server");
 			canvasHost.SetActive(true);
 			canvasClient.SetActive(false);
         }
         else if (isClient)
         {
-            Debug.Log("In Client");
+            //Debug.Log("In Client");
 			canvasHost.SetActive(false);
 			canvasClient.SetActive(true);
         }
