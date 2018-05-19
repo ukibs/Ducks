@@ -218,25 +218,18 @@ public class PlayerController : NetworkBehaviour {
                 }
                 break;
             case PlayerStates.InVehicleDriving:
-                Debug.Log("In vehicle driving");
-                currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
-                cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
-                transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
-                if (spaceKey) {
-                    Debug.Log("Trying to switch place");
-                    currentVehicle.CmdSwitchPlace(gameObject);
-                }
-                if (eKey)
-                {
-                    Debug.Log("Trying to quit vehicle");
-                    currentVehicle.CmdQuitVehicle(gameObject);
-                }
+                
+                CmdDriveVehicle(dt);
+                
                 break;
             case PlayerStates.InVehicleTurret:
                 cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
                 if (spaceKey) currentVehicle.CmdSwitchPlace(gameObject);
                 if (eKey) currentVehicle.CmdQuitVehicle(gameObject);
+                break;
+            default:
+                Debug.Log("Current state: " + state);
                 break;
         }
 	}
@@ -444,4 +437,24 @@ public class PlayerController : NetworkBehaviour {
         transform.position += Vector3.up;
         transform.SetParent(null);
     }
+
+    [Command]
+    void CmdDriveVehicle(float dt)
+    {
+        Debug.Log("In vehicle driving by command");
+        currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
+        cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+        transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
+        if (spaceKey)
+        {
+            Debug.Log("Trying to switch place");
+            currentVehicle.CmdSwitchPlace(gameObject);
+        }
+        if (eKey)
+        {
+            Debug.Log("Trying to quit vehicle");
+            currentVehicle.CmdQuitVehicle(gameObject);
+        }
+    }
+
 }

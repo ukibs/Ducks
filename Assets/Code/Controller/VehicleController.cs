@@ -28,16 +28,16 @@ public class VehicleController : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (isServer)
+        /*if (isServer)
         {
             transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
             transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
-        }
+        }*/
             //RpcMove();
     }
 
     [ClientRpc]
-    public void RpcMove()
+    public void RpcMove(Vector2 controlAxis)
     {
         transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
         transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
@@ -47,9 +47,10 @@ public class VehicleController : NetworkBehaviour {
     public void CmdMove(Vector2 controlAxis)
     {
         this.controlAxis = controlAxis;
-        //RpcMove();
-        transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
-        transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
+        Debug.Log("Receiving axis");
+        RpcMove(controlAxis);
+        //transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
+        //transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
     }
 
     [Command]
