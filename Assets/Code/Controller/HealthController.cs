@@ -17,6 +17,10 @@ public class HealthController : NetworkBehaviour {
     //
     public RectTransform healthBar;
 
+
+	public int Health{
+		get { return currentHealth; }
+	}
 	// Use this for initialization
 	void Start () {
 		spawnPoints = FindObjectsOfType<NetworkStartPosition> ();
@@ -43,7 +47,6 @@ public class HealthController : NetworkBehaviour {
             currentHealth -= amount;
             if(currentHealth <= 0)
             {
-				player.CmdThrowItems ();
                 if(destroyOnDeath)
                 {
                     Destroy(gameObject);
@@ -55,6 +58,7 @@ public class HealthController : NetworkBehaviour {
                     //
                     RpcRespawn();
                 }
+				player.CmdThrowItems ();
             }
         }
     }

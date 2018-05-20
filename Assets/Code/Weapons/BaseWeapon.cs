@@ -19,7 +19,9 @@ public class BaseWeapon : NetworkBehaviour {
     private float fireRate = 0.5f;
     private float fireCooldown = 0.0f;
 
+	//[SyncVar(hook = "OnChangeAmmo")]
     private int currentWeaponAmmo;
+
     private int currentReserveAmmo;
 
     #endregion
@@ -45,13 +47,23 @@ public class BaseWeapon : NetworkBehaviour {
         if (fireCooldown < fireRate) fireCooldown += dt;
     }
 
+	void OnChangeAmmo(int _currentWeaponAmmo, int _currentReserveAmmo)
+	{
+		currentWeaponAmmo = _currentWeaponAmmo;
+		currentReserveAmmo = _currentReserveAmmo;
+	}
+
+	/*void OnChangeAmmoReserve(int _currentReserveAmmo)
+	{
+		currentReserveAmmo = _currentReserveAmmo;
+	}*/
+
+
     //
     public bool OrderFire()
     {
 		if (Input.GetMouseButtonDown (0) && fireCooldown >= fireRate && currentWeaponAmmo > 0)
         {
-
-            // CmdFire();
             fireCooldown = 0.0f;
             currentWeaponAmmo--;
             return true;
@@ -62,27 +74,33 @@ public class BaseWeapon : NetworkBehaviour {
     //
     public void Reload()
     {
-		//Ese max devuelve el valor más alto
-        int amountToReload = Mathf.Min(currentReserveAmmo, maxWeaponAmmo);
-        currentWeaponAmmo = amountToReload;
-        currentReserveAmmo -= amountToReload;
+		/*if (!isServer) {
+			return;
+		} else {*/
+			Debug.Log ("Recargo");
+			//Ese max devuelve el valor más alto
+			int amountToReload = Mathf.Min (currentReserveAmmo, maxWeaponAmmo);
+			currentWeaponAmmo = amountToReload;
+			currentReserveAmmo -= amountToReload;
+		//}
     }
 
 	public void addAmmo(int amount)
 	{
-		int dif = maxWeaponAmmo - CurrentWeaponAmmo;
-		if (dif >= amount) {
-			currentWeaponAmmo += amount;
-			amount = 0;
-		} else {
-			currentWeaponAmmo += dif;
-			amount -= dif;
-		}
+			Debug.Log ("Cojo munición");
+			int dif = maxWeaponAmmo - CurrentWeaponAmmo;
+			if (dif >= amount) {
+				currentWeaponAmmo += amount;
+				amount = 0;
+			} else {
+				currentWeaponAmmo += dif;
+				amount -= dif;
+			}
 
-		//add the rest of the bullets
-		currentReserveAmmo += amount;
-		//check that it doesn't exceed the limit
-		if (currentReserveAmmo > maxReserveAmmo)
-			currentReserveAmmo = maxReserveAmmo;
-	}
+			//add the rest of the bullets
+			currentReserveAmmo += amount;
+			//check that it doesn't exceed the limit
+			if (currentReserveAmmo > maxReserveAmmo)
+				currentReserveAmmo = maxReserveAmmo;
+		}
 }

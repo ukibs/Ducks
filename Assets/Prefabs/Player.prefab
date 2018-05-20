@@ -419,7 +419,10 @@ MonoBehaviour:
   jumpForce: 13
   cam: {fileID: 20668377621379398}
   lifePrefab: {fileID: 1159388425108010, guid: 16cd979919faa994aa40b1359de99071, type: 2}
-  ammunition: {fileID: 0}
+  explosiveTrap: {fileID: 1290925588243224, guid: bec36816dc21b8443b63c6277d3b6540,
+    type: 2}
+  inmovilTrap: {fileID: 1026665230575240, guid: b089ff1b2c49fc14d8b6a8c227eeed26,
+    type: 2}
   bulletPrefab: {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046,
     type: 2}
   myPrefab: {fileID: 1357841904451440, guid: c7425afb8ed65e44bb01c5e6aab42f00, type: 2}

@@ -19,7 +19,6 @@ public class AmmunitionItem : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		//isItem = false;
 	}
 	
 	// Update is called once per frame
@@ -42,12 +41,10 @@ public class AmmunitionItem : MonoBehaviour {
     private void OnTriggerEnter(Collider collider)
     {
         var hit = collider.gameObject;
-        Debug.Log("Estoy: " + isItem + ", collider: " + hit.name);
         if (hit.CompareTag("Player") && isItem)
         {
-            Debug.Log("Cojo municion");
-            hit.GetComponent<PlayerController>().takeWeapon(this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
-            Destroy(this.gameObject);
+			hit.GetComponent<PlayerController>().takeWeapon(this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
+            Destroy(gameObject);
         }
     }
 }

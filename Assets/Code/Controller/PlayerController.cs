@@ -34,7 +34,8 @@ public class PlayerController : NetworkBehaviour {
 
     public Camera cam;
 	public GameObject lifePrefab;
-	public GameObject ammunition;
+	public GameObject explosiveTrap;
+	public GameObject inmovilTrap;
     public GameObject bulletPrefab;
     public GameObject myPrefab;
     public List<GameObject> weaponPrefabs;
@@ -62,6 +63,8 @@ public class PlayerController : NetworkBehaviour {
     private bool tabKey;
 	private bool rKey;
     private bool eKey;
+	private bool key1;
+	private bool key2;
 
 	private float mouseX;
 	private float mouseY;
@@ -111,6 +114,9 @@ public class PlayerController : NetworkBehaviour {
 				CurrentWeapon.Reload ();
             if (tabKey) ChangeWeapon();
 			if (mouseRight) CmdThrowGrenade();
+			if (key1) CmdThrowExplosiveTrap ();
+			if (key2)
+				CmdThrowInmovilTrap ();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
             
@@ -180,6 +186,8 @@ public class PlayerController : NetworkBehaviour {
         tabKey = Input.GetKeyDown(KeyCode.Tab);
 		rKey = Input.GetKeyDown (KeyCode.R);
         eKey = Input.GetKeyDown(KeyCode.E);
+		key1 = Input.GetKeyDown(KeyCode.Alpha1);
+		key2 = Input.GetKeyDown(KeyCode.Alpha2);
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
@@ -390,6 +398,26 @@ public class PlayerController : NetworkBehaviour {
 				weapons [i].GetComponent<BaseWeapon> ().addAmmo (bullets);
 			}
 		}
+	}
+
+	[Command]
+	void CmdThrowExplosiveTrap()
+	{
+		GameObject newExplosiveTrap = GameObject.Instantiate(explosiveTrap, CurrentWeapon.shootPoint.position + transform.forward*5, CurrentWeapon.shootPoint.rotation);
+
+		NetworkServer.Spawn(newExplosiveTrap);
+
+		//Destroy(newBullet, 4.0f);
+	}
+
+	[Command]
+	void CmdThrowInmovilTrap()
+	{
+		GameObject newInmovilTrap = GameObject.Instantiate(inmovilTrap, CurrentWeapon.shootPoint.position + transform.forward*5, CurrentWeapon.shootPoint.rotation);
+
+		NetworkServer.Spawn(newInmovilTrap);
+
+		//Destroy(newBullet, 4.0f);
 	}
 
     [ClientRpc]

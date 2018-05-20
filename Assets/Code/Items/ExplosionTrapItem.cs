@@ -14,7 +14,7 @@ public class ExplosionTrapItem : MonoBehaviour {
 		
 	}
 
-	private void OnCollisionEnter(Collision collision)
+	/*private void OnCollisionEnter(Collision collision)
 	{
 		var hit = collision.gameObject;
 		if (hit.CompareTag("Player") )
@@ -22,7 +22,19 @@ public class ExplosionTrapItem : MonoBehaviour {
 			var player = hit.GetComponent<HealthController> ();
 			//TO DO: change 100 to the player max life
 			player.TakeDamage (100);
-			Destroy (this.gameObject);
+			Destroy (gameObject);
+		}
+	}*/
+
+	private void OnTriggerEnter(Collider collider)
+	{
+		var hit = collider.gameObject;
+		if (hit.CompareTag("Player") )
+		{
+			var player = hit.GetComponent<HealthController> ();
+			//TO DO: change 100 to the player max life
+			player.TakeDamage (100);
+			Destroy (gameObject);
 		}
 	}
 }

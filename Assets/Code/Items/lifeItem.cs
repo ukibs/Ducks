@@ -28,15 +28,13 @@ public class LifeItem : MonoBehaviour {
 		}
 	}*/
 
-    private void OnTriggerEnter(Collider collider)
-    {
-        //Debug.Log("Triggered: " + collider.transform.name);
+   private void OnTriggerEnter(Collider collider)
+   {
         var hit = collider.gameObject;
-        if (hit.CompareTag("Player"))
+		var health = hit.GetComponent<HealthController>();
+		if (hit.CompareTag("Player") && health.Health != 100)
         {
-            var health = hit.GetComponent<HealthController>();
             health.receiveLife(5);
-            Debug.Log("Curando");
             Destroy(gameObject);
         }
     }

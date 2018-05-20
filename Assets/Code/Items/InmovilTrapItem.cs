@@ -14,13 +14,23 @@ public class InmovilTrapItem : MonoBehaviour {
 		
 	}
 
-	private void OnCollisionEnter(Collision collision)
+	/*private void OnCollisionEnter(Collision collision)
 	{
 		var hit = collision.gameObject;
-		if (hit.CompareTag("Player") )
+		if (hit.CompareTag("Player"))
 		{
 			hit.GetComponent<PlayerController> ().State = PlayerStates.Trapped;
-			Destroy (this.gameObject);
+			Destroy (gameObject);
+		}
+	}*/
+
+	private void OnTriggerEnter(Collider collider)
+	{
+		var hit = collider.gameObject;
+		if (hit.CompareTag("Player"))
+		{
+			hit.GetComponent<PlayerController> ().State = PlayerStates.Trapped;
+			Destroy (gameObject);
 		}
 	}
 }
