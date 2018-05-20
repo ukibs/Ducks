@@ -219,8 +219,22 @@ public class PlayerController : NetworkBehaviour {
                 break;
             case PlayerStates.InVehicleDriving:
                 
-                CmdDriveVehicle(dt);
-                
+                CmdDriveVehicle(dt, hAxis, vAxis, mouseY, mouseX, spaceKey, eKey);
+
+                /*if (spaceKey)
+                {
+                    Debug.Log("Trying to switch place");
+                    currentVehicle.CmdSwitchPlace(gameObject);
+                }
+                if (eKey)
+                {
+                    Debug.Log("Trying to quit vehicle");
+                    currentVehicle.CmdQuitVehicle(gameObject);
+                }
+                currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
+                cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+                transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);*/
+
                 break;
             case PlayerStates.InVehicleTurret:
                 cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
@@ -407,6 +421,8 @@ public class PlayerController : NetworkBehaviour {
         //
         currentVehicle = vehicleController;
         transform.SetParent(vehicle.transform);
+        // NetworkIdentity playerIdentity = player.GetComponent<NetworkIdentity>();
+        // playerIdentity.localPlayerAuthority = false;
         //
         Debug.Log("Entering vehicle, state: " + state + ", vehicle: " + currentVehicle);
     }
@@ -439,12 +455,9 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [Command]
-    void CmdDriveVehicle(float dt)
+    void CmdDriveVehicle(float dt, float hAxis, float vAxis, float mouseY, float mouseX, bool spaceKey, bool eKey)
     {
         Debug.Log("In vehicle driving by command");
-        currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
-        cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
-        transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
         if (spaceKey)
         {
             Debug.Log("Trying to switch place");
@@ -455,6 +468,9 @@ public class PlayerController : NetworkBehaviour {
             Debug.Log("Trying to quit vehicle");
             currentVehicle.CmdQuitVehicle(gameObject);
         }
+        currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
+        cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+        transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
     }
 
 }

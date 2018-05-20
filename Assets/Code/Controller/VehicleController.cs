@@ -28,12 +28,19 @@ public class VehicleController : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        /*if (isServer)
+        if (isServer)
         {
             transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
             transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
-        }*/
+        }
             //RpcMove();
+    }
+
+    private void OnGUI()
+    {
+        //
+        if(driver != null)
+            GUI.Label(new Rect(10, 30, 350, 20), "Driver: " + driver + ", axis: " + controlAxis);
     }
 
     [ClientRpc]
@@ -86,8 +93,7 @@ public class VehicleController : NetworkBehaviour {
         
         
         //
-        // NetworkIdentity playerIdentity = player.GetComponent<NetworkIdentity>();
-        // playerIdentity.localPlayerAuthority = false;
+        
     }
 
     [Command]
