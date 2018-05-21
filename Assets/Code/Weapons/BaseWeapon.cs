@@ -72,6 +72,18 @@ public class BaseWeapon : NetworkBehaviour {
     }
 
     //
+    public bool AiOrderFire()
+    {
+        if (fireCooldown >= fireRate && currentWeaponAmmo > 0)
+        {
+            fireCooldown = 0.0f;
+            currentWeaponAmmo--;
+            return true;
+        }
+        return false;
+    }
+
+    //
     public void Reload()
     {
 		/*if (!isServer) {

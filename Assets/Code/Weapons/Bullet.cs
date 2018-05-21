@@ -24,7 +24,7 @@ public class Bullet : NetworkBehaviour {
 		if (health != null)
         {
             health.TakeDamage(damage);
-			Destroy (gameObject);
         }
+        Destroy(gameObject);
     }
 }

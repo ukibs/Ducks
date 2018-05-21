@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public enum MovementStates
 {
@@ -315,6 +316,12 @@ public class PlayerController : NetworkBehaviour {
         this.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
         //GameObject enemySkin = Instantiate(myPrefab, transform.position, transform.rotation);
         //enemySkin.transform.parent = gameObject.transform;
+        //
+        if (!SceneManager.GetActiveScene().name.Equals("SelectorOfMaps"))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     [Command]

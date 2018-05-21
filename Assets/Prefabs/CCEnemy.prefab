@@ -40,12 +40,12 @@ GameObject:
   - component: {fileID: 33628633946542180}
   - component: {fileID: 23571970261069192}
   - component: {fileID: 114635855979335562}
-  - component: {fileID: 114602674346546016}
   - component: {fileID: 114582111938288992}
   - component: {fileID: 143617926823892670}
   - component: {fileID: 114378355190273868}
+  - component: {fileID: 114791760400245882}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: CCEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,24 +426,6 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114602674346546016
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1357841904451440}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51a08c050b42eab4db76f61349f7b930, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 1
-  playerCheckRate: 2
-  weaponPrefab: {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed,
-    type: 2}
-  weaponPoint: {fileID: 4670319708686042}
-  attackDistance: 20
-  fireRate: 1
 --- !u!114 &114635855979335562
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -458,24 +440,42 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 199
-    i1: 66
-    i2: 90
-    i3: 251
-    i4: 142
-    i5: 214
-    i6: 94
-    i7: 68
-    i8: 187
-    i9: 1
-    i10: 197
-    i11: 230
-    i12: 170
-    i13: 180
-    i14: 47
-    i15: 0
+    i0: 110
+    i1: 241
+    i2: 176
+    i3: 81
+    i4: 49
+    i5: 130
+    i6: 246
+    i7: 84
+    i8: 91
+    i9: 93
+    i10: 48
+    i11: 34
+    i12: 167
+    i13: 217
+    i14: 161
+    i15: 37
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114791760400245882
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357841904451440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 620a2bacefa4295419bcc03d1350fb1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 2
+  playerCheckRate: 2
+  weaponPrefab: {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed,
+    type: 2}
+  weaponPoint: {fileID: 4670319708686042}
+  attackDistance: 5
+  fireRate: 1
 --- !u!114 &114837289414271100
 MonoBehaviour:
   m_ObjectHideFlags: 1
