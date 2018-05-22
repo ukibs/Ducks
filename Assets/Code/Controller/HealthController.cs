@@ -36,7 +36,7 @@ public class HealthController : NetworkBehaviour {
 		GUI.DrawTexture (new Rect (Screen.width * 8 / 10, Screen.height / 10, 100, 10), t, ScaleMode.StretchToFill);
 	}
 
-    public void TakeDamage(int amount)
+	public void TakeDamage(int amount, GameObject attacker)
     {
         if (!isServer)
         {
@@ -45,18 +45,29 @@ public class HealthController : NetworkBehaviour {
         else
         {
             currentHealth -= amount;
-            if(currentHealth <= 0)
+            if(currentHealth <= 0)//if you died
             {
-                if(destroyOnDeath)
+                if(destroyOnDeath)//You are a enemy
                 {
-                    Destroy(gameObject);
+					//if a player kill an enemy
+					PlayerController playerController = attacker.GetComponent<PlayerController> ();
+					if (playerController != null) {
+						playerController.Score += 10;
+					}
+					Destroy(gameObject);
                 }
-                else
+                else//You are a player
                 {
                     currentHealth = maxHealth;
                     Debug.Log("Dead!");
                     //
                     RpcRespawn();
+
+					//if a player kill another player
+					PlayerController playerController = attacker.GetComponent<PlayerController> ();
+					if (playerController != null) {
+						playerController.Score += 100;
+					}
                 }
 				player.CmdThrowItems ();
             }

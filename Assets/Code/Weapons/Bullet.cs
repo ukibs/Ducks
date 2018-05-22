@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class Bullet : NetworkBehaviour {
 
     public int damage;
+	public GameObject owner;
 
 	// Use this for initialization
 	void Start () {
@@ -23,7 +24,7 @@ public class Bullet : NetworkBehaviour {
 		var health = hit.GetComponent<HealthController>();
 		if (health != null)
         {
-            health.TakeDamage(damage);
+			health.TakeDamage(damage, owner);
         }
         Destroy(gameObject);
     }

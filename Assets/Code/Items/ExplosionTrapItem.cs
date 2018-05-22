@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ExplosionTrapItem : MonoBehaviour {
 
+	public GameObject owner;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -33,7 +35,7 @@ public class ExplosionTrapItem : MonoBehaviour {
 		{
 			var player = hit.GetComponent<HealthController> ();
 			//TO DO: change 100 to the player max life
-			player.TakeDamage (100);
+			player.TakeDamage (100, owner);
 			Destroy (gameObject);
 		}
 	}

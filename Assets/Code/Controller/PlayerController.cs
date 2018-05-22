@@ -44,6 +44,9 @@ public class PlayerController : NetworkBehaviour {
 	public Transform weaponPoint;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
+	//GUI
+	public Texture imageBullet; 
+
     // private float fireRate = 0.5f;
     // private float fireCooldown = 0.0f;
 	private MovementStates movementState = MovementStates.Walking;
@@ -75,6 +78,8 @@ public class PlayerController : NetworkBehaviour {
     // Variable de prueba
     public Door door;
 
+	private int score;
+
     #region Properties
 
     public BaseWeapon CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>(); } }
@@ -82,8 +87,15 @@ public class PlayerController : NetworkBehaviour {
         set { state = value; }
         get { return state; }
     }
+
     public VehicleController CurrentVehicle { set { currentVehicle = value; } }
 
+	public int Score
+	{
+		set{ score = value; }
+		get{ return score; }
+	}
+		
     #endregion
 
     // Use this for initialization
@@ -129,11 +141,12 @@ public class PlayerController : NetworkBehaviour {
 		if (isLocalPlayer) {
             // Weapon info
 			BaseWeapon weaponData = weapons [currentWeaponIndex].GetComponent<BaseWeapon> ();
-			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 8.8f / 10, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
+			GUI.Label (new Rect (Screen.width * 8.5f / 10, Screen.height * 9 / 10, 100, 20), imageBullet);
+			GUI.Label (new Rect (Screen.width * 8 / 10, Screen.height * 9 / 10, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
 			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 9 / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
             //
             GUI.Label(new Rect(10, 10, 350, 20), "State: " + state + ", movement state: " + movementState);
-
+			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 1 / 10, 100, 20), "Score: " + Score);
         }
     }
 
@@ -197,10 +210,9 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 
-
 	void Movement(float dt, float speed)
 	{
-        // TODO: Preguntar a Nestor que coño apsa con esto
+        // TODO: Preguntar a Nestor que coño pasa con esto
         //Debug.Log("Applying movement");
         switch (state) {
             case PlayerStates.Normal:
@@ -281,6 +293,8 @@ public class PlayerController : NetworkBehaviour {
         grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
         GameObject newGrenade = Instantiate(grenadePrefab, grenadePosition, grenadeOrientation);
         newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
+
+		newGrenade.GetComponent<Grenade> ().owner = gameObject;
 
 		NetworkServer.Spawn (newGrenade);
         //Destroy(newGrenade, 4);
@@ -382,6 +396,8 @@ public class PlayerController : NetworkBehaviour {
             CurrentWeapon.shootPoint.rotation);
 
         newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
+		newBullet.GetComponent<Bullet> ().owner = gameObject;
+
 
         NetworkServer.Spawn(newBullet);
 
@@ -413,6 +429,8 @@ public class PlayerController : NetworkBehaviour {
 		GameObject newExplosiveTrap = GameObject.Instantiate(explosiveTrap, CurrentWeapon.shootPoint.position + transform.forward*5, CurrentWeapon.shootPoint.rotation);
 
 		NetworkServer.Spawn(newExplosiveTrap);
+
+		newExplosiveTrap.GetComponent<ExplosionTrapItem> ().owner = gameObject;
 
 		//Destroy(newBullet, 4.0f);
 	}

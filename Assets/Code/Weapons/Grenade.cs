@@ -7,6 +7,7 @@ public class Grenade : NetworkBehaviour {
 
     public int damage;
     public int range;
+	public GameObject owner;
     
 
     private void OnCollisionEnter(Collision collision)
@@ -18,7 +19,7 @@ public class Grenade : NetworkBehaviour {
             if (hit.transform.tag.Equals("Player") || hit.transform.tag.Equals("Enemy"))
             {
                 var health = hit.transform.GetComponent<HealthController>();
-                health.TakeDamage(damage);
+				health.TakeDamage(damage, owner);
             }
         }
         Destroy(gameObject);
