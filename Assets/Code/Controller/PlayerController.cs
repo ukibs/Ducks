@@ -46,6 +46,7 @@ public class PlayerController : NetworkBehaviour {
 
 	//GUI
 	public Texture imageBullet; 
+	public Texture imageRecharge;
 
     // private float fireRate = 0.5f;
     // private float fireCooldown = 0.0f;
@@ -141,12 +142,17 @@ public class PlayerController : NetworkBehaviour {
 		if (isLocalPlayer) {
             // Weapon info
 			BaseWeapon weaponData = weapons [currentWeaponIndex].GetComponent<BaseWeapon> ();
-			GUI.Label (new Rect (Screen.width * 8.5f / 10, Screen.height * 9 / 10, 100, 20), imageBullet);
-			GUI.Label (new Rect (Screen.width * 8 / 10, Screen.height * 9 / 10, 100, 20), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
-			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 9 / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
-            //
-            GUI.Label(new Rect(10, 10, 350, 20), "State: " + state + ", movement state: " + movementState);
-			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 1 / 10, 100, 20), "Score: " + Score);
+			//Bullets
+			GUI.Label (new Rect (Screen.width * 7.8f / 10, Screen.height * 9f / 10, 150, 30), imageBullet);
+			GUI.Label (new Rect (Screen.width * 8.1f / 10, Screen.height * 9.1f / 10, 150, 30), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
+			//Recharge weapon
+			GUI.Label (new Rect (Screen.width * 8.5f / 10, Screen.height * 9 / 10, 150, 30), imageRecharge);
+			GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.1f / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
+            
+			GUI.Label(new Rect(10, 10, 350, 20), "State: " + state + ", movement state: " + movementState);
+
+			//Score
+			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, 100, 20), "Score: " + Score);
         }
     }
 

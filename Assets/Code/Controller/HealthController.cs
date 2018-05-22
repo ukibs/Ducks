@@ -21,6 +21,7 @@ public class HealthController : NetworkBehaviour {
 	public int Health{
 		get { return currentHealth; }
 	}
+
 	// Use this for initialization
 	void Start () {
 		spawnPoints = FindObjectsOfType<NetworkStartPosition> ();
@@ -45,13 +46,15 @@ public class HealthController : NetworkBehaviour {
         else
         {
             currentHealth -= amount;
-            if(currentHealth <= 0)//if you died
+			//if you died
+            if(currentHealth <= 0)
             {
                 if(destroyOnDeath)//You are a enemy
                 {
 					//if a player kill an enemy
 					PlayerController playerController = attacker.GetComponent<PlayerController> ();
-					if (playerController != null) {
+					if (playerController != null) 
+					{
 						playerController.Score += 10;
 					}
 					Destroy(gameObject);

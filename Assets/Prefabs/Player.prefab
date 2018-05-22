@@ -433,6 +433,8 @@ MonoBehaviour:
     type: 2}
   weaponPoint: {fileID: 4294000598380074}
   gravity: {x: 0, y: -9.81, z: 0}
+  imageBullet: {fileID: 2800000, guid: 1af78001ca461cc4bac9b84b6f7a38b0, type: 3}
+  imageRecharge: {fileID: 2800000, guid: 22eb63442db9abf498188c1f5f3ff4c7, type: 3}
   door: {fileID: 0}
 --- !u!124 &124560644315771574
 Behaviour:
