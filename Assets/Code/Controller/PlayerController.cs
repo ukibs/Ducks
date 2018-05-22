@@ -21,6 +21,7 @@ public enum PlayerStates
     InVehicleDriving,
     InVehicleTurret,
     Trapped,
+	Blind,
     Count
 }
 
@@ -45,8 +46,8 @@ public class PlayerController : NetworkBehaviour {
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
 	//GUI
-	public Texture imageBullet; 
-	public Texture imageRecharge;
+	//public Texture imageBullet; 
+	//public Texture imageRecharge;
 
     // private float fireRate = 0.5f;
     // private float fireCooldown = 0.0f;
@@ -137,7 +138,7 @@ public class PlayerController : NetworkBehaviour {
         }
 	}
 
-    private void OnGUI()
+    /*private void OnGUI()
     {
 		if (isLocalPlayer) {
             // Weapon info
@@ -154,7 +155,7 @@ public class PlayerController : NetworkBehaviour {
 			//Score
 			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, 100, 20), "Score: " + Score);
         }
-    }
+    }*/
 
     void ChangeStates()
 	{
