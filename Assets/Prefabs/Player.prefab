@@ -375,6 +375,8 @@ MonoBehaviour:
   imageBullet: {fileID: 2800000, guid: 1af78001ca461cc4bac9b84b6f7a38b0, type: 3}
   imageRecharge: {fileID: 2800000, guid: 22eb63442db9abf498188c1f5f3ff4c7, type: 3}
   black: {fileID: 2800000, guid: 80a01d0b16cf1df4bbeb77ee7c11a180, type: 3}
+  bomb: {fileID: 2800000, guid: 9d612cfd9c7af674db3365652c130f25, type: 3}
+  bombCooldown: {fileID: 2800000, guid: 3fc589cc7024ca34f802e7c1e1090f7b, type: 3}
 --- !u!114 &114297755770596800
 MonoBehaviour:
   m_ObjectHideFlags: 1

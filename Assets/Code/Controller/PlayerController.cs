@@ -20,14 +20,16 @@ public enum PlayerStates
     Normal,
     InVehicleDriving,
     InVehicleTurret,
-    Trapped,
-	Blind,
     Count
 }
 
-// TODO: Trabajar cegado
 
 public class PlayerController : NetworkBehaviour {
+	public static int throwGrenadeIndex = 0;
+	public static int throwExplosiveTrapIndex = 1;
+	public static int throwInmovilTrapIndex = 2;
+	public static int throwBlindGrenadeIndex = 3;
+	public static int blindGrenadeIndex = 4;
 
     public float movementSpeed = 5.0f;
 	public float runSpeed = 10.0f;
@@ -49,7 +51,7 @@ public class PlayerController : NetworkBehaviour {
 	//GUI
 	//public Texture imageBullet; 
 	//public Texture imageRecharge;
-
+	private float [] cooldown;
     // private float fireRate = 0.5f;
     // private float fireCooldown = 0.0f;
 	private MovementStates movementState = MovementStates.Walking;
@@ -109,24 +111,38 @@ public class PlayerController : NetworkBehaviour {
 		cam.enabled = true;
 		controller = GetComponent<CharacterController>();
         InitializeWeapons();
+		InitializeCooldowns ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// Delta time
 		float dt = Time.deltaTime;
+		if (isServer) {
+			if (stateTimer > 0) {
+				stateTimer -= dt;
+			} else if(stateTimer < 0) {
+				RpcChangeState(MovementStates.Walking);
+				movementState = MovementStates.Walking;
+				stateTimer = 0;
+			}
 
+			for (int i = 0; i < cooldown.Length; i++) 
+			{
+				if (cooldown [i] > 0) 
+				{
+					cooldown [i] -= dt;
+				} else if (cooldown [i] < 0) 
+				{
+					RpcCooldown (i, 0);
+					cooldown [i] = 0;
+				}
+			}
+		}
         if (!isLocalPlayer)
         {
             cam.enabled = false;
             gameObject.GetComponentInChildren<AudioListener>().enabled = false;
-
-			if (stateTimer > 0) {
-				stateTimer -= dt;
-			} else if(stateTimer < 0) {
-				RpcChangeState(PlayerStates.Normal);
-				stateTimer = 0;
-			}
             return;
         }
         else
@@ -138,15 +154,22 @@ public class PlayerController : NetworkBehaviour {
 			if (rKey)
 				CurrentWeapon.Reload ();
             if (tabKey) ChangeWeapon();
-			if (mouseRight) CmdThrowGrenade();
-			if (key1) CmdThrowExplosiveTrap ();
-			if (key2)
+			if (mouseRight && cooldown[throwGrenadeIndex] == 0) 
+				CmdThrowGrenade();
+			if (key1 && cooldown[throwExplosiveTrapIndex] == 0) 
+				CmdThrowExplosiveTrap ();
+			if (key2 && cooldown[throwInmovilTrapIndex] == 0)
 				CmdThrowInmovilTrap ();
-			if (key3)
+			if (key3 && cooldown[blindGrenadeIndex] == 0)
 				CmdThrowBlindGrenade ();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
         }
+	}
+
+	public float getCooldown(int i)
+	{
+		return cooldown [i];
 	}
 
     void ChangeStates()
@@ -205,21 +228,16 @@ public class PlayerController : NetworkBehaviour {
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
-		//mouseLeft = Input.GetMouseButtonDown (0);
 		mouseRight = Input.GetMouseButtonDown (1);
 	}
 
 
 	void Movement(float dt, float speed)
 	{
-        // TODO: Preguntar a Nestor que coño pasa con esto
-        //Debug.Log("Applying movement");
         switch (state) {
-			case PlayerStates.Blind:
             case PlayerStates.Normal:
 
                 //
-                //if (spaceKey) Debug.Log("Controller: " + controller.isGrounded);
                 if (controller.isGrounded && spaceKey)
                 {
                     Jump();
@@ -266,16 +284,11 @@ public class PlayerController : NetworkBehaviour {
         weapons[currentWeaponIndex].SetActive(false);
         currentWeaponIndex++;
         if (currentWeaponIndex >= weapons.Count) currentWeaponIndex = 0;
-        // InitiateWeapon();
         weapons[currentWeaponIndex].SetActive(true);
     }
 
     void InitializeWeapons()
     {
-        //Debug.Log(weapons[currentWeaponIndex]);
-        /*GameObject newWeapon = Instantiate(weapons[currentWeaponIndex].gameObject, weaponPoint);
-        newWeapon.transform.localPosition = Vector3.zero;
-        currentWeapon = newWeapon.GetComponent<BaseWeapon>();*/
         weapons = new List<GameObject>(weaponPrefabs.Count);
         for(int i = 0; i < weaponPrefabs.Count; i++)
         {
@@ -285,6 +298,15 @@ public class PlayerController : NetworkBehaviour {
             weapons.Add(newWeapon);
         }
     }
+
+	void InitializeCooldowns()
+	{
+		cooldown = new float[5];
+		for (int i = 0; i < cooldown.Length; i++) 
+		{
+			cooldown [i] = 0;
+		}
+	}
 		
 	void SimpleShoot(float dt)
 	{
@@ -325,17 +347,30 @@ public class PlayerController : NetworkBehaviour {
     }
 
 	[Command]
-	public void CmdChangeState(PlayerStates newState, int time)
+	public void CmdChangeState(MovementStates newState, int time)
 	{
-		state = newState;
+		movementState = newState;
 		stateTimer = time;
 		RpcChangeState (newState);
 	}
 
 	[ClientRpc]
-	private void RpcChangeState(PlayerStates newState)
+	private void RpcChangeState(MovementStates newState)
 	{
-		state = newState;
+		movementState = newState;
+	}
+
+	[Command]
+	public void CmdCooldown(int timer, int time)
+	{
+		cooldown [timer] = time;
+		RpcCooldown (timer, time);
+	}
+
+	[ClientRpc]
+	private void RpcCooldown(int timer, int time)
+	{
+		cooldown [timer] = time;
 	}
 
     [Command]
@@ -416,6 +451,8 @@ public class PlayerController : NetworkBehaviour {
 		newGrenade.GetComponent<Grenade> ().owner = gameObject;
 
 		NetworkServer.Spawn (newGrenade);
+
+		CmdCooldown (throwGrenadeIndex, 5);
 		//Destroy(newGrenade, 4);
 	}
 
@@ -429,6 +466,7 @@ public class PlayerController : NetworkBehaviour {
 		newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
 
 		NetworkServer.Spawn (newGrenade);
+		CmdCooldown (throwBlindGrenadeIndex, 5);
 		//Destroy(newGrenade, 4);
 	}
 
@@ -441,6 +479,7 @@ public class PlayerController : NetworkBehaviour {
 
 		newExplosiveTrap.GetComponent<ExplosionTrapItem> ().owner = gameObject;
 
+		CmdCooldown (throwExplosiveTrapIndex, 5);
 		//Destroy(newBullet, 4.0f);
 	}
 
@@ -451,16 +490,9 @@ public class PlayerController : NetworkBehaviour {
 
 		NetworkServer.Spawn(newInmovilTrap);
 
+		CmdCooldown (throwInmovilTrapIndex, 5);
 		//Destroy(newBullet, 4.0f);
 	}
-    
-    /*[Command]
-    public void CmdUseObject(BaseUsable usable)
-    {
-        usable.CmdUse();
-        //if (door != null)
-        //    door.CmdSwitchDirection();
-    }*/
 
 	public void takeWeapon(BaseWeapon weapon, int bullets)
 	{
@@ -468,11 +500,10 @@ public class PlayerController : NetworkBehaviour {
 		{
 			if (weapons [i].tag.Equals (weapon.tag)) 
 			{
-				weapons [i].GetComponent<BaseWeapon> ().addAmmo (bullets);
+				weapons [i].GetComponent<BaseWeapon> ().CmdAddAmmo (bullets);
 			}
 		}
 	}
-
 
     [ClientRpc]
     public void RpcEnterVehicle(GameObject vehicle, VehiclePlace vehiclePlace)

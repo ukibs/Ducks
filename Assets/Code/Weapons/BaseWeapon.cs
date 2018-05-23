@@ -97,7 +97,8 @@ public class BaseWeapon : NetworkBehaviour {
 		//}
     }
 
-	public void addAmmo(int amount)
+	[Command]
+	public void CmdAddAmmo(int amount)
 	{
 			Debug.Log ("Cojo munición");
 			int dif = maxWeaponAmmo - CurrentWeaponAmmo;
@@ -114,5 +115,5 @@ public class BaseWeapon : NetworkBehaviour {
 			//check that it doesn't exceed the limit
 			if (currentReserveAmmo > maxReserveAmmo)
 				currentReserveAmmo = maxReserveAmmo;
-		}
+	}
 }

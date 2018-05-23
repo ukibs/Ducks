@@ -14,7 +14,7 @@ public class BlindGrenade : NetworkBehaviour {
 			if (hit.transform.tag.Equals("Player"))
 			{
 				var player = hit.collider.gameObject;
-				player.GetComponent<PlayerController> ().CmdChangeState (PlayerStates.Blind, 3);
+				player.GetComponent<PlayerController> ().CmdCooldown (PlayerController.blindGrenadeIndex, 3);
 			}
 		}
 		Destroy(gameObject);

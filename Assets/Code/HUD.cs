@@ -8,6 +8,8 @@ public class HUD : NetworkBehaviour {
 	public Texture imageBullet; 
 	public Texture imageRecharge;
 	public Texture black;
+	public Texture bomb;
+	public Texture bombCooldown;
 
 	private PlayerController player;
 
@@ -43,8 +45,17 @@ public class HUD : NetworkBehaviour {
 			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, 100, 20), "Score: " + player.Score);
 
 			//Blind screen
-			if(player.State == PlayerStates.Blind)
+			if(player.getCooldown(4) != 0)
 				GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
+			for (int i = 0; i < 4; i++) 
+			{
+				if (player.getCooldown (i) != 0) 
+				{
+					GUI.DrawTexture (new Rect (Screen.width * i / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height * 0.75f / 10), bombCooldown, ScaleMode.StretchToFill);
+				}
+				else
+					GUI.DrawTexture (new Rect (Screen.width * i / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height * 0.75f / 10), bomb, ScaleMode.StretchToFill);
+			}
 		}
 	}
 }

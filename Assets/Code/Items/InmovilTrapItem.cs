@@ -19,7 +19,7 @@ public class InmovilTrapItem : MonoBehaviour {
 		var hit = collider.gameObject;
 		if (hit.CompareTag("Player"))
 		{
-			hit.GetComponent<PlayerController> ().CmdChangeState (PlayerStates.Trapped, 5);
+			hit.GetComponent<PlayerController> ().CmdChangeState (MovementStates.Inmovile, 5);
 			Destroy (gameObject);
 		}
 	}
