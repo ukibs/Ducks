@@ -67,9 +67,12 @@ public class HealthController : NetworkBehaviour {
                     RpcRespawn();
 
 					//if a player kill another player
-					PlayerController playerController = attacker.GetComponent<PlayerController> ();
-					if (playerController != null) {
-						playerController.Score += 100;
+					if (attacker != null) 
+					{
+						PlayerController playerController = attacker.GetComponent<PlayerController> ();
+						if (playerController != null) {
+							playerController.Score += 100;
+						}
 					}
                 }
 				player.CmdThrowItems ();

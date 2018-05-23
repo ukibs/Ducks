@@ -39,6 +39,7 @@ public class PlayerController : NetworkBehaviour {
 	public GameObject explosiveTrap;
 	public GameObject inmovilTrap;
     public GameObject bulletPrefab;
+	public GameObject blindGrenadePrefab;
     public GameObject myPrefab;
     public List<GameObject> weaponPrefabs;
     public GameObject grenadePrefab;
@@ -59,6 +60,7 @@ public class PlayerController : NetworkBehaviour {
     private int currentWeaponIndex = 0;
     private List<GameObject> weapons;
     private VehicleController currentVehicle;
+	private float stateTimer;
 
 
 	private float vAxis;
@@ -71,6 +73,7 @@ public class PlayerController : NetworkBehaviour {
     private bool eKey;
 	private bool key1;
 	private bool key2;
+	private bool key3;
 
 	private float mouseX;
 	private float mouseY;
@@ -117,6 +120,13 @@ public class PlayerController : NetworkBehaviour {
         {
             cam.enabled = false;
             gameObject.GetComponentInChildren<AudioListener>().enabled = false;
+
+			if (stateTimer > 0) {
+				stateTimer -= dt;
+			} else if(stateTimer < 0) {
+				RpcChangeState(PlayerStates.Normal);
+				stateTimer = 0;
+			}
             return;
         }
         else
@@ -132,30 +142,12 @@ public class PlayerController : NetworkBehaviour {
 			if (key1) CmdThrowExplosiveTrap ();
 			if (key2)
 				CmdThrowInmovilTrap ();
+			if (key3)
+				CmdThrowBlindGrenade ();
 			SimpleShoot (dt);
 			UpdateMovement (dt);
-            
         }
 	}
-
-    /*private void OnGUI()
-    {
-		if (isLocalPlayer) {
-            // Weapon info
-			BaseWeapon weaponData = weapons [currentWeaponIndex].GetComponent<BaseWeapon> ();
-			//Bullets
-			GUI.Label (new Rect (Screen.width * 7.8f / 10, Screen.height * 9f / 10, 150, 30), imageBullet);
-			GUI.Label (new Rect (Screen.width * 8.1f / 10, Screen.height * 9.1f / 10, 150, 30), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
-			//Recharge weapon
-			GUI.Label (new Rect (Screen.width * 8.5f / 10, Screen.height * 9 / 10, 150, 30), imageRecharge);
-			GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.1f / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
-            
-			GUI.Label(new Rect(10, 10, 350, 20), "State: " + state + ", movement state: " + movementState);
-
-			//Score
-			GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, 100, 20), "Score: " + Score);
-        }
-    }*/
 
     void ChangeStates()
 	{
@@ -209,6 +201,7 @@ public class PlayerController : NetworkBehaviour {
         eKey = Input.GetKeyDown(KeyCode.E);
 		key1 = Input.GetKeyDown(KeyCode.Alpha1);
 		key2 = Input.GetKeyDown(KeyCode.Alpha2);
+		key3 = Input.GetKeyDown (KeyCode.Alpha3);
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
@@ -222,6 +215,7 @@ public class PlayerController : NetworkBehaviour {
         // TODO: Preguntar a Nestor que coño pasa con esto
         //Debug.Log("Applying movement");
         switch (state) {
+			case PlayerStates.Blind:
             case PlayerStates.Normal:
 
                 //
@@ -291,21 +285,6 @@ public class PlayerController : NetworkBehaviour {
             weapons.Add(newWeapon);
         }
     }
-
-	[Command]
-    void CmdThrowGrenade()
-    {
-        Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
-        Quaternion grenadeOrientation = weaponPoint.rotation;
-        grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
-        GameObject newGrenade = Instantiate(grenadePrefab, grenadePosition, grenadeOrientation);
-        newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
-
-		newGrenade.GetComponent<Grenade> ().owner = gameObject;
-
-		NetworkServer.Spawn (newGrenade);
-        //Destroy(newGrenade, 4);
-    }
 		
 	void SimpleShoot(float dt)
 	{
@@ -344,6 +323,20 @@ public class PlayerController : NetworkBehaviour {
             Cursor.visible = false;
         }
     }
+
+	[Command]
+	public void CmdChangeState(PlayerStates newState, int time)
+	{
+		state = newState;
+		stateTimer = time;
+		RpcChangeState (newState);
+	}
+
+	[ClientRpc]
+	private void RpcChangeState(PlayerStates newState)
+	{
+		state = newState;
+	}
 
     [Command]
     void CmdCheckAndUse()
@@ -410,24 +403,33 @@ public class PlayerController : NetworkBehaviour {
 
         Destroy(newBullet, 4.0f);
     }
-    
-    /*[Command]
-    public void CmdUseObject(BaseUsable usable)
-    {
-        usable.CmdUse();
-        //if (door != null)
-        //    door.CmdSwitchDirection();
-    }*/
 
-	public void takeWeapon(BaseWeapon weapon, int bullets)
+	[Command]
+	void CmdThrowGrenade()
 	{
-		for (int i = 0; i < weapons.Count; i++) 
-		{
-			if (weapons [i].tag.Equals (weapon.tag)) 
-			{
-				weapons [i].GetComponent<BaseWeapon> ().addAmmo (bullets);
-			}
-		}
+		Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
+		Quaternion grenadeOrientation = weaponPoint.rotation;
+		grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
+		GameObject newGrenade = Instantiate(grenadePrefab, grenadePosition, grenadeOrientation);
+		newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
+
+		newGrenade.GetComponent<Grenade> ().owner = gameObject;
+
+		NetworkServer.Spawn (newGrenade);
+		//Destroy(newGrenade, 4);
+	}
+
+	[Command]
+	void CmdThrowBlindGrenade()
+	{
+		Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
+		Quaternion grenadeOrientation = weaponPoint.rotation;
+		grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
+		GameObject newGrenade = Instantiate(blindGrenadePrefab, grenadePosition, grenadeOrientation);
+		newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
+
+		NetworkServer.Spawn (newGrenade);
+		//Destroy(newGrenade, 4);
 	}
 
 	[Command]
@@ -451,6 +453,26 @@ public class PlayerController : NetworkBehaviour {
 
 		//Destroy(newBullet, 4.0f);
 	}
+    
+    /*[Command]
+    public void CmdUseObject(BaseUsable usable)
+    {
+        usable.CmdUse();
+        //if (door != null)
+        //    door.CmdSwitchDirection();
+    }*/
+
+	public void takeWeapon(BaseWeapon weapon, int bullets)
+	{
+		for (int i = 0; i < weapons.Count; i++) 
+		{
+			if (weapons [i].tag.Equals (weapon.tag)) 
+			{
+				weapons [i].GetComponent<BaseWeapon> ().addAmmo (bullets);
+			}
+		}
+	}
+
 
     [ClientRpc]
     public void RpcEnterVehicle(GameObject vehicle, VehiclePlace vehiclePlace)

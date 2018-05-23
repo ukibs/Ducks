@@ -12,7 +12,6 @@ public class Grenade : NetworkBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision");
         RaycastHit[] hitInfo = Physics.SphereCastAll(transform.position, range, transform.forward);
         foreach(RaycastHit hit in hitInfo)
         {

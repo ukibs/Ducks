@@ -440,6 +440,8 @@ MonoBehaviour:
     type: 2}
   bulletPrefab: {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046,
     type: 2}
+  blindGrenadePrefab: {fileID: 1992815356103152, guid: 1820945e7d06e74429a9549e8b1dcd81,
+    type: 2}
   myPrefab: {fileID: 1357841904451440, guid: c7425afb8ed65e44bb01c5e6aab42f00, type: 2}
   weaponPrefabs:
   - {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed, type: 2}
