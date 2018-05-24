@@ -63,6 +63,8 @@ public class PlayerController : NetworkBehaviour {
     private List<GameObject> weapons;
     private VehicleController currentVehicle;
 	private float stateTimer;
+    private CustomNetworkManager networkManager;
+    private int playerId;
 
 
 	private float vAxis;
@@ -113,7 +115,17 @@ public class PlayerController : NetworkBehaviour {
 		controller = GetComponent<CharacterController>();
         InitializeWeapons();
 		InitializeCooldowns ();
-	}
+        //
+        networkManager = FindObjectOfType<CustomNetworkManager>();
+        //
+        if (isServer)
+        {
+            networkManager.RegisterPlayer(gameObject);
+            playerId = networkManager.GetId();
+            //RpcChangeColor(playerId);
+            networkManager.SetColorToPlayers();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -602,4 +614,39 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
+    #region Color Functions
+
+    public Color DecideColor(int colorIndex)
+    {
+        switch (colorIndex)
+        {
+            case 0:
+                return Color.cyan;
+            case 1:
+                return Color.red;
+            case 2:
+                return Color.blue;
+            case 3:
+                return Color.green;
+            case 4:
+                return Color.yellow;
+            case 5:
+                return Color.magenta;
+            case 6:
+                return Color.white;
+            case 7:
+                return Color.grey;
+            default:
+                return Color.black;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcChangeColor(int colorIndex)
+    {
+        MeshRenderer meshRenderer = this.gameObject.GetComponent<MeshRenderer>();
+        meshRenderer.material.color = DecideColor(colorIndex);
+    }
+
+    #endregion
 }
