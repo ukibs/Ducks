@@ -168,17 +168,28 @@ public class PlayerController : NetworkBehaviour {
 				CurrentWeapon.Reload ();
 			}
 			if (cKey) {
-				cam.transform.position = camThirdPerson.position;
+				if (cam.transform.position == camFirstPerson.position) {
+					cam.transform.position = camThirdPerson.position;
+				} else {
+					cam.transform.position = camFirstPerson.position;
+				}
+
 			}
-            if (tabKey) ChangeWeapon();
-			if (mouseRight && cooldown[throwGrenadeIndex] == 0) 
-				CmdThrowGrenade();
-			if (key1 && cooldown[throwExplosiveTrapIndex] == 0) 
+			if (tabKey) {
+				ChangeWeapon ();
+			}
+			if (mouseRight && cooldown [throwGrenadeIndex] == 0) { 
+				CmdThrowGrenade ();
+			}
+			if (key1 && cooldown [throwExplosiveTrapIndex] == 0) {
 				CmdThrowExplosiveTrap ();
-			if (key2 && cooldown[throwInmovilTrapIndex] == 0)
+			}
+			if (key2 && cooldown [throwInmovilTrapIndex] == 0) {
 				CmdThrowInmovilTrap ();
-			if (key3 && cooldown[blindGrenadeIndex] == 0)
+			}
+			if (key3 && cooldown [blindGrenadeIndex] == 0) {
 				CmdThrowBlindGrenade ();
+			}
 			SimpleShoot (dt);
 			UpdateMovement (dt);
         }
