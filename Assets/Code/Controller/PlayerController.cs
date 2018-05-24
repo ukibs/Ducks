@@ -31,6 +31,7 @@ public class PlayerController : NetworkBehaviour {
 	public static int throwBlindGrenadeIndex = 3;
 	public static int blindGrenadeIndex = 4;
 
+	public float slowerSpeed = 0.0f;
     public float movementSpeed = 5.0f;
 	public float runSpeed = 10.0f;
 	public float crouchSpeed = 3.0f;
@@ -48,17 +49,11 @@ public class PlayerController : NetworkBehaviour {
 	public Transform weaponPoint;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 
-	//GUI
-	//public Texture imageBullet; 
-	//public Texture imageRecharge;
 	private float [] cooldown;
-    // private float fireRate = 0.5f;
-    // private float fireCooldown = 0.0f;
 	private MovementStates movementState = MovementStates.Walking;
 	private PlayerStates state = PlayerStates.Normal;
 	private CharacterController controller;
 	private float verticalSpeed = 0.0f;
-    // private BaseWeapon currentWeapon = null;
     private int currentWeaponIndex = 0;
     private List<GameObject> weapons;
     private VehicleController currentVehicle;
@@ -234,7 +229,8 @@ public class PlayerController : NetworkBehaviour {
 
 	void Movement(float dt, float speed)
 	{
-        switch (state) {
+        switch (state) 
+		{
             case PlayerStates.Normal:
 
                 //
@@ -244,8 +240,8 @@ public class PlayerController : NetworkBehaviour {
                 }
                 
                 //
-                Vector3 rightMovement = transform.right * hAxis * speed;
-                Vector3 forwardMovement = transform.forward * vAxis * speed;
+				Vector3 rightMovement = transform.right * hAxis * (speed - slowerSpeed);
+				Vector3 forwardMovement = transform.forward * vAxis * (speed - slowerSpeed);
                 Vector3 yMovement = transform.up * verticalSpeed;
                 controller.Move((rightMovement + forwardMovement + yMovement) * dt);
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
@@ -371,6 +367,19 @@ public class PlayerController : NetworkBehaviour {
 	private void RpcCooldown(int timer, int time)
 	{
 		cooldown [timer] = time;
+	}
+
+	[Command]
+	public void CmdSlower(float amount)
+	{
+		slowerSpeed = amount;
+		RpcSlower (amount);
+	}
+
+	[ClientRpc]
+	private void RpcSlower(float amount)
+	{
+		slowerSpeed = amount;
 	}
 
     [Command]

@@ -97,9 +97,12 @@ public class BaseWeapon : NetworkBehaviour {
 		//}
     }
 
-	[Command]
+	//[Command]
 	public void CmdAddAmmo(int amount)
 	{
+		if (!isServer) {
+			return;
+		} else {
 			Debug.Log ("Cojo munición");
 			int dif = maxWeaponAmmo - CurrentWeaponAmmo;
 			if (dif >= amount) {
@@ -115,5 +118,6 @@ public class BaseWeapon : NetworkBehaviour {
 			//check that it doesn't exceed the limit
 			if (currentReserveAmmo > maxReserveAmmo)
 				currentReserveAmmo = maxReserveAmmo;
+		}
 	}
 }
