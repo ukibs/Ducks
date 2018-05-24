@@ -11,6 +11,7 @@ public class HUD : NetworkBehaviour {
 	public Texture black;
 	public Texture bomb;
 	public Texture bombCooldown;
+	public Texture backgroundHud;
 
 	private PlayerController player;
 	private Scene currentScene;
@@ -36,12 +37,14 @@ public class HUD : NetworkBehaviour {
 			if (isLocalPlayer) {
 				// Weapon info
 				BaseWeapon weaponData = player.CurrentWeapon;
+				//Background
+				GUI.Label (new Rect (0, Screen.height * 8.9f / 10 , Screen.width * 100, Screen.width*1), backgroundHud);
 				//Bullets
-				GUI.Label (new Rect (Screen.width * 7.8f / 10, Screen.height * 9f / 10, 150, 30), imageBullet);
-				GUI.Label (new Rect (Screen.width * 8.1f / 10, Screen.height * 9.1f / 10, 150, 30), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
+				GUI.Label (new Rect (Screen.width * 7.1f / 10, Screen.height * 9.2f / 10, 150, 30), imageBullet);
+				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, 150, 30), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
 				//Recharge weapon
-				GUI.Label (new Rect (Screen.width * 8.5f / 10, Screen.height * 9 / 10, 150, 30), imageRecharge);
-				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.1f / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
+				GUI.Label (new Rect (Screen.width * 8.3f / 10, Screen.height * 9.2f / 10, 150, 30), imageRecharge);
+				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);
 
 				//GUI.Label(new Rect(10, 10, 350, 20), "State: " + player.State + ", movement state: " + player.);
 
@@ -56,10 +59,10 @@ public class HUD : NetworkBehaviour {
 				{
 					if (player.getCooldown (i) != 0) 
 					{
-						GUI.DrawTexture (new Rect (Screen.width * i / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height * 0.75f / 10), bombCooldown, ScaleMode.StretchToFill);
+						GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
 					}
 					else
-						GUI.DrawTexture (new Rect (Screen.width * i / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height * 0.75f / 10), bomb, ScaleMode.StretchToFill);
+						GUI.DrawTexture (new Rect (Screen.width * i * 0.5f/ 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
 				}
 			}
 		

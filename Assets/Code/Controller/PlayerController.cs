@@ -37,7 +37,12 @@ public class PlayerController : NetworkBehaviour {
 	public float crouchSpeed = 3.0f;
 	public float jumpForce = 13.0f;
 
+	//Camera
     public Camera cam;
+	public Transform camFirstPerson;
+	public Transform camThirdPerson;
+
+
 	public GameObject lifePrefab;
 	public GameObject explosiveTrap;
 	public GameObject inmovilTrap;
@@ -68,6 +73,7 @@ public class PlayerController : NetworkBehaviour {
     private bool tabKey;
 	private bool rKey;
     private bool eKey;
+	private bool cKey;
 	private bool key1;
 	private bool key2;
 	private bool key3;
@@ -146,8 +152,12 @@ public class PlayerController : NetworkBehaviour {
 			ChangeStates ();
 			ApplyGravity (dt);
 			
-			if (rKey)
+			if (rKey) {
 				CurrentWeapon.Reload ();
+			}
+			if (cKey) {
+				cam.transform.position = camThirdPerson.position;
+			}
             if (tabKey) ChangeWeapon();
 			if (mouseRight && cooldown[throwGrenadeIndex] == 0) 
 				CmdThrowGrenade();
@@ -217,6 +227,7 @@ public class PlayerController : NetworkBehaviour {
         tabKey = Input.GetKeyDown(KeyCode.Tab);
 		rKey = Input.GetKeyDown (KeyCode.R);
         eKey = Input.GetKeyDown(KeyCode.E);
+		cKey = Input.GetKeyDown (KeyCode.C);
 		key1 = Input.GetKeyDown(KeyCode.Alpha1);
 		key2 = Input.GetKeyDown(KeyCode.Alpha2);
 		key3 = Input.GetKeyDown (KeyCode.Alpha3);
