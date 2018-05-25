@@ -12,12 +12,16 @@ public class HUD : NetworkBehaviour {
 	public Texture bomb;
 	public Texture bombCooldown;
 	public Texture backgroundHud;
+	public Texture totalLife;
+	public Texture currentLife;
 
 	private PlayerController player;
+	private HealthController life;
 	private Scene currentScene;
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<PlayerController> ();
+		life = GetComponent<HealthController> ();
 	}
 	
 	// Update is called once per frame
@@ -64,6 +68,10 @@ public class HUD : NetworkBehaviour {
 					else
 						GUI.DrawTexture (new Rect (Screen.width * i * 0.5f/ 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
 				}
+
+				//Life
+				GUI.DrawTexture(new Rect(Screen.width *3.5f/10, Screen.height*9.1f/10, Screen.width*3/10, Screen.height*0.8f/10), totalLife, ScaleMode.StretchToFill);
+				GUI.DrawTexture(new Rect(Screen.width *3.5f/10, Screen.height*9.1f/10, life.Health/100f * (Screen.width*3/10), Screen.height*0.8f/10), currentLife, ScaleMode.StretchToFill);
 			}
 		
 		}

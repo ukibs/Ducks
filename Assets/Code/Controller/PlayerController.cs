@@ -366,8 +366,6 @@ public class PlayerController : NetworkBehaviour {
     {
         base.OnStartLocalPlayer();
         this.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
-        //GameObject enemySkin = Instantiate(myPrefab, transform.position, transform.rotation);
-        //enemySkin.transform.parent = gameObject.transform;
         //
         if (!SceneManager.GetActiveScene().name.Equals("SelectorOfMaps"))
         {
@@ -447,6 +445,8 @@ public class PlayerController : NetworkBehaviour {
             }
         }
     }
+
+	#region Commands Throw
 
 	[Command]
 	public void CmdThrowItems()
@@ -537,16 +537,26 @@ public class PlayerController : NetworkBehaviour {
 		//Destroy(newBullet, 4.0f);
 	}
 
-	public void takeWeapon(BaseWeapon weapon, int bullets)
+	#endregion
+
+	public void CmdTakeWeapon(BaseWeapon weapon, int bullets)
 	{
-		for (int i = 0; i < weapons.Count; i++) 
+		if (isLocalPlayer) 
 		{
-			if (weapons [i].tag.Equals (weapon.tag)) 
-			{
-				weapons [i].GetComponent<BaseWeapon> ().CmdAddAmmo (bullets);
+			return;
+		} 
+		else 
+		{
+			Debug.Log ("Busco arma");
+			for (int i = 0; i < weapons.Count; i++) {
+				if (weapons [i].name.Equals (weapon.name)) {
+					weapons [i].GetComponent<BaseWeapon> ().CmdAddAmmo (bullets);
+				}
 			}
 		}
 	}
+
+	#region Vehicle Functions
 
     [ClientRpc]
     public void RpcEnterVehicle(GameObject vehicle, VehiclePlace vehiclePlace)
@@ -624,6 +634,8 @@ public class PlayerController : NetworkBehaviour {
             currentVehicle.CmdQuitVehicle(gameObject);
         }
     }
+
+	#endregion
 
     #region Color Functions
 

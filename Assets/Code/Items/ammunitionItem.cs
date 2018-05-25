@@ -17,33 +17,14 @@ public class AmmunitionItem : MonoBehaviour {
 	public int Bullets {
 		set { amountBullets = value; }
 	}
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	/*private void OnCollisionEnter(Collision collision)
-	{
-		var hit = collision.gameObject;
-		Debug.Log ("Estoy: " + isItem);
-		if (hit.CompareTag("Player") && isItem)
-		{
-			Debug.Log ("Cojo municion");
-			hit.GetComponent<PlayerController> ().takeWeapon ( this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
-			Destroy (this.gameObject);
-		}
-	}*/
 
     private void OnTriggerEnter(Collider collider)
     {
         var hit = collider.gameObject;
         if (hit.CompareTag("Player") && isItem)
         {
-			hit.GetComponent<PlayerController>().takeWeapon(this.gameObject.GetComponent<BaseWeapon>(), amountBullets);
+			Debug.Log ("Toco munición");
+			hit.GetComponent<PlayerController>().CmdTakeWeapon(gameObject.GetComponent<BaseWeapon>(), amountBullets);
             Destroy(gameObject);
         }
     }

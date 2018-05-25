@@ -32,9 +32,12 @@ public class LifeItem : MonoBehaviour {
    {
         var hit = collider.gameObject;
 		var health = hit.GetComponent<HealthController>();
-		if (hit.CompareTag("Player") && health.Health != 100)
+		if (hit.CompareTag("Player"))
         {
-            health.receiveLife(5);
+			if(health.Health != 100)
+			{
+            	health.receiveLife(5);
+			}
             Destroy(gameObject);
         }
     }
