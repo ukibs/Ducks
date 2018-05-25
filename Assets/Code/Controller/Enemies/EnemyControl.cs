@@ -22,6 +22,8 @@ public class EnemyControl : NetworkBehaviour {
     protected Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
     protected GameObject weapon;
     protected BaseWeapon weaponClass;
+    protected WeaponController weaponController;
+    private float fireCounter;
 
 	// Use this for initialization
 	protected virtual void Start () {
@@ -33,6 +35,7 @@ public class EnemyControl : NetworkBehaviour {
         //
         weapon = Instantiate(weaponPrefab, weaponPoint);
         weaponClass = weapon.GetComponent<BaseWeapon>();
+        weaponController = GetComponent<WeaponController>();
     }
 
     // Update is called once per frame
@@ -53,10 +56,13 @@ public class EnemyControl : NetworkBehaviour {
             else
             {
                 // Shooting stuff
-                weaponClass = weapon.GetComponent<BaseWeapon>();
-                if (weaponClass.AiOrderFire())
+                //weaponClass = weapon.GetComponent<WeaponController>();
+                fireCounter += dt;
+                if (fireCounter >= fireRate)
                 {
                     CmdFire();
+                    weaponController.wasteBullet();
+                    fireCounter -= fireRate;
                 }
             }
         }

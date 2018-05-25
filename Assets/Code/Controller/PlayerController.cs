@@ -586,6 +586,7 @@ public class PlayerController : NetworkBehaviour {
         //
         currentVehicle = vehicleController;
         transform.SetParent(vehicle.transform);
+        GetComponent<CharacterController>().detectCollisions = false;
         // NetworkIdentity playerIdentity = player.GetComponent<NetworkIdentity>();
         // playerIdentity.localPlayerAuthority = false;
         //
