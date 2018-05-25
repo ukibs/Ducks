@@ -170,7 +170,7 @@ public class PlayerController : NetworkBehaviour {
 			ApplyGravity (dt);
 			
 			if (rKey) {
-				CurrentWeapon.Reload ();
+				weaponController.CmdReload ();
 			}
 			if (cKey) {
 				if (cam.transform.position == camFirstPerson.position) {
@@ -197,7 +197,7 @@ public class PlayerController : NetworkBehaviour {
 			if (key3 && cooldown [blindGrenadeIndex] == 0) {
 				CmdThrowBlindGrenade ();
 			}
-			//SimpleShoot (dt);
+
 			UpdateMovement (dt);
         }
 	}
@@ -316,7 +316,7 @@ public class PlayerController : NetworkBehaviour {
                 break;
         }
 	}
-
+		
     void ChangeWeapon()
     {
         weapons[currentWeaponIndex].SetActive(false);
@@ -324,8 +324,14 @@ public class PlayerController : NetworkBehaviour {
         if (currentWeaponIndex >= weapons.Count) currentWeaponIndex = 0;
         weapons[currentWeaponIndex].SetActive(true);
 
-		weaponController.special = !weaponController.special;
+		CmdChange ();
     }
+
+	[Command]
+	void CmdChange()
+	{
+		weaponController.special = !weaponController.special;
+	}
 
     void InitializeWeapons()
     {
