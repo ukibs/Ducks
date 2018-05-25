@@ -7,7 +7,6 @@ public class HealthController : NetworkBehaviour {
 
     public const int maxHealth = 100;
     public bool destroyOnDeath;
-	public Texture t;
 
     [SyncVar(hook = "OnChangeHealth")]
     private int currentHealth = maxHealth;
@@ -30,11 +29,6 @@ public class HealthController : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {		
-	}
-
-	private void OnGUI()
-	{
-		GUI.DrawTexture (new Rect (Screen.width * 8 / 10, Screen.height / 10, 100, 10), t, ScaleMode.StretchToFill);
 	}
 
 	public void TakeDamage(int amount, GameObject attacker)
