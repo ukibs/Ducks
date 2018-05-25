@@ -25,24 +25,32 @@ public enum PlayerStates
 
 
 public class PlayerController : NetworkBehaviour {
+	#region Index
 	public static int throwGrenadeIndex = 0;
 	public static int throwExplosiveTrapIndex = 1;
 	public static int throwInmovilTrapIndex = 2;
 	public static int throwBlindGrenadeIndex = 3;
 	public static int blindGrenadeIndex = 4;
+	public static int throwBulletIndex = 5;
+	#endregion
 
+	#region Movement Attributes
 	public float slowerSpeed = 0.0f;
     public float movementSpeed = 5.0f;
 	public float runSpeed = 10.0f;
 	public float crouchSpeed = 3.0f;
 	public float jumpForce = 13.0f;
+	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
+	private float verticalSpeed = 0.0f;
+	#endregion
 
-	//Camera
+	#region Camera Attributes
     public Camera cam;
 	public Transform camFirstPerson;
 	public Transform camThirdPerson;
+	#endregion
 
-
+	#region Prefabs
 	public GameObject lifePrefab;
 	public GameObject explosiveTrap;
 	public GameObject inmovilTrap;
@@ -51,23 +59,28 @@ public class PlayerController : NetworkBehaviour {
     public GameObject myPrefab;
     public List<GameObject> weaponPrefabs;
     public GameObject grenadePrefab;
+	#endregion
+
 	public Transform weaponPoint;
-	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
+    public GameObject body;
 
 	private float [] cooldown;
 	private MovementStates movementState = MovementStates.Walking;
 	private PlayerStates state = PlayerStates.Normal;
-	private CharacterController controller;
-	private WeaponController weaponController;
-	private float verticalSpeed = 0.0f;
+
     private int currentWeaponIndex = 0;
     private List<GameObject> weapons;
-    private VehicleController currentVehicle;
 	private float stateTimer;
-    private CustomNetworkManager networkManager;
-    private int playerId;
 
+	#region Controllers
+	private CustomNetworkManager networkManager;
+	private int playerId;
+	private VehicleController currentVehicle;
+	private CharacterController controller;
+	private WeaponController weaponController;
+	#endregion
 
+	#region Input Attributes
 	private float vAxis;
 	private float hAxis;
 	private bool shiftKey;
@@ -85,6 +98,7 @@ public class PlayerController : NetworkBehaviour {
 	private float mouseY;
 	private bool mouseLeft;
 	private bool mouseRight;
+	#endregion
 
     // Variable de prueba
     public Door door;
@@ -113,6 +127,18 @@ public class PlayerController : NetworkBehaviour {
 		
     #endregion
 
+	public override void OnStartLocalPlayer()
+	{
+		base.OnStartLocalPlayer();
+		//this.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
+		//
+		if (!SceneManager.GetActiveScene().name.Equals("SelectorOfMaps"))
+		{
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+		}
+	}
+
     // Use this for initialization
     void Start () {
 		cam = GetComponentInChildren<Camera> ();
@@ -137,25 +163,8 @@ public class PlayerController : NetworkBehaviour {
 		// Delta time
 		float dt = Time.deltaTime;
 		if (isServer) {
-			if (stateTimer > 0) {
-				stateTimer -= dt;
-			} else if(stateTimer < 0) {
-				RpcChangeState(MovementStates.Walking);
-				movementState = MovementStates.Walking;
-				stateTimer = 0;
-			}
-
-			for (int i = 0; i < cooldown.Length; i++) 
-			{
-				if (cooldown [i] > 0) 
-				{
-					cooldown [i] -= dt;
-				} else if (cooldown [i] < 0) 
-				{
-					RpcCooldown (i, 0);
-					cooldown [i] = 0;
-				}
-			}
+			updateInmovil (dt);
+			updateCooldown(dt);
 		}
         if (!isLocalPlayer)
         {
@@ -168,60 +177,75 @@ public class PlayerController : NetworkBehaviour {
 			UpdateInput ();
 			ChangeStates ();
 			ApplyGravity (dt);
-			
-			if (rKey) {
-				weaponController.CmdReload ();
-			}
-			if (cKey) {
-				if (cam.transform.position == camFirstPerson.position) {
-					cam.transform.position = camThirdPerson.position;
-				} else {
-					cam.transform.position = camFirstPerson.position;
-				}
-
-			}
-			if (tabKey) {
-				ChangeWeapon ();
-			}
-			if (mouseLeft)
-				SimpleShoot (dt);
-			if (mouseRight && cooldown [throwGrenadeIndex] == 0) { 
-				CmdThrowGrenade ();
-			}
-			if (key1 && cooldown [throwExplosiveTrapIndex] == 0) {
-				CmdThrowExplosiveTrap ();
-			}
-			if (key2 && cooldown [throwInmovilTrapIndex] == 0) {
-				CmdThrowInmovilTrap ();
-			}
-			if (key3 && cooldown [blindGrenadeIndex] == 0) {
-				CmdThrowBlindGrenade ();
-			}
-
+			checkInputs ();
 			UpdateMovement (dt);
         }
 	}
 
-	void OnTriggerStay(Collider other){
-		// Chequeo adicional específico para el ascensor
-		Elevator ele= other.gameObject.GetComponent<Elevator>();
-		if (ele != null) {
-			transform.position += ele.PositionOffset;
+	#region Input Functions
+	void UpdateInput()
+	{
+		vAxis = Input.GetAxis("Vertical");
+		hAxis = Input.GetAxis("Horizontal");
+		shiftKey = Input.GetKeyDown (KeyCode.LeftShift);
+		ctrlKey = Input.GetKeyDown (KeyCode.LeftControl);
+		spaceKey = Input.GetKeyDown (KeyCode.Space);
+        tabKey = Input.GetKeyDown(KeyCode.Tab);
+		rKey = Input.GetKeyDown (KeyCode.R);
+        eKey = Input.GetKeyDown(KeyCode.E);
+		cKey = Input.GetKeyDown (KeyCode.C);
+		key1 = Input.GetKeyDown(KeyCode.Alpha1);
+		key2 = Input.GetKeyDown(KeyCode.Alpha2);
+		key3 = Input.GetKeyDown (KeyCode.Alpha3);
+
+		mouseX = Input.GetAxis ("Mouse X");
+		mouseY = Input.GetAxis ("Mouse Y");
+		mouseLeft = Input.GetMouseButtonDown (0);
+		mouseRight = Input.GetMouseButtonDown (1);
+	}
+
+	void checkInputs()
+	{
+		if (rKey) {
+			weaponController.CmdReload ();
+		}
+		if (cKey) {
+			if (cam.transform.position == camFirstPerson.position) {
+				cam.transform.position = camThirdPerson.position;
+			} else {
+				cam.transform.position = camFirstPerson.position;
+			}
+
+		}
+		if (tabKey) {
+			ChangeWeapon ();
+		}
+		if (mouseLeft && cooldown [throwBulletIndex] == 0) {
+			CmdFire ();
+		}
+		if (mouseRight && cooldown [throwGrenadeIndex] == 0) { 
+			CmdThrowGrenade ();
+		}
+		if (key1 && cooldown [throwExplosiveTrapIndex] == 0) {
+			CmdThrowExplosiveTrap ();
+		}
+		if (key2 && cooldown [throwInmovilTrapIndex] == 0) {
+			CmdThrowInmovilTrap ();
+		}
+		if (key3 && cooldown [blindGrenadeIndex] == 0) {
+			CmdThrowBlindGrenade ();
 		}
 	}
+	#endregion
 
-	public float getCooldown(int i)
-	{
-		return cooldown [i];
-	}
-
-    void ChangeStates()
+	#region Movement Functions
+	void ChangeStates()
 	{
 		if (shiftKey){
 			if(movementState == MovementStates.Walking) {
-			movementState = MovementStates.Running;
+				movementState = MovementStates.Running;
 			} else
-			movementState = MovementStates.Walking;
+				movementState = MovementStates.Walking;
 		}
 
 		if (ctrlKey) {
@@ -230,7 +254,7 @@ public class PlayerController : NetworkBehaviour {
 			} else
 				movementState = MovementStates.Walking;
 		}
-			
+
 	}
 
 	void UpdateMovement(float dt)
@@ -254,28 +278,6 @@ public class PlayerController : NetworkBehaviour {
 			break;
 		}
 	}
-
-	void UpdateInput()
-	{
-		vAxis = Input.GetAxis("Vertical");
-		hAxis = Input.GetAxis("Horizontal");
-		shiftKey = Input.GetKeyDown (KeyCode.LeftShift);
-		ctrlKey = Input.GetKeyDown (KeyCode.LeftControl);
-		spaceKey = Input.GetKeyDown (KeyCode.Space);
-        tabKey = Input.GetKeyDown(KeyCode.Tab);
-		rKey = Input.GetKeyDown (KeyCode.R);
-        eKey = Input.GetKeyDown(KeyCode.E);
-		cKey = Input.GetKeyDown (KeyCode.C);
-		key1 = Input.GetKeyDown(KeyCode.Alpha1);
-		key2 = Input.GetKeyDown(KeyCode.Alpha2);
-		key3 = Input.GetKeyDown (KeyCode.Alpha3);
-
-		mouseX = Input.GetAxis ("Mouse X");
-		mouseY = Input.GetAxis ("Mouse Y");
-		mouseLeft = Input.GetMouseButtonDown (0);
-		mouseRight = Input.GetMouseButtonDown (1);
-	}
-
 
 	void Movement(float dt, float speed)
 	{
@@ -324,6 +326,23 @@ public class PlayerController : NetworkBehaviour {
                 break;
         }
 	}
+
+	void ApplyGravity(float dt)
+	{
+		if (state == PlayerStates.Normal)
+		{
+			if (controller.isGrounded)
+				verticalSpeed = 0.0f;
+			else
+				verticalSpeed += gravity.y * dt;
+		}
+	}
+
+	void Jump()
+	{
+		verticalSpeed = jumpForce;
+	}
+	#endregion
 		
     void ChangeWeapon()
     {
@@ -355,49 +374,56 @@ public class PlayerController : NetworkBehaviour {
 
 	void InitializeCooldowns()
 	{
-		cooldown = new float[5];
+		cooldown = new float[6];
 		for (int i = 0; i < cooldown.Length; i++) 
 		{
 			cooldown [i] = 0;
 		}
 	}
-		
-	void SimpleShoot(float dt)
-	{
-        if (state == PlayerStates.Normal || state == PlayerStates.InVehicleTurret)
-        {
-           	CmdFire();
-			//weaponController.wasteBullet ();
-        }
-    }
 
-	void ApplyGravity(float dt)
+	[Command]
+	void CmdCheckAndUse()
 	{
-        if (state == PlayerStates.Normal)
-        {
-            if (controller.isGrounded)
-                verticalSpeed = 0.0f;
-            else
-                verticalSpeed += gravity.y * dt;
-        }
+		//Debug.Log("Checking with ray");
+		RaycastHit hit;
+		if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.0f))
+		{
+
+			//Debug.Log("Checking object to use: " + hit.transform.name);
+			BaseUsable usable = hit.transform.GetComponent<BaseUsable>();
+			if (usable != null)
+			{
+				//TODO: Preguntar a Nestor sobre esto
+
+				//usable.CmdUse();
+				usable.SendMessage("CmdUse");
+				//hit.transform.SendMessage("CmdUse");
+				//CmdUseObject(usable);
+				Debug.Log("Using object " + usable);
+				//return;
+			}
+
+			VehicleController vehicleController = hit.transform.GetComponent<VehicleController>();
+			//Debug.Log("Is it a vehicle? " + vehicleController != null);
+			if (vehicleController != null)
+			{
+
+				vehicleController.CmdUse(gameObject);
+			}
+		}
 	}
 
-	void Jump()
+	#region Punishments
+	private void updateInmovil(float dt)
 	{
-		verticalSpeed = jumpForce;
+		if (stateTimer > 0) {
+			stateTimer -= dt;
+		} else if(stateTimer < 0) {
+			RpcChangeState(MovementStates.Walking);
+			movementState = MovementStates.Walking;
+			stateTimer = 0;
+		}
 	}
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-        this.gameObject.GetComponent<MeshRenderer>().material.color = Color.cyan;
-        //
-        if (!SceneManager.GetActiveScene().name.Equals("SelectorOfMaps"))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-    }
 
 	[Command]
 	public void CmdChangeState(MovementStates newState, int time)
@@ -411,6 +437,25 @@ public class PlayerController : NetworkBehaviour {
 	private void RpcChangeState(MovementStates newState)
 	{
 		movementState = newState;
+	}
+
+	private void updateCooldown(float dt)
+	{
+		for (int i = 0; i < cooldown.Length; i++) 
+		{
+			if (cooldown [i] > 0) 
+			{
+				cooldown [i] -= dt;
+			} else if (cooldown [i] < 0) 
+			{
+				RpcCooldown (i, 0);
+				cooldown [i] = 0;
+			}
+		}
+	}
+	public float getCooldown(int i)
+	{
+		return cooldown [i];
 	}
 
 	[Command]
@@ -438,73 +483,42 @@ public class PlayerController : NetworkBehaviour {
 	{
 		slowerSpeed = amount;
 	}
-
-    [Command]
-    void CmdCheckAndUse()
-    {
-        //Debug.Log("Checking with ray");
-        RaycastHit hit;
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.0f))
-        {
-
-            //Debug.Log("Checking object to use: " + hit.transform.name);
-            BaseUsable usable = hit.transform.GetComponent<BaseUsable>();
-            if (usable != null)
-            {
-                //TODO: Preguntar a Nestor sobre esto
-
-                //usable.CmdUse();
-                usable.SendMessage("CmdUse");
-                //hit.transform.SendMessage("CmdUse");
-                //CmdUseObject(usable);
-                Debug.Log("Using object " + usable);
-                //return;
-            }
-
-            VehicleController vehicleController = hit.transform.GetComponent<VehicleController>();
-            //Debug.Log("Is it a vehicle? " + vehicleController != null);
-            if (vehicleController != null)
-            {
-                
-                vehicleController.CmdUse(gameObject);
-            }
-        }
-    }
+	#endregion
 
 	#region Commands Throw
-
 	[Command]
 	public void CmdThrowItems()
 	{
 		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 		GameObject ammunitionItem = GameObject.Instantiate(weaponPrefabs[currentWeaponIndex], CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
 
-        //ammunitionItem.GetComponent<ammunitionItem> ().Bullets = CurrentWeapon.CurrentWeaponAmmo;
         AmmunitionItem ammo = ammunitionItem.GetComponent<AmmunitionItem> ();
 		ammo.IsItem = true;
 		ammo.Bullets = CurrentWeapon.CurrentWeaponAmmo;
 
-		//Debug.Log(ammo.IsItem);
 		NetworkServer.Spawn(itemLife);
 		NetworkServer.Spawn (ammunitionItem);
+
+		Destroy (itemLife, Constants.lifeTimeDestroy);
+		Destroy (ammunitionItem, Constants.weaponTimeDestroy);
 	}
 
     [Command]
     void CmdFire()
     {
-        //Debug.Log("Shootpoint: " + currentWeapon.shootPoint.position + ", " + currentWeapon.shootPoint.rotation);
+		if (state == PlayerStates.Normal || state == PlayerStates.InVehicleTurret) 
+		{
+			if (weaponController.CurrentAmmo > 0) {
+				GameObject newBullet = GameObject.Instantiate (bulletPrefab, CurrentWeapon.shootPoint.position, CurrentWeapon.shootPoint.rotation);
+				newBullet.GetComponent<Rigidbody> ().velocity = newBullet.transform.forward * 10f;
+				newBullet.GetComponent<Bullet> ().owner = gameObject;
 
-		GameObject newBullet = GameObject.Instantiate(bulletPrefab, 
-            CurrentWeapon.shootPoint.position, 
-            CurrentWeapon.shootPoint.rotation);
-
-        newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
-		newBullet.GetComponent<Bullet> ().owner = gameObject;
-
-		weaponController.wasteBullet ();
-        NetworkServer.Spawn(newBullet);
-
-        Destroy(newBullet, 4.0f);
+				weaponController.wasteBullet ();
+				NetworkServer.Spawn (newBullet);
+				CmdCooldown (throwBulletIndex, Constants.bulletCooldown);
+				Destroy (newBullet, Constants.bulletTimeDestroy);
+			}
+		}
     }
 
 	[Command]
@@ -520,8 +534,8 @@ public class PlayerController : NetworkBehaviour {
 
 		NetworkServer.Spawn (newGrenade);
 
-		CmdCooldown (throwGrenadeIndex, 5);
-		//Destroy(newGrenade, 4);
+		CmdCooldown (throwGrenadeIndex, Constants.grenadeCooldown);
+		Destroy(newGrenade, Constants.grenadeTimeDestroy);
 	}
 
 	[Command]
@@ -534,10 +548,10 @@ public class PlayerController : NetworkBehaviour {
 		newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
 
 		NetworkServer.Spawn (newGrenade);
-		CmdCooldown (throwBlindGrenadeIndex, 5);
-		//Destroy(newGrenade, 4);
+		CmdCooldown (throwBlindGrenadeIndex, Constants.blindGrenadeCooldown);
+		Destroy(newGrenade, Constants.blindGrenadeDuration);
 	}
-
+		
 	[Command]
 	void CmdThrowExplosiveTrap()
 	{
@@ -548,7 +562,7 @@ public class PlayerController : NetworkBehaviour {
 		newExplosiveTrap.GetComponent<ExplosionTrapItem> ().owner = gameObject;
 
 		CmdCooldown (throwExplosiveTrapIndex, 5);
-		//Destroy(newBullet, 4.0f);
+		Destroy(newExplosiveTrap, Constants.trampExplosiveTimeDestroy);
 	}
 
 	[Command]
@@ -558,14 +572,26 @@ public class PlayerController : NetworkBehaviour {
 
 		NetworkServer.Spawn(newInmovilTrap);
 
-		CmdCooldown (throwInmovilTrapIndex, 5);
-		//Destroy(newBullet, 4.0f);
+		CmdCooldown (throwInmovilTrapIndex, Constants.trampInmovilCooldown);
+		Destroy(newInmovilTrap, Constants.trampInmovilTimeDestroy);
+	}
+
+	#endregion
+
+	#region Elevator
+
+	void OnTriggerStay(Collider other)
+	{
+		// Chequeo adicional específico para el ascensor
+		Elevator ele= other.gameObject.GetComponent<Elevator>();
+		if (ele != null) {
+			transform.position += ele.PositionOffset;
+		}
 	}
 
 	#endregion
 
 	#region Vehicle Functions
-
     [ClientRpc]
     public void RpcEnterVehicle(GameObject vehicle, VehiclePlace vehiclePlace)
     {
@@ -643,11 +669,9 @@ public class PlayerController : NetworkBehaviour {
             currentVehicle.CmdQuitVehicle(gameObject);
         }
     }
-
 	#endregion
 
     #region Color Functions
-
     public Color DecideColor(int colorIndex)
     {
         switch (colorIndex)
@@ -676,9 +700,8 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     public void RpcChangeColor(int colorIndex)
     {
-        MeshRenderer meshRenderer = this.gameObject.GetComponent<MeshRenderer>();
+        MeshRenderer meshRenderer = body.GetComponent<MeshRenderer>();
         meshRenderer.material.color = DecideColor(colorIndex);
     }
-
     #endregion
 }
