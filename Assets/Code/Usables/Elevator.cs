@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class Elevator : NetworkBehaviour
 {
-	//public bool open = false;
 	public bool enter = false;
 
 
@@ -16,6 +15,9 @@ public class Elevator : NetworkBehaviour
 	private float status = 0.0f;
 	private int direction = 1;
 	private Vector3 previousPos;
+	private Vector3 positionOffset;
+
+	public Vector3 PositionOffset {get{return positionOffset;}}
 
 	void Start()
 	{
@@ -31,40 +33,27 @@ public class Elevator : NetworkBehaviour
 			//Debug.Log("In server");
 			status += direction * Time.deltaTime / journeyDuration;
 			status = Mathf.Clamp01(status);
-
-			previousPos = transform.position;
-
 			transform.position = Vector3.Lerp(originalPosition, displacedPosition, status);
 
 		}
 
-		/*if (!isLocalPlayer)
-        {
-            Debug.Log("Not Local player");
-            if (enter == true)
-            {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    Debug.Log("Key pressed");
-                    // direction *= -1;
-                    CmdSwitchDirection();
-                }
-            }
-        }*/
-
-		if (isLocalPlayer)
-		{
-			Debug.Log("In local player");
+		if (isLocalPlayer) {
+			positionOffset = transform.position - previousPos;
 		}
+		previousPos = transform.position;
 	}
 
 
 	void OnTriggerStay(Collider other){
         // Chequeo adicional específico para el ascensor
-        Vector3 positionOffset = (transform.position - previousPos);
-        positionOffset.x = 0;
-        positionOffset.z = 0;
-        other.transform.position += positionOffset;
+		Elevator ele= other.gameObject.GetComponent<Elevator>();
+		if (ele != null) {
+			Vector3 positionOffset = (transform.position - previousPos);
+			positionOffset.x = 0;
+			positionOffset.z = 0;
+			other.transform.position += positionOffset;
+			//transform.position += ele.positionOffset;
+		}
 		//Debug.Log ("estoy dentrp");
 		
 	}

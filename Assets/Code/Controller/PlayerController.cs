@@ -202,6 +202,14 @@ public class PlayerController : NetworkBehaviour {
         }
 	}
 
+	void OnTriggerStay(Collider other){
+		// Chequeo adicional específico para el ascensor
+		Elevator ele= other.gameObject.GetComponent<Elevator>();
+		if (ele != null) {
+			transform.position += ele.PositionOffset;
+		}
+	}
+
 	public float getCooldown(int i)
 	{
 		return cooldown [i];
