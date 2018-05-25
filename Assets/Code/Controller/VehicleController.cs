@@ -20,18 +20,22 @@ public class VehicleController : NetworkBehaviour {
     private PlayerController turretGuy;
 
     private Vector2 controlAxis;
+    private Rigidbody rigidbody;
 
 	// Use this for initialization
 	void Start () {
         controlAxis = Vector2.zero;
+        rigidbody = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         if (isServer)
         {
-            transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
+            //transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
+            rigidbody.velocity = Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime;
             transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
+            rigidbody.angularVelocity = Vector3.zero;
         }
             //RpcMove();
     }
@@ -41,6 +45,25 @@ public class VehicleController : NetworkBehaviour {
         //
         if(driver != null)
             GUI.Label(new Rect(10, 30, 350, 20), "Driver: " + driver + ", axis: " + controlAxis);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log("Vehicle colliding with " + collision.gameObject.name);
+        //
+        float vehicleVelocity = rigidbody.velocity.magnitude;
+        PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+        //
+        //if (/*vehicleVelocity <= 3 || */playerController == driver || playerController == turretGuy)
+        //    return;
+        //
+        HealthController healthController = collision.gameObject.GetComponent<HealthController>();
+        //Debug.Log("Collided has HealthController " + healthController != null);
+        if (healthController != null)
+        {
+            Debug.Log("Hitting " + collision.gameObject + " with " + rigidbody.mass + " mass & " + vehicleVelocity + " speed");
+            healthController.TakeDamage((int)(rigidbody.mass * vehicleVelocity), driver.gameObject);
+        }
     }
 
     [ClientRpc]
