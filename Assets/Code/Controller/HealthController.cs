@@ -61,6 +61,14 @@ public class HealthController : NetworkBehaviour {
                 }
                 else//You are a player
                 {
+                    
+                    // If the player was in the vehicle
+                    if(player.State == PlayerStates.InVehicleDriving || player.State == PlayerStates.InVehicleTurret)
+                    {
+                        VehicleController vehicleController = player.CurrentVehicle;
+                        vehicleController.CmdQuitVehicle(player.gameObject);
+                    }
+
                     currentHealth = maxHealth;
                     Debug.Log("Dead!");
                     //

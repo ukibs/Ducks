@@ -98,7 +98,11 @@ public class PlayerController : NetworkBehaviour {
         get { return state; }
     }
 
-    public VehicleController CurrentVehicle { set { currentVehicle = value; } }
+    public VehicleController CurrentVehicle
+    {
+        set { currentVehicle = value; }
+        get { return currentVehicle; }
+    }
 
 	public int Score
 	{
