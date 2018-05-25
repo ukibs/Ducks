@@ -8,8 +8,8 @@ public class WeaponController : NetworkBehaviour {
 
 	public GameObject bulletPrefab;
 	public Transform shootPoint;
-	public int maxWeaponAmmo = 10;
-	public int maxReserveAmmo = 20;
+	public const int maxWeaponAmmo = 10;
+	public const int maxReserveAmmo = 20;
 
 	#endregion
 
@@ -18,23 +18,19 @@ public class WeaponController : NetworkBehaviour {
 	private float fireRate = 0.5f;
 	private float fireCooldown = 0.0f;
 
-	//[SyncVar(hook = "OnChangeAmmo")]
-	//private int currentWeaponAmmo;
-	//private int currentReserveAmmo;
-
 	#endregion
 
 	public bool special = false;
 
 	[SyncVar (hook = "OnStandardChange")]
-	private int standardWeaponAmmo;
+	private int standardWeaponAmmo = maxWeaponAmmo;
 	[SyncVar (hook = "OnStandardReserveChange")]
-	private int standardReserveAmmo;
+	private int standardReserveAmmo = maxReserveAmmo;
 
 	[SyncVar (hook = "OnSpecialChange")]
-	private int specialWeaponAmmo;
+	private int specialWeaponAmmo = maxWeaponAmmo;
 	[SyncVar (hook = "OnSpecialReserveChange")]
-	private int specialReserveAmmo;
+	private int specialReserveAmmo = maxReserveAmmo;
 
 	public int CurrentAmmo
 	{
@@ -43,6 +39,16 @@ public class WeaponController : NetworkBehaviour {
 				return specialWeaponAmmo;
 			else
 				return standardWeaponAmmo;
+		}
+	}
+
+	public int ReserveAmmo
+	{
+		get {
+			if (special)
+				return specialReserveAmmo;
+			else
+				return standardReserveAmmo;
 		}
 	}
 
@@ -68,18 +74,10 @@ public class WeaponController : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		standardWeaponAmmo = 10;
-		specialWeaponAmmo = 10;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (isServer) {
-			Debug.Log(gameObject.name + " ServerAmmo " + CurrentAmmo);
-		}
-		if (isLocalPlayer) {
-			Debug.Log(gameObject.name + " ammo " + CurrentAmmo);
-		}
 	}
 
 	public void wasteBullet()
@@ -99,19 +97,21 @@ public class WeaponController : NetworkBehaviour {
 		}
 	}
 
-	public void reload()
+	void reload()
 	{
 		if (!isServer) {
 			return;
 		} else {
-			if (special) {
-				int amountToReload = Mathf.Min (specialWeaponAmmo, maxWeaponAmmo);
-				specialWeaponAmmo = amountToReload;
-				specialWeaponAmmo -= amountToReload;
-			} else {
-				int amountToReload = Mathf.Min (standardWeaponAmmo, maxWeaponAmmo);
-				standardWeaponAmmo = amountToReload;
-				standardWeaponAmmo -= amountToReload;
+			if (CurrentAmmo == 0) {
+				if (special) {
+					int amountToReload = Mathf.Min (specialReserveAmmo, maxWeaponAmmo);
+					specialWeaponAmmo = amountToReload;
+					specialReserveAmmo -= amountToReload;
+				} else {
+					int amountToReload = Mathf.Min (standardReserveAmmo, maxWeaponAmmo);
+					standardWeaponAmmo = amountToReload;
+					standardReserveAmmo -= amountToReload;
+				}
 			}
 		}
 	}
@@ -155,5 +155,9 @@ public class WeaponController : NetworkBehaviour {
 		}
 	}
 
-
+	[Command]
+	public void CmdReload()
+	{
+		reload ();
+	}
 }
