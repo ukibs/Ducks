@@ -104,7 +104,6 @@ public class HealthController : NetworkBehaviour {
     {
 		currentHealth = _currentHealth;
 		healthBar.sizeDelta = new Vector2 (currentHealth, healthBar.sizeDelta.y);
-		healthBar.localPosition = new Vector3 (0, 0, 0);
     }
 
     [ClientRpc]

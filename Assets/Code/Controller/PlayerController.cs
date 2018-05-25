@@ -58,6 +58,7 @@ public class PlayerController : NetworkBehaviour {
 	private MovementStates movementState = MovementStates.Walking;
 	private PlayerStates state = PlayerStates.Normal;
 	private CharacterController controller;
+	private WeaponController weaponController;
 	private float verticalSpeed = 0.0f;
     private int currentWeaponIndex = 0;
     private List<GameObject> weapons;
@@ -82,7 +83,7 @@ public class PlayerController : NetworkBehaviour {
 
 	private float mouseX;
 	private float mouseY;
-	// private bool mouseLeft;
+	private bool mouseLeft;
 	private bool mouseRight;
 
     // Variable de prueba
@@ -117,6 +118,7 @@ public class PlayerController : NetworkBehaviour {
 		cam = GetComponentInChildren<Camera> ();
 		cam.enabled = true;
 		controller = GetComponent<CharacterController>();
+		weaponController = GetComponent<WeaponController> ();
         InitializeWeapons();
 		InitializeCooldowns ();
         //
@@ -126,7 +128,6 @@ public class PlayerController : NetworkBehaviour {
         {
             networkManager.RegisterPlayer(gameObject);
             playerId = networkManager.GetId();
-            //RpcChangeColor(playerId);
             networkManager.SetColorToPlayers();
         }
     }
@@ -182,6 +183,8 @@ public class PlayerController : NetworkBehaviour {
 			if (tabKey) {
 				ChangeWeapon ();
 			}
+			if (mouseLeft)
+				SimpleShoot (dt);
 			if (mouseRight && cooldown [throwGrenadeIndex] == 0) { 
 				CmdThrowGrenade ();
 			}
@@ -194,7 +197,7 @@ public class PlayerController : NetworkBehaviour {
 			if (key3 && cooldown [blindGrenadeIndex] == 0) {
 				CmdThrowBlindGrenade ();
 			}
-			SimpleShoot (dt);
+			//SimpleShoot (dt);
 			UpdateMovement (dt);
         }
 	}
@@ -261,6 +264,7 @@ public class PlayerController : NetworkBehaviour {
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
+		mouseLeft = Input.GetMouseButtonDown (0);
 		mouseRight = Input.GetMouseButtonDown (1);
 	}
 
@@ -319,6 +323,8 @@ public class PlayerController : NetworkBehaviour {
         currentWeaponIndex++;
         if (currentWeaponIndex >= weapons.Count) currentWeaponIndex = 0;
         weapons[currentWeaponIndex].SetActive(true);
+
+		weaponController.special = !weaponController.special;
     }
 
     void InitializeWeapons()
@@ -346,7 +352,8 @@ public class PlayerController : NetworkBehaviour {
 	{
         if (state == PlayerStates.Normal || state == PlayerStates.InVehicleTurret)
         {
-            if (CurrentWeapon.OrderFire()) CmdFire();
+           	CmdFire();
+			//weaponController.wasteBullet ();
         }
     }
 
@@ -480,7 +487,7 @@ public class PlayerController : NetworkBehaviour {
         newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
 		newBullet.GetComponent<Bullet> ().owner = gameObject;
 
-
+		weaponController.wasteBullet ();
         NetworkServer.Spawn(newBullet);
 
         Destroy(newBullet, 4.0f);
@@ -542,23 +549,6 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	#endregion
-
-	public void CmdTakeWeapon(BaseWeapon weapon, int bullets)
-	{
-		if (isLocalPlayer) 
-		{
-			return;
-		} 
-		else 
-		{
-			Debug.Log ("Busco arma");
-			for (int i = 0; i < weapons.Count; i++) {
-				if (weapons [i].name.Equals (weapon.name)) {
-					weapons [i].GetComponent<BaseWeapon> ().CmdAddAmmo (bullets);
-				}
-			}
-		}
-	}
 
 	#region Vehicle Functions
 

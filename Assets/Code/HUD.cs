@@ -17,11 +17,13 @@ public class HUD : NetworkBehaviour {
 
 	private PlayerController player;
 	private HealthController life;
+	private WeaponController weapon;
 	private Scene currentScene;
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<PlayerController> ();
 		life = GetComponent<HealthController> ();
+		weapon = GetComponent<WeaponController> ();
 	}
 	
 	// Update is called once per frame
@@ -45,7 +47,7 @@ public class HUD : NetworkBehaviour {
 				GUI.Label (new Rect (0, Screen.height * 8.9f / 10 , Screen.width * 100, Screen.width*1), backgroundHud);
 				//Bullets
 				GUI.Label (new Rect (Screen.width * 7.1f / 10, Screen.height * 9.2f / 10, 150, 30), imageBullet);
-				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, 150, 30), weaponData.CurrentWeaponAmmo + "/" + weaponData.maxWeaponAmmo);
+				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, 150, 30), weapon.CurrentAmmo + "/" + weaponData.maxWeaponAmmo);
 				//Recharge weapon
 				GUI.Label (new Rect (Screen.width * 8.3f / 10, Screen.height * 9.2f / 10, 150, 30), imageRecharge);
 				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, 100, 20), weaponData.CurrentReserveAmmo + "/" + weaponData.maxReserveAmmo);

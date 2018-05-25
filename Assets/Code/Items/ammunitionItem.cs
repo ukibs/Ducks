@@ -21,10 +21,10 @@ public class AmmunitionItem : MonoBehaviour {
     private void OnTriggerEnter(Collider collider)
     {
         var hit = collider.gameObject;
+		var player = hit.GetComponent<WeaponController> ();
         if (hit.CompareTag("Player") && isItem)
         {
-			Debug.Log ("Toco munición");
-			hit.GetComponent<PlayerController>().CmdTakeWeapon(gameObject.GetComponent<BaseWeapon>(), amountBullets);
+			player.addAmmo (amountBullets);
             Destroy(gameObject);
         }
     }

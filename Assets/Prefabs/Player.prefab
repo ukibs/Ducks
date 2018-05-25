@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 114067682299113018}
   - component: {fileID: 143711797364698250}
   - component: {fileID: 114238925374186776}
+  - component: {fileID: 114309353614579286}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -459,6 +460,22 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114309353614579286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1435399472651118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03704af50184dc64fa1b9b84d44ae32a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 0}
+  shootPoint: {fileID: 0}
+  maxWeaponAmmo: 10
+  maxReserveAmmo: 20
+  special: 0
 --- !u!114 &114348730342918390
 MonoBehaviour:
   m_ObjectHideFlags: 1
