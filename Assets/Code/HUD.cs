@@ -39,16 +39,18 @@ public class HUD : NetworkBehaviour {
 		
 			if (isLocalPlayer) {
 				//Background
-				GUI.Label (new Rect (0, Screen.height * 8.9f / 10 , Screen.width * 100, Screen.width*1), backgroundHud);
+				GUI.DrawTexture (new Rect (0, Screen.height * 8.9f / 10 , Screen.width*1 , Screen.height*1), backgroundHud, ScaleMode.StretchToFill);
+
 				//Bullets
-				GUI.Label (new Rect (Screen.width * 7.1f / 10, Screen.height * 9.2f / 10, 150, 30), imageBullet);
-				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, 150, 30), weapon.CurrentAmmo + "/" + weapon.MaxAmmo);
+				GUI.DrawTexture (new Rect (Screen.width * 7.1f / 10, Screen.height * 9f / 10, Screen.width / 17 , Screen.height/12f), imageBullet, ScaleMode.StretchToFill);
+				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, Screen.width / 7, Screen.height / 9.5f), weapon.CurrentAmmo + "/" + weapon.MaxAmmo);
+
 				//Recharge weapon
-				GUI.Label (new Rect (Screen.width * 8.3f / 10, Screen.height * 9.2f / 10, 150, 30), imageRecharge);
-				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, 100, 20), weapon.ReserveAmmo + "/" + weapon.MaxReserveAmmo);
+				GUI.DrawTexture (new Rect (Screen.width * 8.3f / 10, Screen.height * 9f / 10, Screen.width / 15 , Screen.height/12f), imageRecharge, ScaleMode.StretchToFill);
+				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, Screen.width / 7, Screen.height / 9.5f), weapon.ReserveAmmo + "/" + weapon.MaxReserveAmmo);
 
 				//Score
-				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, 100, 20), "Score: " + player.Score);
+				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, Screen.width / 6, Screen.height / 9.5f), "Score: " + player.Score);
 
 				//Blind screen
 				if(player.getCooldown(4) != 0)
@@ -56,12 +58,37 @@ public class HUD : NetworkBehaviour {
 
 				for (int i = 0; i < 4; i++) 
 				{
-					if (player.getCooldown (i) != 0) 
-					{
-						GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+					if (player.getCooldown (i) != 0) {
+						switch (i) {
+						case 0:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							break;
+						case 1:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							break;
+						case 2:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							break;
+						case 3:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							break;
+						}		
+					} else {
+						switch (i) {
+						case 0:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							break;
+						case 1:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							break;
+						case 2:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							break;
+						case 3:
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							break;
+						}
 					}
-					else
-						GUI.DrawTexture (new Rect (Screen.width * i * 0.5f/ 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
 				}
 
 				//Life
