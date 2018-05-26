@@ -24,7 +24,7 @@ public class HealthController : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
 		spawnPoints = FindObjectsOfType<NetworkStartPosition> ();
-		player = FindObjectOfType<PlayerController> ();
+		player = GetComponent<PlayerController> ();
 	}
 	
 	// Update is called once per frame
@@ -43,7 +43,7 @@ public class HealthController : NetworkBehaviour {
 			//if you died
             if(currentHealth <= 0)
             {
-                if(destroyOnDeath)//You are a enemy
+                if (destroyOnDeath)//You are a enemy
                 {
                     if (attacker != null)
                     {
@@ -58,16 +58,15 @@ public class HealthController : NetworkBehaviour {
                 }
                 else//You are a player
                 {
-                    
+                    player.CmdThrowItems();
                     // If the player was in the vehicle
-                    if(player.State == PlayerStates.InVehicleDriving || player.State == PlayerStates.InVehicleTurret)
+                    if (player.State == PlayerStates.InVehicleDriving || player.State == PlayerStates.InVehicleTurret)
                     {
                         VehicleController vehicleController = player.CurrentVehicle;
                         vehicleController.CmdQuitVehicle(player.gameObject);
                     }
 
                     currentHealth = maxHealth;
-                    Debug.Log("Dead!");
                     //
                     RpcRespawn();
 
@@ -80,7 +79,6 @@ public class HealthController : NetworkBehaviour {
 						}
 					}
                 }
-				player.CmdThrowItems ();
             }
         }
     }

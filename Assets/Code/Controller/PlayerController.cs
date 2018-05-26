@@ -575,11 +575,11 @@ public class PlayerController : NetworkBehaviour {
 	{
 		GameObject newExplosiveTrap = GameObject.Instantiate(explosiveTrap, CurrentWeapon.position + transform.forward*5, CurrentWeapon.rotation);
 
-		NetworkServer.Spawn(newExplosiveTrap);
-
 		newExplosiveTrap.GetComponent<ExplosionTrapItem> ().owner = gameObject;
 
-		CmdCooldown (throwExplosiveTrapIndex, 5);
+        NetworkServer.Spawn(newExplosiveTrap);
+
+        CmdCooldown(throwExplosiveTrapIndex, 5);
 		Destroy(newExplosiveTrap, Constants.trampExplosiveTimeDestroy);
 	}
 
