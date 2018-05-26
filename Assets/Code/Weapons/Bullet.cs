@@ -7,6 +7,7 @@ public class Bullet : NetworkBehaviour {
 
     public int damage;
 	public GameObject owner;
+    public GameObject bloodPrefab;
 
     private Effects effectManager;
 
@@ -27,6 +28,8 @@ public class Bullet : NetworkBehaviour {
 		if (health != null)
         {
 			health.TakeDamage(damage, owner);
+            GameObject blood = Instantiate(bloodPrefab, transform.position, Quaternion.identity);
+            Destroy(blood, 1);
         }
         effectManager.playChoque();
         Destroy(gameObject);

@@ -136,6 +136,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 50
   range: 10
+  owner: {fileID: 0}
+  explosionPrefab: {fileID: 100010, guid: 031d08f52af1daa4f929b85221519426, type: 2}
 --- !u!114 &114784671836511270
 MonoBehaviour:
   m_ObjectHideFlags: 1

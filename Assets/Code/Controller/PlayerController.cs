@@ -528,8 +528,15 @@ public class PlayerController : NetworkBehaviour {
 				Destroy (newBullet, Constants.bulletTimeDestroy);
 
                 effectManager.playEffect(0);
+                RpcShootSound();
 			}
 		}
+    }
+
+    [ClientRpc]
+    void RpcShootSound()
+    {
+        effectManager.playEffect(0);
     }
 
 	[Command]

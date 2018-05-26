@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4391868372361948}
-  - component: {fileID: 114007662462488266}
   - component: {fileID: 114237241725890214}
+  - component: {fileID: 114095876085073582}
   m_Layer: 0
   m_Name: _networkManager
   m_TagString: Untagged
@@ -41,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114007662462488266
+--- !u!114 &114095876085073582
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1196244754277358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e6a73194f99e3545ae771cd5c9e3dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetworkPort: 7777
@@ -61,22 +61,26 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1435399472651118, guid: fccebfd70195f904c946070e03aee733,
+  m_PlayerPrefab: {fileID: 1695685568892666, guid: c409d17db20fdf04e89de519ada90fa5,
     type: 2}
   m_AutoCreatePlayer: 1
-  m_PlayerSpawnMethod: 1
-  m_OfflineScene: 
-  m_OnlineScene: 
+  m_PlayerSpawnMethod: 0
+  m_OfflineScene: InitialScene
+  m_OnlineScene: SelectorOfMaps
   m_SpawnPrefabs:
-  - {fileID: 1435399472651118, guid: fccebfd70195f904c946070e03aee733, type: 2}
-  - {fileID: 1649190195679524, guid: 6664d64edeaa59e4688590b5ef1ff0fa, type: 2}
-  - {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046, type: 2}
+  - {fileID: 1695685568892666, guid: c409d17db20fdf04e89de519ada90fa5, type: 2}
   - {fileID: 1357841904451440, guid: c7425afb8ed65e44bb01c5e6aab42f00, type: 2}
-  - {fileID: 1159388425108010, guid: 16cd979919faa994aa40b1359de99071, type: 2}
-  - {fileID: 1649190195679524, guid: a6c867b27a64a5e4b9416db00e0642f7, type: 2}
-  - {fileID: 1953701121832436, guid: 77b377ac44922bb42b3e6747a16c382c, type: 2}
+  - {fileID: 1357841904451440, guid: 6ef1b0513182f6545b5d3022a7d9a125, type: 2}
   - {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed, type: 2}
-  m_CustomConfig: 1
+  - {fileID: 1953701121832436, guid: 77b377ac44922bb42b3e6747a16c382c, type: 2}
+  - {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046, type: 2}
+  - {fileID: 1649190195679524, guid: 6664d64edeaa59e4688590b5ef1ff0fa, type: 2}
+  - {fileID: 1649190195679524, guid: a6c867b27a64a5e4b9416db00e0642f7, type: 2}
+  - {fileID: 1992815356103152, guid: 1820945e7d06e74429a9549e8b1dcd81, type: 2}
+  - {fileID: 1290925588243224, guid: bec36816dc21b8443b63c6277d3b6540, type: 2}
+  - {fileID: 1026665230575240, guid: b089ff1b2c49fc14d8b6a8c227eeed26, type: 2}
+  - {fileID: 1159388425108010, guid: 16cd979919faa994aa40b1359de99071, type: 2}
+  m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
     m_PacketSize: 1440
@@ -118,7 +122,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 0500000000000000
+  m_Channels: 
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
@@ -128,7 +132,7 @@ MonoBehaviour:
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443
   matchName: default
-  matchSize: 4
+  matchSize: 8
   isNetworkActive: 0
   matchMaker: {fileID: 0}
 --- !u!114 &114237241725890214

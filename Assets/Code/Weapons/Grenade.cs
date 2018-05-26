@@ -8,6 +8,7 @@ public class Grenade : NetworkBehaviour {
     public int damage;
     public int range;
 	public GameObject owner;
+    public GameObject explosionPrefab;
 
     private Effects effectManager;
 
@@ -27,6 +28,8 @@ public class Grenade : NetworkBehaviour {
 				health.TakeDamage(damage, owner);
             }
         }
+        GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(explosion, 3);
         effectManager.playEffect(1);
         Destroy(gameObject);
     }

@@ -316,7 +316,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 0
-  t: {fileID: 0}
   healthBar: {fileID: 224806628412937444}
 --- !u!114 &114080407823738340
 MonoBehaviour:
@@ -471,8 +470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03704af50184dc64fa1b9b84d44ae32a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 0}
-  shootPoint: {fileID: 0}
   special: 0
 --- !u!114 &114348730342918390
 MonoBehaviour:
@@ -524,7 +521,6 @@ MonoBehaviour:
     type: 2}
   blindGrenadePrefab: {fileID: 1992815356103152, guid: 1820945e7d06e74429a9549e8b1dcd81,
     type: 2}
-  myPrefab: {fileID: 1357841904451440, guid: c7425afb8ed65e44bb01c5e6aab42f00, type: 2}
   weaponPrefabs:
   - {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed, type: 2}
   - {fileID: 1953701121832436, guid: 77b377ac44922bb42b3e6747a16c382c, type: 2}
@@ -532,7 +528,6 @@ MonoBehaviour:
     type: 2}
   weaponPoint: {fileID: 4294000598380074}
   body: {fileID: 0}
-  door: {fileID: 0}
 --- !u!124 &124560644315771574
 Behaviour:
   m_ObjectHideFlags: 1
@@ -643,5 +638,5 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 50, y: 0}
-  m_SizeDelta: {x: 100, y: 10}
+  m_SizeDelta: {x: 25, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}

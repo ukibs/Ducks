@@ -146,6 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 25
+  owner: {fileID: 0}
+  bloodPrefab: {fileID: 1140092767019704, guid: 91b49373bc793d142b0201d311a25f20,
+    type: 2}
 --- !u!114 &114975552532631364
 MonoBehaviour:
   m_ObjectHideFlags: 1
