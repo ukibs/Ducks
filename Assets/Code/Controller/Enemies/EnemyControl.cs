@@ -8,12 +8,12 @@ public class EnemyControl : NetworkBehaviour {
     public float movementSpeed = 1;
     public float playerCheckRate = 2;
     public GameObject weaponPrefab;
+    public GameObject bulletPrefab;
     public Transform weaponPoint;
     public float attackDistance = 10;
     public float fireRate = 1;
 
     protected CharacterController cc;
-    // protected NetworkManager netMgr;
     protected List<PlayerController> players;
     protected PlayerController objectivePlayer;
     //
@@ -21,20 +21,19 @@ public class EnemyControl : NetworkBehaviour {
     protected float verticalSpeed;
     protected Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
     protected GameObject weapon;
-    protected BaseWeapon weaponClass;
+    protected Transform weaponClass;
     protected WeaponController weaponController;
     private float fireCounter;
 
 	// Use this for initialization
 	protected virtual void Start () {
         cc = GetComponent<CharacterController>();
-        // netMgr = FindObjectOfType<NetworkManager>();
         players = new List<PlayerController>();
         GetPlayers();
         objectivePlayer = GetNearestPlayer();
         //
         weapon = Instantiate(weaponPrefab, weaponPoint);
-        weaponClass = weapon.GetComponent<BaseWeapon>();
+        weaponClass = weapon.GetComponent<BaseWeapon>().shootPoint;
         weaponController = GetComponent<WeaponController>();
     }
 
@@ -56,7 +55,6 @@ public class EnemyControl : NetworkBehaviour {
             else
             {
                 // Shooting stuff
-                //weaponClass = weapon.GetComponent<WeaponController>();
                 fireCounter += dt;
                 if (fireCounter >= fireRate)
                 {
@@ -131,11 +129,9 @@ public class EnemyControl : NetworkBehaviour {
     [Command]
     protected void CmdFire()
     {
-        //Debug.Log("Shootpoint: " + currentWeapon.shootPoint.position + ", " + currentWeapon.shootPoint.rotation);
-
-        GameObject newBullet = GameObject.Instantiate(weaponClass.bulletPrefab,
-            weaponClass.shootPoint.position,
-            weaponClass.shootPoint.rotation);
+        GameObject newBullet = GameObject.Instantiate(bulletPrefab,
+            weaponClass.position,
+            weaponClass.rotation);
 
         newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
 

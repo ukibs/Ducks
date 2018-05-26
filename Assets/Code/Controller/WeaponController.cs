@@ -4,23 +4,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class WeaponController : NetworkBehaviour {
-	#region Public Attributes
+	public static int maxWeaponAmmo = 10;
+	public static int maxReserveAmmo = 20;
 
-	public GameObject bulletPrefab;
-	public Transform shootPoint;
-	public const int maxWeaponAmmo = 10;
-	public const int maxReserveAmmo = 20;
-
-	#endregion
-
-	#region Private Attributes
-
-	private float fireRate = 0.5f;
-	private float fireCooldown = 0.0f;
-
-	#endregion
-
-	public bool special = false;
+    public bool special = false;
 
 	[SyncVar (hook = "OnStandardChange")]
 	private int standardWeaponAmmo = maxWeaponAmmo;
@@ -32,7 +19,8 @@ public class WeaponController : NetworkBehaviour {
 	[SyncVar (hook = "OnSpecialReserveChange")]
 	private int specialReserveAmmo = maxReserveAmmo;
 
-	public int CurrentAmmo
+    #region Properties
+    public int CurrentAmmo
 	{
 		get {
 			if (special)
@@ -52,7 +40,23 @@ public class WeaponController : NetworkBehaviour {
 		}
 	}
 
-	void OnStandardChange(int _standardWeaponAmmo)
+    public int MaxAmmo
+    {
+        get
+        {
+            return maxWeaponAmmo;
+        }
+    }
+    public int MaxReserveAmmo
+    {
+        get
+        {
+            return maxReserveAmmo;
+        }
+    }
+    #endregion
+
+    void OnStandardChange(int _standardWeaponAmmo)
 	{
 		standardWeaponAmmo = _standardWeaponAmmo;
 	}
@@ -116,12 +120,12 @@ public class WeaponController : NetworkBehaviour {
 		}
 	}
 
-	public void addAmmo(int amount)
+	public void addAmmo(int amount, bool isSpecial)
 	{	
 		if (!isServer) {
 			return;
 		} else {
-			if (special) {
+			if (isSpecial) {
 				int dif = maxWeaponAmmo - CurrentAmmo;
 
 				if (dif >= amount) {

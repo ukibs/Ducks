@@ -19,6 +19,7 @@ public class HUD : NetworkBehaviour {
 	private HealthController life;
 	private WeaponController weapon;
 	private Scene currentScene;
+
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<PlayerController> ();
@@ -32,27 +33,19 @@ public class HUD : NetworkBehaviour {
 
 	}
 
-	void NesxtScene(){
-		//NetworkManager.ServerChangeScene ("TestScene");
-	}
-
 	private void OnGUI()
 	{
 		if (currentScene.name != "SelectorOfMaps") {
 		
 			if (isLocalPlayer) {
-				// Weapon info
-				BaseWeapon weaponData = player.CurrentWeapon;
 				//Background
 				GUI.Label (new Rect (0, Screen.height * 8.9f / 10 , Screen.width * 100, Screen.width*1), backgroundHud);
 				//Bullets
 				GUI.Label (new Rect (Screen.width * 7.1f / 10, Screen.height * 9.2f / 10, 150, 30), imageBullet);
-				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, 150, 30), weapon.CurrentAmmo + "/" + weaponData.maxWeaponAmmo);
+				GUI.Label (new Rect (Screen.width * 7.6f / 10, Screen.height * 9.3f / 10, 150, 30), weapon.CurrentAmmo + "/" + weapon.MaxAmmo);
 				//Recharge weapon
 				GUI.Label (new Rect (Screen.width * 8.3f / 10, Screen.height * 9.2f / 10, 150, 30), imageRecharge);
-				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, 100, 20), weapon.ReserveAmmo + "/" + weaponData.maxReserveAmmo);
-
-				//GUI.Label(new Rect(10, 10, 350, 20), "State: " + player.State + ", movement state: " + player.);
+				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, 100, 20), weapon.ReserveAmmo + "/" + weapon.MaxReserveAmmo);
 
 				//Score
 				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, 100, 20), "Score: " + player.Score);

@@ -45,13 +45,16 @@ public class HealthController : NetworkBehaviour {
             {
                 if(destroyOnDeath)//You are a enemy
                 {
-					//if a player kill an enemy
-					PlayerController playerController = attacker.GetComponent<PlayerController> ();
-					if (playerController != null) 
-					{
-						playerController.Score += 10;
-					}
-					Destroy(gameObject);
+                    if (attacker != null)
+                    {
+                        //if a player kill an enemy
+                        PlayerController playerController = attacker.GetComponent<PlayerController>();
+                        if (playerController != null)
+                        {
+                            playerController.Score += 10;
+                        }
+                        Destroy(gameObject);
+                    }
                 }
                 else//You are a player
                 {

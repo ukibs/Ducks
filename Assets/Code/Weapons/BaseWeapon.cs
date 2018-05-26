@@ -6,8 +6,7 @@ using UnityEngine.Networking;
 public class BaseWeapon : NetworkBehaviour {
 
     #region Public Attributes
-
-    public GameObject bulletPrefab;
+    
     public Transform shootPoint;
     public int maxWeaponAmmo = 10;
     public int maxReserveAmmo = 20;

@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 
 public class AmmunitionItem : MonoBehaviour {
 
-	public bool isItem = false;
+	private bool isItem = false;
+    private bool special = false;
 	private int amountBullets = 0;
 
 	public bool IsItem
@@ -13,6 +14,11 @@ public class AmmunitionItem : MonoBehaviour {
 		get { return isItem; }
 		set { isItem = value;}
 	}
+
+    public bool Special
+    {
+        set { special = value; }
+    }
 
 	public int Bullets {
 		set { amountBullets = value; }
@@ -24,7 +30,7 @@ public class AmmunitionItem : MonoBehaviour {
 		var player = hit.GetComponent<WeaponController> ();
         if (hit.CompareTag("Player") && isItem)
         {
-			player.addAmmo (amountBullets);
+			player.addAmmo (amountBullets, special);
             Destroy(gameObject);
         }
     }
