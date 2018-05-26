@@ -6,15 +6,17 @@ using UnityEngine.Networking;
 public class HealthController : NetworkBehaviour {
 
     public const int maxHealth = 100;
+    public const int initialScore = 0;
     public bool destroyOnDeath;
 
     [SyncVar(hook = "OnChangeHealth")]
     private int currentHealth = maxHealth;
+
 	private NetworkStartPosition[] spawnPoints;
 	private PlayerController player;
 
 	[SyncVar(hook = "OnChangeScore")]
-	private int score = 0;
+	private int score = initialScore;
 
     //
     public RectTransform healthBar;
@@ -25,6 +27,7 @@ public class HealthController : NetworkBehaviour {
 	}
 	public int Score{
 		get{ return score; }
+        set { score = value; }
 	}
 
 	// Use this for initialization
@@ -54,10 +57,10 @@ public class HealthController : NetworkBehaviour {
                     if (attacker != null)
                     {
                         //if a player kill an enemy
-                        PlayerController playerController = attacker.GetComponent<PlayerController>();
+                        HealthController playerController = attacker.GetComponent<HealthController>();
                         if (playerController != null)
                         {
-                            score += 10;
+                            playerController.Score += 10;
                         }
                         Destroy(gameObject);
                     }
@@ -79,9 +82,9 @@ public class HealthController : NetworkBehaviour {
 					//if a player kill another player
 					if (attacker != null) 
 					{
-						PlayerController playerController = attacker.GetComponent<PlayerController> ();
-						if (playerController != null) {
-							score += 100;
+                        HealthController playerController = attacker.GetComponent<HealthController>();
+                        if (playerController != null) {
+                            playerController.Score += 100;
 						}
 					}
                 }

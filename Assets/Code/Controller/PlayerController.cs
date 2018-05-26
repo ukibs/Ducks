@@ -70,8 +70,7 @@ public class PlayerController : NetworkBehaviour {
     private int currentWeaponIndex = 0;
     private List<GameObject> weapons;
 	private float stateTimer;
-
-    private int score;
+    
     private Effects effectManager;
 
     #region Controllers
@@ -116,12 +115,6 @@ public class PlayerController : NetworkBehaviour {
         set { currentVehicle = value; }
         get { return currentVehicle; }
     }
-
-	public int Score
-	{
-		set{ score = value; }
-		get{ return score; }
-	}
 		
     #endregion
 
