@@ -61,6 +61,7 @@ public class PlayerController : NetworkBehaviour {
 	#endregion
 
 	public Transform weaponPoint;
+    public Transform rotationPoint;
     public GameObject body;
 
 	private float [] cooldown;
@@ -115,10 +116,11 @@ public class PlayerController : NetworkBehaviour {
         set { currentVehicle = value; }
         get { return currentVehicle; }
     }
-		
-    #endregion
 
-	public override void OnStartLocalPlayer()
+    #endregion
+    
+    #region Unity Methods
+    public override void OnStartLocalPlayer()
 	{
 		base.OnStartLocalPlayer();
 		//
@@ -174,9 +176,10 @@ public class PlayerController : NetworkBehaviour {
 			UpdateMovement (dt);
         }
 	}
+    #endregion
 
-	#region Input Functions
-	void UpdateInput()
+    #region Input Functions
+    void UpdateInput()
 	{
 		vAxis = Input.GetAxis("Vertical");
 		hAxis = Input.GetAxis("Horizontal");
@@ -295,8 +298,14 @@ public class PlayerController : NetworkBehaviour {
 				Vector3 forwardMovement = transform.forward * vAxis * (speed - slowerSpeed);
                 Vector3 yMovement = transform.up * verticalSpeed;
                 controller.Move((rightMovement + forwardMovement + yMovement) * dt);
+                Vector3 aux = rotationPoint.transform.localEulerAngles;
+                float change = mouseY * -90.0f;
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
-                cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
+                aux += new Vector3(change * dt, 0, 0);
+                if (aux.x < 30 || aux.x > 330)
+                {
+                    rotationPoint.transform.Rotate(change * dt, 0.0f, 0.0f);
+                }
                 // 
                 if (eKey)
                 {
