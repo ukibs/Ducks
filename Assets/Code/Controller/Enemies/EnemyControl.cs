@@ -25,6 +25,8 @@ public class EnemyControl : NetworkBehaviour {
     protected WeaponController weaponController;
     private float fireCounter;
 
+    protected Effects effectManager;
+
 	// Use this for initialization
 	protected virtual void Start () {
         cc = GetComponent<CharacterController>();
@@ -35,6 +37,8 @@ public class EnemyControl : NetworkBehaviour {
         weapon = Instantiate(weaponPrefab, weaponPoint);
         weaponClass = weapon.GetComponent<BaseWeapon>().shootPoint;
         weaponController = GetComponent<WeaponController>();
+        //
+        effectManager = FindObjectOfType<Effects>();
     }
 
     // Update is called once per frame
@@ -61,6 +65,7 @@ public class EnemyControl : NetworkBehaviour {
                     CmdFire();
                     weaponController.wasteBullet();
                     fireCounter -= fireRate;
+                    effectManager.playEffect(0);
                 }
             }
         }

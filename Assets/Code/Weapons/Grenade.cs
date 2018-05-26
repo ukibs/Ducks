@@ -8,7 +8,13 @@ public class Grenade : NetworkBehaviour {
     public int damage;
     public int range;
 	public GameObject owner;
-    
+
+    private Effects effectManager;
+
+    void Start()
+    {
+        effectManager = FindObjectOfType<Effects>();
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -21,6 +27,7 @@ public class Grenade : NetworkBehaviour {
 				health.TakeDamage(damage, owner);
             }
         }
+        effectManager.playEffect(1);
         Destroy(gameObject);
     }
 }

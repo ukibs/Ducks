@@ -55,32 +55,6 @@ public class Door : BaseUsable
         }
 	}
 
-	//Activate the Main function when player is near the door
-	//[Command]  
-    //[RPC]
-	private void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.tag == "Player")
-		{
-			Debug.Log("Trigger Enter");
-			(enter) = true;
-            other.GetComponent<PlayerController>().door = this;
-		}
-	}
-
-	//Deactivate the Main function when player is go away from door
-	//[Command]
-    //[RPC]
-	void OnTriggerExit (Collider other)
-	{
-		if (other.gameObject.tag == "Player")
-		{
-			Debug.Log("Trigger Exit");
-			(enter) = false;
-            other.GetComponent<PlayerController>().door = null;
-        }
-	}
-
     [Command]
     public void CmdSwitchDirection()
     {

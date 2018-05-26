@@ -72,7 +72,7 @@ public class PlayerController : NetworkBehaviour {
 	private float stateTimer;
 
     private int score;
-    public Door door;
+    private Effects effectManager;
 
     #region Controllers
     private CustomNetworkManager networkManager;
@@ -153,6 +153,8 @@ public class PlayerController : NetworkBehaviour {
             playerId = networkManager.GetId();
             networkManager.SetColorToPlayers();
         }
+        //
+        effectManager = FindObjectOfType<Effects>();
     }
 	
 	// Update is called once per frame
@@ -524,6 +526,8 @@ public class PlayerController : NetworkBehaviour {
 				NetworkServer.Spawn (newBullet);
 				CmdCooldown (throwBulletIndex, Constants.bulletCooldown);
 				Destroy (newBullet, Constants.bulletTimeDestroy);
+
+                effectManager.playEffect(0);
 			}
 		}
     }

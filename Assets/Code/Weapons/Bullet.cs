@@ -8,9 +8,11 @@ public class Bullet : NetworkBehaviour {
     public int damage;
 	public GameObject owner;
 
+    private Effects effectManager;
+
 	// Use this for initialization
 	void Start () {
-		
+        effectManager = FindObjectOfType<Effects>();
 	}
 	
 	// Update is called once per frame
@@ -26,6 +28,7 @@ public class Bullet : NetworkBehaviour {
         {
 			health.TakeDamage(damage, owner);
         }
+        effectManager.playChoque();
         Destroy(gameObject);
     }
 }
