@@ -95,6 +95,7 @@ public class PlayerController : NetworkBehaviour {
 	private bool key1;
 	private bool key2;
 	private bool key3;
+    private bool quitKey;
 
 	private float mouseX;
 	private float mouseY;
@@ -196,6 +197,7 @@ public class PlayerController : NetworkBehaviour {
 		key1 = Input.GetKeyDown(KeyCode.Alpha1);
 		key2 = Input.GetKeyDown(KeyCode.Alpha2);
 		key3 = Input.GetKeyDown (KeyCode.Alpha3);
+        quitKey = Input.GetKeyDown(KeyCode.P);
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
@@ -234,6 +236,11 @@ public class PlayerController : NetworkBehaviour {
 		if (key3 && cooldown [blindGrenadeIndex] == 0) {
 			CmdThrowBlindGrenade ();
 		}
+        //
+        if(quitKey && isServer)
+        {
+            SceneManager.LoadScene("SelectorOfMaps");
+        }
 	}
 	#endregion
 
