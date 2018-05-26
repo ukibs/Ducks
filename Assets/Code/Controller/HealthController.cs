@@ -13,12 +13,18 @@ public class HealthController : NetworkBehaviour {
 	private NetworkStartPosition[] spawnPoints;
 	private PlayerController player;
 
+	[SyncVar(hook = "OnChangeScore")]
+	private int score = 0;
+
     //
     public RectTransform healthBar;
 
 
 	public int Health{
 		get { return currentHealth; }
+	}
+	public int Score{
+		get{ return score; }
 	}
 
 	// Use this for initialization
@@ -51,7 +57,7 @@ public class HealthController : NetworkBehaviour {
                         PlayerController playerController = attacker.GetComponent<PlayerController>();
                         if (playerController != null)
                         {
-                            playerController.Score += 10;
+                            score += 10;
                         }
                         Destroy(gameObject);
                     }
@@ -75,7 +81,7 @@ public class HealthController : NetworkBehaviour {
 					{
 						PlayerController playerController = attacker.GetComponent<PlayerController> ();
 						if (playerController != null) {
-							playerController.Score += 100;
+							score += 100;
 						}
 					}
                 }
@@ -100,6 +106,11 @@ public class HealthController : NetworkBehaviour {
 		currentHealth = _currentHealth;
 		healthBar.sizeDelta = new Vector2 (currentHealth, healthBar.sizeDelta.y);
     }
+
+	void OnChangeScore(int _score)
+	{
+		score = _score;
+	}
 
     [ClientRpc]
     private void RpcRespawn()

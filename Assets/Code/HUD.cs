@@ -50,7 +50,7 @@ public class HUD : NetworkBehaviour {
 				GUI.Label (new Rect (Screen.width * 9.1f / 10, Screen.height * 9.3f / 10, Screen.width / 7, Screen.height / 9.5f), weapon.ReserveAmmo + "/" + weapon.MaxReserveAmmo);
 
 				//Score
-				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, Screen.width / 6, Screen.height / 9.5f), "Score: " + player.Score);
+				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, Screen.width / 6, Screen.height / 9.5f), "Score: " + life.Score);
 
 				//Blind screen
 				if(player.getCooldown(4) != 0)
