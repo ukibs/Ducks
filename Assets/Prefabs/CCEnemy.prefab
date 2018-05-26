@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 143617926823892670}
   - component: {fileID: 114378355190273868}
   - component: {fileID: 114791760400245882}
+  - component: {fileID: 114356352385110768}
   m_Layer: 0
   m_Name: CCEnemy
   m_TagString: Enemy
@@ -391,6 +392,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114356352385110768
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357841904451440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03704af50184dc64fa1b9b84d44ae32a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  special: 0
 --- !u!114 &114378355190273868
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -403,7 +416,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 1
-  t: {fileID: 0}
   healthBar: {fileID: 224190923465950066}
 --- !u!114 &114582111938288992
 MonoBehaviour:
@@ -473,9 +485,12 @@ MonoBehaviour:
   playerCheckRate: 2
   weaponPrefab: {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed,
     type: 2}
+  bulletPrefab: {fileID: 1649190195679524, guid: 6664d64edeaa59e4688590b5ef1ff0fa,
+    type: 2}
   weaponPoint: {fileID: 4670319708686042}
   attackDistance: 5
   fireRate: 1
+  zigZagRate: 2
 --- !u!114 &114837289414271100
 MonoBehaviour:
   m_ObjectHideFlags: 1
