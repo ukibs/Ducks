@@ -65,14 +65,12 @@ public class PlayerController : NetworkBehaviour {
 	private float [] cooldown;
 	private MovementStates movementState = MovementStates.Walking;
 	private PlayerStates state = PlayerStates.Normal;
-
-    private int currentWeaponIndex = 0;
-    private List<GameObject> weapons;
+    
 	private float stateTimer;
     
     private Effects effectManager;
 
-    private bool collElevator = false;
+    private bool collObject = false;
 
     #region Controllers
     private CustomNetworkManager networkManager;
@@ -115,10 +113,10 @@ public class PlayerController : NetworkBehaviour {
         get { return currentVehicle; }
     }
 
-    public bool CollisionElevator
+    public bool CollisionObject
     {
-        set { collElevator = value; }
-        get { return collElevator; }
+        set { collObject = value; }
+        get { return collObject; }
     }
 
     #endregion
@@ -152,6 +150,7 @@ public class PlayerController : NetworkBehaviour {
             playerId = networkManager.GetId();
             networkManager.SetColorToPlayers();
         }
+        
         //
         effectManager = FindObjectOfType<Effects>();
     }
@@ -163,16 +162,17 @@ public class PlayerController : NetworkBehaviour {
 		if (isServer) {
 			updateInmovil (dt);
 			updateCooldown(dt);
-		}
+        }
         if (!isLocalPlayer)
         {
+            AudioListener listener = cam.GetComponent<AudioListener>();
+            if (listener.enabled) listener.enabled = false;
             cam.enabled = false;
-            gameObject.GetComponentInChildren<AudioListener>().enabled = false;
             return;
         }
         else
         {
-			UpdateInput ();
+            UpdateInput ();
 			ChangeStates ();
 			ApplyGravity (dt);
 			checkInputs ();
@@ -296,11 +296,12 @@ public class PlayerController : NetworkBehaviour {
                     Jump();
                 }
                 
-                //
+                //Movement
 				Vector3 rightMovement = transform.right * hAxis * (speed - slowerSpeed);
 				Vector3 forwardMovement = transform.forward * vAxis * (speed - slowerSpeed);
                 Vector3 yMovement = transform.up * verticalSpeed;
                 controller.Move((rightMovement + forwardMovement + yMovement) * dt);
+                //Rotation
                 Vector3 aux = rotationPoint.transform.localEulerAngles;
                 float change = mouseY * -90.0f;
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
@@ -308,11 +309,11 @@ public class PlayerController : NetworkBehaviour {
                 if (aux.x < 30 || aux.x > 330)
                 {
                     rotationPoint.transform.Rotate(change * dt, 0.0f, 0.0f);
+                    CmdRotateWeapon(rotationPoint.rotation);
                 }
                 // 
                 if (eKey)
                 {
-                    //CmdUseObject();
                     CmdCheckAndUse();
                 }
                 break;
@@ -334,10 +335,15 @@ public class PlayerController : NetworkBehaviour {
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
                 break;
             default:
-                Debug.Log("Current state: " + state);
                 break;
         }
 	}
+
+    [Command]
+    private void CmdRotateWeapon(Quaternion rotation)
+    {
+        rotationPoint.rotation = rotation;
+    }
 
 	void ApplyGravity(float dt)
 	{
@@ -359,27 +365,16 @@ public class PlayerController : NetworkBehaviour {
     [Command]
 	private void CmdCheckAndUse()
 	{
-		//Debug.Log("Checking with ray");
 		RaycastHit hit;
 		if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.0f))
 		{
-
-			//Debug.Log("Checking object to use: " + hit.transform.name);
 			BaseUsable usable = hit.transform.GetComponent<BaseUsable>();
 			if (usable != null)
 			{
-				//TODO: Preguntar a Nestor sobre esto
-
-				//usable.CmdUse();
 				usable.SendMessage("CmdUse");
-				//hit.transform.SendMessage("CmdUse");
-				//CmdUseObject(usable);
-				Debug.Log("Using object " + usable);
-				//return;
 			}
 
 			VehicleController vehicleController = hit.transform.GetComponent<VehicleController>();
-			Debug.Log("Is it a vehicle? " + vehicleController != null);
 			if (vehicleController != null)
 			{
 
@@ -543,7 +538,6 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	void CmdThrowExplosiveTrap()
 	{
-        Debug.Log(weaponController.CurrentWeapon.position + " inmovil");
         GameObject newExplosiveTrap = Instantiate(explosiveTrap, weaponController.CurrentWeapon.position + transform.forward*5, weaponController.CurrentWeapon.rotation);
 
 		newExplosiveTrap.GetComponent<ExplosionTrapItem> ().owner = gameObject;
@@ -557,7 +551,6 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	void CmdThrowInmovilTrap()
 	{
-        Debug.Log(weaponController.CurrentWeapon.position + " inmovil");
 		GameObject newInmovilTrap = Instantiate(inmovilTrap, weaponController.CurrentWeapon.position + transform.forward*5, weaponController.CurrentWeapon.rotation);
 
 		NetworkServer.Spawn(newInmovilTrap);
@@ -583,14 +576,14 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     public void CmdCollisionObject(bool state)
     {
-        collElevator = state;
+        collObject = state;
         RpcCollisionObject(state);
     }
 
     [ClientRpc]
     public void RpcCollisionObject(bool state)
     {
-        collElevator = state;
+        collObject = state;
     }
 
     #endregion
@@ -617,16 +610,11 @@ public class PlayerController : NetworkBehaviour {
         currentVehicle = vehicleController;
         transform.SetParent(vehicle.transform);
         GetComponent<CharacterController>().detectCollisions = false;
-        // NetworkIdentity playerIdentity = player.GetComponent<NetworkIdentity>();
-        // playerIdentity.localPlayerAuthority = false;
-        //
-        Debug.Log("Entering vehicle, state: " + state + ", vehicle: " + currentVehicle);
     }
 
     [ClientRpc]
     public void RpcSwitchVehiclePosition()
     {
-        Debug.Log("Switching place");
         switch (state)
         {
             case PlayerStates.InVehicleDriving:
@@ -643,7 +631,6 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     public void RpcQuitVehicle()
     {
-        Debug.Log("Quitting vehicle");
         state = PlayerStates.Normal;
         currentVehicle = null;
         transform.position += Vector3.up;
@@ -654,10 +641,7 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     void CmdDriveVehicle(float hAxis, float vAxis)
     {
-        Debug.Log("In vehicle driving by command");
-        
         currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
-        
     }
 
     [Command]
@@ -665,12 +649,10 @@ public class PlayerController : NetworkBehaviour {
     {
         if (spaceKey)
         {
-            Debug.Log("Trying to switch place");
             currentVehicle.CmdSwitchPlace(gameObject);
         }
         if (eKey)
         {
-            Debug.Log("Trying to quit vehicle");
             currentVehicle.CmdQuitVehicle(gameObject);
         }
     }

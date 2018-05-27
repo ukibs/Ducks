@@ -11,7 +11,7 @@ public enum VehiclePlace
     Count
 }
 
-public class VehicleController : NetworkBehaviour {
+public class VehicleController : BaseUsable {
 
     #region Public Attributes
 
@@ -79,20 +79,10 @@ public class VehicleController : NetworkBehaviour {
     #endregion
 
     #region Driver Methods
-
-    /*[ClientRpc]
-    public void RpcMove(Vector2 controlAxis)
-    {
-        transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
-        transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
-    }*/
-
     [Command]
     public void CmdMove(Vector2 controlAxis)
     {
         this.controlAxis = controlAxis;
-        Debug.Log("Receiving axis");
-        //RpcMove(controlAxis);
     }
 
     #endregion
@@ -203,4 +193,7 @@ public class VehicleController : NetworkBehaviour {
     }
 
     #endregion
+
+    [Command]
+    public override void CmdUse(){;}
 }

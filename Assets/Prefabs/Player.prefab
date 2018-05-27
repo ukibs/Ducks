@@ -199,7 +199,6 @@ GameObject:
   - component: {fileID: 114170259284097112}
   - component: {fileID: 143251407701251032}
   - component: {fileID: 114210296575053268}
-  - component: {fileID: 114333814512913002}
   - component: {fileID: 114698779997808396}
   m_Layer: 0
   m_Name: Player
@@ -817,18 +816,7 @@ MonoBehaviour:
   backgroundHud: {fileID: 2800000, guid: 2cd4e26b6add3b64cb013e365dc9e5ef, type: 3}
   totalLife: {fileID: 2800000, guid: 0134950bf4afb4540bd3955f9ac8cbad, type: 3}
   currentLife: {fileID: 2800000, guid: 0157002ea325da846ac371326a3e6ed2, type: 3}
---- !u!114 &114333814512913002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1695685568892666}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03704af50184dc64fa1b9b84d44ae32a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  special: 0
+  alpha: 0
 --- !u!114 &114405965707297212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -950,7 +938,7 @@ MonoBehaviour:
   camFirstPerson: {fileID: 4329503503069838}
   camThirdPerson: {fileID: 4730803420889448}
   lifePrefab: {fileID: 1159388425108010, guid: 16cd979919faa994aa40b1359de99071, type: 2}
-  explosiveTrap: {fileID: 1290925588243224, guid: bec36816dc21b8443b63c6277d3b6540,
+  explosiveTrap: {fileID: 1717933847997606, guid: bec36816dc21b8443b63c6277d3b6540,
     type: 2}
   inmovilTrap: {fileID: 1026665230575240, guid: b089ff1b2c49fc14d8b6a8c227eeed26,
     type: 2}

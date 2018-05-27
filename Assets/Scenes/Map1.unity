@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667865, g: 0.4842735, b: 0.56452376, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667847, g: 0.48427242, b: 0.5645227, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1477,6 +1477,7 @@ GameObject:
   - component: {fileID: 329008167}
   - component: {fileID: 329008166}
   - component: {fileID: 329008165}
+  - component: {fileID: 329008168}
   m_Layer: 0
   m_Name: Cube (12)
   m_TagString: Untagged
@@ -1617,6 +1618,18 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!65 &329008168
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 329008160}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 4}
+  m_Center: {x: 0.000000078231096, y: 0, z: 0.0000019073486}
 --- !u!1001 &336399491
 Prefab:
   m_ObjectHideFlags: 0
@@ -1734,6 +1747,7 @@ GameObject:
   - component: {fileID: 376418585}
   - component: {fileID: 376418584}
   - component: {fileID: 376418583}
+  - component: {fileID: 376418586}
   m_Layer: 0
   m_Name: Cube (13)
   m_TagString: Untagged
@@ -1874,6 +1888,18 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!65 &376418586
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 376418578}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4, y: 1, z: 1}
+  m_Center: {x: 0.000000078231096, y: 0, z: 0.0000019073486}
 --- !u!1 &384441302
 GameObject:
   m_ObjectHideFlags: 0
@@ -3248,6 +3274,7 @@ GameObject:
   - component: {fileID: 626326013}
   - component: {fileID: 626326012}
   - component: {fileID: 626326011}
+  - component: {fileID: 626326014}
   m_Layer: 0
   m_Name: Cube (14)
   m_TagString: Untagged
@@ -3388,6 +3415,18 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!65 &626326014
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626326006}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 4}
+  m_Center: {x: 0.000000078231096, y: 0, z: 0.0000019073486}
 --- !u!1 &647813163
 GameObject:
   m_ObjectHideFlags: 0
@@ -9504,6 +9543,7 @@ GameObject:
   - component: {fileID: 1963469866}
   - component: {fileID: 1963469865}
   - component: {fileID: 1963469864}
+  - component: {fileID: 1963469867}
   m_Layer: 0
   m_Name: Cube (12)
   m_TagString: Untagged
@@ -9644,6 +9684,18 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!65 &1963469867
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1963469859}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4, y: 1, z: 1}
+  m_Center: {x: 0.000000078231096, y: 0, z: 0.0000019073486}
 --- !u!1001 &1970603249
 Prefab:
   m_ObjectHideFlags: 0

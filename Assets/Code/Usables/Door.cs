@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class Door : BaseUsable
 {
-	//public bool open = false;
 	public bool enter = false;
 
     
