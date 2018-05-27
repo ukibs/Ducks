@@ -190,8 +190,8 @@ public class VehicleController : NetworkBehaviour {
             turretFirePoint.rotation);
         Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
         bulletRB.velocity = newBullet.transform.forward * 20;
-        Debug.Log("Created " + newBullet);
-
+        newBullet.GetComponent<Bullet>().owner = turretGuy.gameObject;
+        NetworkServer.Spawn(newBullet);
         effectManager.playEffect(0);
         RpcShootSound();
     }

@@ -653,6 +653,7 @@ public class PlayerController : NetworkBehaviour {
         currentVehicle = null;
         transform.position += Vector3.up;
         transform.SetParent(null);
+        GetComponent<CharacterController>().detectCollisions = true;
     }
 
     [Command]
