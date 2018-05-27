@@ -13,10 +13,16 @@ public enum VehiclePlace
 
 public class VehicleController : NetworkBehaviour {
 
+    #region Public Attributes
+
     public Transform driverPlace;
     public Transform turretGuyPlace;
     public GameObject turretWeapon;
     public GameObject turretBulletPrefab;
+
+    #endregion
+
+    #region Private Attributes
 
     private PlayerController driver;
     private PlayerController turretGuy;
@@ -27,8 +33,12 @@ public class VehicleController : NetworkBehaviour {
     private float turretWeaponFireCount;
     private Transform turretFirePoint;
 
-	// Use this for initialization
-	void Start () {
+    #endregion
+
+    #region Monobehaviour Methods
+
+    // Use this for initialization
+    void Start () {
         controlAxis = Vector2.zero;
         rb = GetComponent<Rigidbody>();
         effectManager = FindObjectOfType<Effects>();
@@ -40,7 +50,7 @@ public class VehicleController : NetworkBehaviour {
         if (isServer)
         {
             //transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
-            rb.velocity = transform.forward * controlAxis.y * 20.0f * Time.deltaTime;
+            rb.velocity = transform.forward * controlAxis.y * 500.0f * Time.deltaTime;
             transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
             rb.angularVelocity = Vector3.zero;
             if(turretGuy != null && turretWeaponFireCount < Constants.bulletCooldown)
@@ -48,28 +58,17 @@ public class VehicleController : NetworkBehaviour {
                 turretWeaponFireCount += Time.deltaTime;
             }
         }
-            //RpcMove();
     }
-
-    private void OnGUI()
-    {
-        //
-        //if(driver != null)
-           // GUI.Label(new Rect(10, 30, 350, 20), "Driver: " + driver + ", axis: " + controlAxis);
-    }
+    
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("Vehicle colliding with " + collision.gameObject.name);
-        //
+        
         float vehicleVelocity = rb.velocity.magnitude;
         PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
-        //
-        //if (/*vehicleVelocity <= 3 || */playerController == driver || playerController == turretGuy)
-        //    return;
-        //
+        
         HealthController healthController = collision.gameObject.GetComponent<HealthController>();
-        //Debug.Log("Collided has HealthController " + healthController != null);
+        
         if (healthController != null)
         {
             Debug.Log("Hitting " + collision.gameObject + " with " + rb.mass + " mass & " + vehicleVelocity + " speed");
@@ -77,28 +76,33 @@ public class VehicleController : NetworkBehaviour {
         }
     }
 
-    [ClientRpc]
+    #endregion
+
+    #region Driver Methods
+
+    /*[ClientRpc]
     public void RpcMove(Vector2 controlAxis)
     {
         transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
         transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
-    }
+    }*/
 
     [Command]
     public void CmdMove(Vector2 controlAxis)
     {
         this.controlAxis = controlAxis;
         Debug.Log("Receiving axis");
-        RpcMove(controlAxis);
-        //transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
-        //transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
+        //RpcMove(controlAxis);
     }
+
+    #endregion
+
+    #region Place Management Methods
 
     [Command]
     public void CmdUse(GameObject player)
     {
-        //Debug.Log("Trying to use");
-        // Check that there isn't currently a driver
+        // Check if there isn't currently a driver or a turret guy
         if (driver == null)
         {
             AssignPosition(player, VehiclePlace.Driver);
@@ -108,6 +112,7 @@ public class VehicleController : NetworkBehaviour {
             AssignPosition(player, VehiclePlace.Gunner);
         }
     }
+
 
     void AssignPosition(GameObject player, VehiclePlace vehiclePlace)
     {
@@ -162,6 +167,10 @@ public class VehicleController : NetworkBehaviour {
         
     }
 
+    #endregion
+
+    #region Turret Methods
+
     [Command]
     public void CmdUseTurret(Quaternion weaponPointRotation, bool leftMouse)
     {
@@ -192,4 +201,6 @@ public class VehicleController : NetworkBehaviour {
     {
         effectManager.playEffect(0);
     }
+
+    #endregion
 }
