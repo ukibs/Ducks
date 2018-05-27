@@ -37,9 +37,6 @@ GameObject:
   - component: {fileID: 33025257630119812}
   - component: {fileID: 136185818608688988}
   - component: {fileID: 23431318574073002}
-  - component: {fileID: 114355343754954468}
-  - component: {fileID: 114548170183829226}
-  - component: {fileID: 114915989922965786}
   - component: {fileID: 114407018212729310}
   m_Layer: 0
   m_Name: Death Turret
@@ -116,20 +113,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1953701121832436}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114355343754954468
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1953701121832436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f6349ab26d86349bcd4ceeea66c6d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shootPoint: {fileID: 4205695076021052}
-  maxWeaponAmmo: 100
-  maxReserveAmmo: 200
 --- !u!114 &114407018212729310
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,60 +124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d575b820a08e1429b1aa1faadc965b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isItem: 0
---- !u!114 &114548170183829226
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1953701121832436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 152
-    i1: 226
-    i2: 249
-    i3: 225
-    i4: 164
-    i5: 137
-    i6: 13
-    i7: 20
-    i8: 168
-    i9: 186
-    i10: 247
-    i11: 62
-    i12: 171
-    i13: 133
-    i14: 245
-    i15: 205
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
---- !u!114 &114915989922965786
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1953701121832436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.11111111
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!136 &136185818608688988
 CapsuleCollider:
   m_ObjectHideFlags: 1

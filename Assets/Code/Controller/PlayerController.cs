@@ -386,7 +386,7 @@ public class PlayerController : NetworkBehaviour {
 			}
 
 			VehicleController vehicleController = hit.transform.GetComponent<VehicleController>();
-			//Debug.Log("Is it a vehicle? " + vehicleController != null);
+			Debug.Log("Is it a vehicle? " + vehicleController != null);
 			if (vehicleController != null)
 			{
 
