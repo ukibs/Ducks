@@ -11,6 +11,12 @@ public class HUD : NetworkBehaviour {
 	public Texture black;
 	public Texture bomb;
 	public Texture bombCooldown;
+	public Texture flashbangCoolDown;
+	public Texture flashbang;
+	public Texture claymoreCoolDown;
+	public Texture claymore;
+	public Texture trapCoolDown;
+	public Texture trap;
 	public Texture backgroundHud;
 	public Texture totalLife;
 	public Texture currentLife;
@@ -64,13 +70,13 @@ public class HUD : NetworkBehaviour {
 							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
 							break;
 						case 1:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), claymoreCoolDown, ScaleMode.StretchToFill);
 							break;
 						case 2:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), trapCoolDown, ScaleMode.StretchToFill);
 							break;
 						case 3:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), flashbangCoolDown, ScaleMode.StretchToFill);
 							break;
 						}		
 					} else {
@@ -79,13 +85,13 @@ public class HUD : NetworkBehaviour {
 							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
 							break;
 						case 1:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), claymore, ScaleMode.StretchToFill);
 							break;
 						case 2:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), trap, ScaleMode.StretchToFill);
 							break;
 						case 3:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 10, Screen.height / 10), flashbang, ScaleMode.StretchToFill);
 							break;
 						}
 					}
