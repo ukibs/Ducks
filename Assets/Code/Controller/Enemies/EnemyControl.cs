@@ -86,6 +86,7 @@ public class EnemyControl : NetworkBehaviour {
         {
             GetPlayers();
             objectivePlayer = GetNearestPlayer();
+            Debug.Log("Players " + players.Count + ", nearest one" + objectivePlayer);
             playerCheckCounter -= playerCheckRate;
         }
         //
@@ -124,7 +125,7 @@ public class EnemyControl : NetworkBehaviour {
         float minDistance = (nearestPlayer.transform.position - transform.position).magnitude;
         for (int i = 1; i < players.Count; i++)
         {
-            if((nearestPlayer.transform.position - transform.position).magnitude < minDistance)
+            if((players[i].transform.position - transform.position).magnitude < minDistance)
             {
                 nearestPlayer = players[i];
                 minDistance = (nearestPlayer.transform.position - transform.position).magnitude;
