@@ -11,9 +11,6 @@ public class Effects : MonoBehaviour {
 
 	#region Private Attributes
 	private AudioSource aS;
-    //protected GameObject gameManager;
-    //protected GameManager gmScript;
-    //protected GameManagerSingleton gameManagerSingleton;
 	#endregion
 
 
@@ -21,18 +18,8 @@ public class Effects : MonoBehaviour {
 	// Use this for initialization
 	protected virtual void Start () 
 	{
-        //gmScript = FindObjectOfType<GameManager>();
-        //gameManagerSingleton = GameManagerSingleton.instance;
 		aS = GetComponent<AudioSource> ();
-        //aS.volume = gameManagerSingleton.Volume;
-        //Debug.Log("Current volume: " + aS.volume);
     }
-
-	// Update is called once per frame
-	protected virtual void Update () 
-	{
-
-	}
 	#endregion
 
 	#region User Methods

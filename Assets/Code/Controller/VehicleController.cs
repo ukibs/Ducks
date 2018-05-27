@@ -90,7 +90,7 @@ public class VehicleController : BaseUsable {
     #region Place Management Methods
 
     [Command]
-    public void CmdUse(GameObject player)
+    public void CmdEnterVehicle(GameObject player)
     {
         // Check if there isn't currently a driver or a turret guy
         if (driver == null)
@@ -195,5 +195,5 @@ public class VehicleController : BaseUsable {
     #endregion
 
     [Command]
-    public override void CmdUse(){;}
+    public override void CmdUse() { }
 }

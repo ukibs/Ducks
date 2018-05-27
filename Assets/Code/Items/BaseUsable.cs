@@ -8,7 +8,6 @@ public class BaseUsable : NetworkBehaviour
     [Command]
     public virtual void CmdUse()
     {
-        Debug.Log("Base Usable: This shouldn't appear");
     }
 
     private void OnTriggerEnter(Collider collision)

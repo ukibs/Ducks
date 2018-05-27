@@ -20,14 +20,5 @@ public class SelectionCanvasManager : NetworkBehaviour {
 			canvasHost.SetActive(false);
 			canvasClient.SetActive(true);
         }
-        else
-        {
-            Debug.Log("Something's wrong");
-        }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

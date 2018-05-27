@@ -12,7 +12,6 @@ public class ExplosionTrapItem : MonoBehaviour {
 		if (hit.CompareTag("Player") || hit.CompareTag("Enemy"))
 		{
 			var player = hit.GetComponent<HealthController> ();
-			//TO DO: change 100 to the player max life
 			player.TakeDamage (100, owner);
 			Destroy (gameObject);
 		}

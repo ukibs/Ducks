@@ -30,11 +30,9 @@ public class Elevator : BaseUsable
 	{
 		if (isServer)
 		{
-			//Debug.Log("In server");
 			status += direction * Time.deltaTime / journeyDuration;
 			status = Mathf.Clamp01(status);
 			transform.position = Vector3.Lerp(originalPosition, displacedPosition, status);
-
 		}
 
 		if (isLocalPlayer) {
@@ -53,16 +51,12 @@ public class Elevator : BaseUsable
 			positionOffset.x = 0;
 			positionOffset.z = 0;
 			other.transform.position += positionOffset;
-			//transform.position += ele.positionOffset;
 		}
-		//Debug.Log ("estoy dentrp");
-		
 	}
 
 	[Command]
 	public void CmdSwitchDirection()
 	{
-		Debug.Log("Switching direction");
 		direction *= -1;
 	}
 
@@ -70,7 +64,6 @@ public class Elevator : BaseUsable
 	public override void CmdUse()
 	{
 		base.CmdUse();
-		Debug.Log("Switching direction");
 		direction *= -1;
 	}
 

@@ -378,7 +378,7 @@ public class PlayerController : NetworkBehaviour {
 			if (vehicleController != null)
 			{
 
-				vehicleController.CmdUse(gameObject);
+				vehicleController.CmdEnterVehicle(gameObject);
 			}
 		}
 	}

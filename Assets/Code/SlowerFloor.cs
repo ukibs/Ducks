@@ -5,16 +5,6 @@ using UnityEngine;
 public class SlowerFloor : MonoBehaviour {
 	public float slow = 2.0f;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	private void OnTriggerEnter(Collider collider)
 	{
 		var hit = collider.gameObject;

@@ -19,18 +19,8 @@ public class Music : MonoBehaviour {
 	#region MonoDevelop Methods
 	// Use this for initialization
 	protected virtual void Start () {
-        //gameManager = GameObject.Find ("GameManager");
-        //gmScript = gameManager.GetComponent<GameManager> ();
-        //gameManagerSingleton = GameManagerSingleton.instance;
 		aS = GetComponent<AudioSource> ();
-        //aS.volume = gameManagerSingleton.Volume;
         PlayMusic();
-	}
-
-	// Update is called once per frame
-	protected virtual void Update () 
-	{
-
 	}
 	#endregion
 
