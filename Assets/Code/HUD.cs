@@ -66,6 +66,17 @@ public class HUD : NetworkBehaviour {
 					GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black, ScaleMode.ScaleToFit, true, 10f);
 
 				}
+
+				//Collision elevator or doors
+				if (player.CollisionElevator) //|| player.CollisionDoor)
+				{
+					GUI.Label (new Rect (Screen.width / 2, Screen.height / 2, Screen.width / 15, Screen.height / 12f), "Press E");
+					player.CollisionElevator = false;
+				} 
+				else 
+				{
+					
+				}
 					
 				for (int i = 0; i < 4; i++) 
 				{
