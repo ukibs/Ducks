@@ -54,9 +54,7 @@ public class PlayerController : NetworkBehaviour {
 	public GameObject lifePrefab;
 	public GameObject explosiveTrap;
 	public GameObject inmovilTrap;
-    public GameObject bulletPrefab;
 	public GameObject blindGrenadePrefab;
-    public List<GameObject> weaponPrefabs;
     public GameObject grenadePrefab;
 	#endregion
 
@@ -79,7 +77,7 @@ public class PlayerController : NetworkBehaviour {
 	private int playerId;
 	private VehicleController currentVehicle;
 	private CharacterController controller;
-	private WeaponController weaponController;
+    private WeaponController2 weaponController;
 	#endregion
 
 	#region Input Attributes
@@ -104,8 +102,6 @@ public class PlayerController : NetworkBehaviour {
 	#endregion
 
     #region Properties
-
-    public Transform CurrentWeapon { get { return weapons[currentWeaponIndex].GetComponent<BaseWeapon>().shootPoint; } }
 	public PlayerStates State {
         set { state = value; }
         get { return state; }
@@ -137,8 +133,7 @@ public class PlayerController : NetworkBehaviour {
         cam.transform.position = camFirstPerson.position;
 		cam.enabled = true;
 		controller = GetComponent<CharacterController>();
-		weaponController = GetComponent<WeaponController> ();
-        InitializeWeapons();
+        weaponController = GetComponent<WeaponController2>();
 		InitializeCooldowns ();
         //
         networkManager = FindObjectOfType<CustomNetworkManager>();
@@ -215,7 +210,7 @@ public class PlayerController : NetworkBehaviour {
 
 		}
 		if (tabKey) {
-			CmdChangeWeapon ();
+			weaponController.CmdChangeWeapon ();
 		}
 		if (mouseLeft && cooldown [throwBulletIndex] == 0) {
 			CmdFire ();
@@ -352,43 +347,6 @@ public class PlayerController : NetworkBehaviour {
 	}
     #endregion
 
-    #region Weapon Functions
-    private void InitializeWeapons()
-    {
-        weapons = new List<GameObject>(weaponPrefabs.Count);
-        for (int i = 0; i < weaponPrefabs.Count; i++)
-        {
-            GameObject newWeapon = Instantiate(weaponPrefabs[i], weaponPoint);
-            newWeapon.transform.localPosition = Vector3.zero;
-            if (i > 0) newWeapon.SetActive(false);
-            weapons.Add(newWeapon);
-        }
-    }
-
-    [Command]
-	void CmdChangeWeapon()
-	{
-        int lastIndex = currentWeaponIndex;
-        weapons[currentWeaponIndex].SetActive(false);
-        currentWeaponIndex++;
-        if (currentWeaponIndex >= weapons.Count) currentWeaponIndex = 0;
-        weapons[currentWeaponIndex].SetActive(true);
-
-        weaponController.special = !weaponController.special;
-        RpcChangeWeapon(lastIndex, currentWeaponIndex, weaponController.special);
-	}
-
-    [ClientRpc]
-    private void RpcChangeWeapon(int lastIndex, int newIndex, bool specialState)
-    {
-        weapons[lastIndex].SetActive(false);
-        currentWeaponIndex = newIndex;
-        weapons[currentWeaponIndex].SetActive(true);
-
-        weaponController.special = specialState;
-    }
-    #endregion
-
     [Command]
 	private void CmdCheckAndUse()
 	{
@@ -506,13 +464,13 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	public void CmdThrowItems()
 	{
-		GameObject itemLife = GameObject.Instantiate(lifePrefab, CurrentWeapon.position, CurrentWeapon.rotation);
-		GameObject ammunitionItem = GameObject.Instantiate(weaponPrefabs[currentWeaponIndex], CurrentWeapon.position, CurrentWeapon.rotation);
+		GameObject itemLife = Instantiate(lifePrefab, weaponController.CurrentWeapon.position, weaponController.CurrentWeapon.rotation);
+		GameObject ammunitionItem = Instantiate(weaponController.CurrentPrefab, weaponController.CurrentWeapon.position, weaponController.CurrentWeapon.rotation);
 
         AmmunitionItem ammo = ammunitionItem.GetComponent<AmmunitionItem> ();
 		ammo.IsItem = true;
 		ammo.Bullets = weaponController.CurrentAmmo;
-        ammo.Special = weaponController.special;
+        ammo.Special = weaponController.WeaponIndex;
 
 		NetworkServer.Spawn(itemLife);
 		NetworkServer.Spawn (ammunitionItem);
@@ -527,14 +485,8 @@ public class PlayerController : NetworkBehaviour {
 		if (state == PlayerStates.Normal || state == PlayerStates.InVehicleTurret) 
 		{
 			if (weaponController.CurrentAmmo > 0) {
-				GameObject newBullet = GameObject.Instantiate (bulletPrefab, CurrentWeapon.position, CurrentWeapon.rotation);
-				newBullet.GetComponent<Rigidbody> ().velocity = newBullet.transform.forward * 10f;
-				newBullet.GetComponent<Bullet> ().owner = gameObject;
-
-				weaponController.wasteBullet ();
-				NetworkServer.Spawn (newBullet);
+                weaponController.CmdShoot();
 				CmdCooldown (throwBulletIndex, Constants.bulletCooldown);
-				Destroy (newBullet, Constants.bulletTimeDestroy);
 
                 effectManager.playEffect(0);
                 RpcShootSound();
@@ -582,7 +534,8 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	void CmdThrowExplosiveTrap()
 	{
-		GameObject newExplosiveTrap = GameObject.Instantiate(explosiveTrap, CurrentWeapon.position + transform.forward*5, CurrentWeapon.rotation);
+        Debug.Log(weaponController.CurrentWeapon.position + " inmovil");
+        GameObject newExplosiveTrap = Instantiate(explosiveTrap, weaponController.CurrentWeapon.position + transform.forward*5, weaponController.CurrentWeapon.rotation);
 
 		newExplosiveTrap.GetComponent<ExplosionTrapItem> ().owner = gameObject;
 
@@ -595,7 +548,8 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	void CmdThrowInmovilTrap()
 	{
-		GameObject newInmovilTrap = GameObject.Instantiate(inmovilTrap, CurrentWeapon.position + transform.forward*5, CurrentWeapon.rotation);
+        Debug.Log(weaponController.CurrentWeapon.position + " inmovil");
+		GameObject newInmovilTrap = Instantiate(inmovilTrap, weaponController.CurrentWeapon.position + transform.forward*5, weaponController.CurrentWeapon.rotation);
 
 		NetworkServer.Spawn(newInmovilTrap);
 

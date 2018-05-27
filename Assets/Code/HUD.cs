@@ -17,14 +17,14 @@ public class HUD : NetworkBehaviour {
 
 	private PlayerController player;
 	private HealthController life;
-	private WeaponController weapon;
+    private WeaponController2 weapon;
 	private Scene currentScene;
 
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<PlayerController> ();
 		life = GetComponent<HealthController> ();
-		weapon = GetComponent<WeaponController> ();
+        weapon = GetComponent<WeaponController2>();
 	}
 	
 	// Update is called once per frame

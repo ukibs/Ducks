@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 143251407701251032}
   - component: {fileID: 114210296575053268}
   - component: {fileID: 114333814512913002}
+  - component: {fileID: 114698779997808396}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -816,7 +817,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1695685568892666}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03704af50184dc64fa1b9b84d44ae32a, type: 3}
   m_Name: 
@@ -959,6 +960,25 @@ MonoBehaviour:
   weaponPoint: {fileID: 4314236348812536}
   rotationPoint: {fileID: 4594255177490660}
   body: {fileID: 1774746632589380}
+--- !u!114 &114698779997808396
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1695685568892666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 686cbc1a63c4ecb4eb68941da15c470f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponPrefabs:
+  - {fileID: 1578046892124282, guid: 618fdfe19dc6f7447920b929e62662ed, type: 2}
+  - {fileID: 1953701121832436, guid: 77b377ac44922bb42b3e6747a16c382c, type: 2}
+  bulletPrefab:
+  - {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046, type: 2}
+  - {fileID: 1649190195679524, guid: 6664d64edeaa59e4688590b5ef1ff0fa, type: 2}
+  maxWeaponAmmo: 0a00000005000000
+  maxReserveAmmo: 140000000f000000
 --- !u!114 &114828619055226966
 MonoBehaviour:
   m_ObjectHideFlags: 1
