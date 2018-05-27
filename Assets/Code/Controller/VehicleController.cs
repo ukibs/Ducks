@@ -33,7 +33,7 @@ public class VehicleController : NetworkBehaviour {
         if (isServer)
         {
             //transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
-            rigidbody.velocity = Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime;
+            rigidbody.velocity = transform.forward * controlAxis.y * 20.0f * Time.deltaTime;
             transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
             rigidbody.angularVelocity = Vector3.zero;
         }
