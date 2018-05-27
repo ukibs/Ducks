@@ -26,20 +26,27 @@ public class HUD : NetworkBehaviour {
     private WeaponController2 weapon;
 	private Scene currentScene;
 
-	private FadeInOut fade;
+    //0 -> transparent, 1 -> opaque
+    public float alpha = 0.0f;
+    private int drawDepth = -100;
+    private Color fadeColor;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		player = GetComponent<PlayerController> ();
 		life = GetComponent<HealthController> ();
         weapon = GetComponent<WeaponController2>();
-		fade = new FadeInOut();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		currentScene = SceneManager.GetActiveScene();
-	}
+
+        alpha = player.getCooldown(4)/Constants.blindGrenadeCooldown;
+        alpha = Mathf.Clamp01(alpha);
+        fadeColor = GUI.color;
+        fadeColor.a = alpha;
+    }
 		
 	private void OnGUI()
 	{
@@ -63,7 +70,9 @@ public class HUD : NetworkBehaviour {
 				//Blind screen
 				if (player.getCooldown (4) != 0) 
 				{
-					GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black, ScaleMode.ScaleToFit, true, 10f);
+                    GUI.color = fadeColor;
+                    GUI.depth = drawDepth;
+                    GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
 
 				}
 
