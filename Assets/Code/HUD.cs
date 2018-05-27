@@ -77,15 +77,10 @@ public class HUD : NetworkBehaviour {
 				}
 
 				//Collision elevator or doors
-				if (player.CollisionElevator) //|| player.CollisionDoor)
+				if (player.CollisionElevator)
 				{
-					GUI.Label (new Rect (Screen.width / 2, Screen.height / 2, Screen.width / 15, Screen.height / 12f), "Press E");
-					player.CollisionElevator = false;
+					GUI.Label (new Rect (Screen.width / 2, Screen.height / 2, Screen.width / 15, Screen.height / 12f), "Press E to use");
 				} 
-				else 
-				{
-					
-				}
 					
 				for (int i = 0; i < 4; i++) 
 				{

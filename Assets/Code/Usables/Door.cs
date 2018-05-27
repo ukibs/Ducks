@@ -27,38 +27,17 @@ public class Door : BaseUsable
 	{
         if (isServer)
         {
-            //Debug.Log("In server");
             status += direction * Time.deltaTime / journeyDuration;
             status = Mathf.Clamp01(status);
 
             transform.position = Vector3.Lerp(originalPosition, displacedPosition, status);
             
         }
-
-        /*if (!isLocalPlayer)
-        {
-            Debug.Log("Not Local player");
-            if (enter == true)
-            {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    Debug.Log("Key pressed");
-                    // direction *= -1;
-                    CmdSwitchDirection();
-                }
-            }
-        }*/
-
-        if (isLocalPlayer)
-        {
-            Debug.Log("In local player");
-        }
 	}
 
     [Command]
     public void CmdSwitchDirection()
     {
-        Debug.Log("Switching direction");
         direction *= -1;
     }
 
@@ -66,8 +45,6 @@ public class Door : BaseUsable
     public override void CmdUse()
     {
         base.CmdUse();
-        Debug.Log("Switching direction");
         direction *= -1;
     }
-
 }

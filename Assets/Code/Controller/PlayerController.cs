@@ -73,7 +73,6 @@ public class PlayerController : NetworkBehaviour {
     private Effects effectManager;
 
     private bool collElevator = false;
-    private bool collDoor = false;
 
     #region Controllers
     private CustomNetworkManager networkManager;
@@ -120,12 +119,6 @@ public class PlayerController : NetworkBehaviour {
     {
         set { collElevator = value; }
         get { return collElevator; }
-    }
-
-    public bool CollisionDoor
-    {
-        set { collDoor = value; }
-        get { return collDoor; }
     }
 
     #endregion
@@ -579,23 +572,25 @@ public class PlayerController : NetworkBehaviour {
 
     void OnTriggerStay(Collider other)
     {
-
         // Chequeo adicional específico para el ascensor
         Elevator ele = other.gameObject.GetComponent<Elevator>();
         if (ele != null)
         {
-            collElevator = true;
             transform.position += ele.PositionOffset;
         }
+    }
 
+    [Command]
+    public void CmdCollisionObject(bool state)
+    {
+        collElevator = state;
+        RpcCollisionObject(state);
+    }
 
-        // Chequeo adicional específico para la puerta
-        Door door = other.gameObject.GetComponent<Door>();
-        if (door != null)
-        {
-            collDoor = true;
-            Debug.Log("Estoy en la puerta");
-        }
+    [ClientRpc]
+    public void RpcCollisionObject(bool state)
+    {
+        collElevator = state;
     }
 
     #endregion
