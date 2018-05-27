@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Elevator : NetworkBehaviour
+public class Elevator : BaseUsable
 {
 	public bool enter = false;
 
@@ -39,6 +39,7 @@ public class Elevator : NetworkBehaviour
 
 		if (isLocalPlayer) {
 			positionOffset = transform.position - previousPos;
+
 		}
 		previousPos = transform.position;
 	}
@@ -58,37 +59,20 @@ public class Elevator : NetworkBehaviour
 		
 	}
 
-	//Activate the Main function when player is near the door
-	//[Command]  
-	//[RPC]
-	/*private void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.tag == "Player")
-		{
-			Debug.Log("Trigger Enter");
-			(enter) = true;
-			other.GetComponent<PlayerController>().elevator = this;
-		}
-	}
-
-	//Deactivate the Main function when player is go away from door
-	//[Command]
-	//[RPC]
-	void OnTriggerExit (Collider other)
-	{
-		if (other.gameObject.tag == "Player")
-		{
-			Debug.Log("Trigger Exit");
-			(enter) = false;
-			other.GetComponent<PlayerController>().elevator = null;
-		}
-	}
-
 	[Command]
 	public void CmdSwitchDirection()
 	{
 		Debug.Log("Switching direction");
 		direction *= -1;
-	}*/
+	}
+
+	[Command]
+	public override void CmdUse()
+	{
+		base.CmdUse();
+		Debug.Log("Switching direction");
+		direction *= -1;
+	}
+
 
 }
