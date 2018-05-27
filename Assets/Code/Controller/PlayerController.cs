@@ -72,6 +72,9 @@ public class PlayerController : NetworkBehaviour {
     
     private Effects effectManager;
 
+    private bool collElevator = false;
+    private bool collDoor = false;
+
     #region Controllers
     private CustomNetworkManager networkManager;
 	private int playerId;
@@ -113,8 +116,20 @@ public class PlayerController : NetworkBehaviour {
         get { return currentVehicle; }
     }
 
+    public bool CollisionElevator
+    {
+        set { collElevator = value; }
+        get { return collElevator; }
+    }
+
+    public bool CollisionDoor
+    {
+        set { collDoor = value; }
+        get { return collDoor; }
+    }
+
     #endregion
-    
+
     #region Unity Methods
     public override void OnStartLocalPlayer()
 	{
@@ -320,6 +335,7 @@ public class PlayerController : NetworkBehaviour {
             case PlayerStates.InVehicleTurret:
                 //
                 CmdVehicleOptions(spaceKey, eKey);
+                CmdUseTurret(cam.transform.rotation, mouseLeft);
                 //
                 cam.transform.Rotate(mouseY * -90.0f * dt, 0.0f, 0.0f);
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
@@ -482,7 +498,7 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     void CmdFire()
     {
-		if (state == PlayerStates.Normal || state == PlayerStates.InVehicleTurret) 
+		if (state == PlayerStates.Normal) 
 		{
 			if (weaponController.CurrentAmmo > 0) {
                 weaponController.CmdShoot();
@@ -557,22 +573,34 @@ public class PlayerController : NetworkBehaviour {
 		Destroy(newInmovilTrap, Constants.trampInmovilTimeDestroy);
 	}
 
-	#endregion
+    #endregion
 
-	#region Elevator
+    #region Elevator and Door
 
-	void OnTriggerStay(Collider other)
-	{
-		// Chequeo adicional específico para el ascensor
-		Elevator ele= other.gameObject.GetComponent<Elevator>();
-		if (ele != null) {
-			transform.position += ele.PositionOffset;
-		}
-	}
+    void OnTriggerStay(Collider other)
+    {
 
-	#endregion
+        // Chequeo adicional específico para el ascensor
+        Elevator ele = other.gameObject.GetComponent<Elevator>();
+        if (ele != null)
+        {
+            collElevator = true;
+            transform.position += ele.PositionOffset;
+        }
 
-	#region Vehicle Functions
+
+        // Chequeo adicional específico para la puerta
+        Door door = other.gameObject.GetComponent<Door>();
+        if (door != null)
+        {
+            collDoor = true;
+            Debug.Log("Estoy en la puerta");
+        }
+    }
+
+    #endregion
+
+    #region Vehicle Functions
     [ClientRpc]
     public void RpcEnterVehicle(GameObject vehicle, VehiclePlace vehiclePlace)
     {
@@ -649,6 +677,12 @@ public class PlayerController : NetworkBehaviour {
             Debug.Log("Trying to quit vehicle");
             currentVehicle.CmdQuitVehicle(gameObject);
         }
+    }
+
+    [Command]
+    void CmdUseTurret(Quaternion weaponPointRotation, bool leftMouse)
+    {
+        currentVehicle.CmdUseTurret(weaponPointRotation, leftMouse);
     }
 	#endregion
 

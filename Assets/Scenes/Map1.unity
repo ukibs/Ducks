@@ -2832,8 +2832,8 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 1357841904451440, guid: c7425afb8ed65e44bb01c5e6aab42f00, type: 2}
   - {fileID: 1357841904451440, guid: 6ef1b0513182f6545b5d3022a7d9a125, type: 2}
-  numEnemies: 1
-  enemySpawnRate: 3
+  numEnemies: 0
+  enemySpawnRate: 20
 --- !u!114 &539565832
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,17 +15,24 @@ public class VehicleController : NetworkBehaviour {
 
     public Transform driverPlace;
     public Transform turretGuyPlace;
+    public GameObject turretWeapon;
+    public GameObject turretBulletPrefab;
 
     private PlayerController driver;
     private PlayerController turretGuy;
 
     private Vector2 controlAxis;
-    private Rigidbody rigidbody;
+    private Rigidbody rb;
+    private Effects effectManager;
+    private float turretWeaponFireCount;
+    private Transform turretFirePoint;
 
 	// Use this for initialization
 	void Start () {
         controlAxis = Vector2.zero;
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        effectManager = FindObjectOfType<Effects>();
+        turretFirePoint = turretWeapon.transform.GetChild(0);
 	}
 	
 	// Update is called once per frame
@@ -33,9 +40,13 @@ public class VehicleController : NetworkBehaviour {
         if (isServer)
         {
             //transform.Translate(Vector3.forward * controlAxis.y * 20.0f * Time.deltaTime);
-            rigidbody.velocity = transform.forward * controlAxis.y * 20.0f * Time.deltaTime;
+            rb.velocity = transform.forward * controlAxis.y * 20.0f * Time.deltaTime;
             transform.Rotate(transform.up * controlAxis.x * 90.0f * Time.deltaTime);
-            rigidbody.angularVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            if(turretGuy != null && turretWeaponFireCount < Constants.bulletCooldown)
+            {
+                turretWeaponFireCount += Time.deltaTime;
+            }
         }
             //RpcMove();
     }
@@ -43,15 +54,15 @@ public class VehicleController : NetworkBehaviour {
     private void OnGUI()
     {
         //
-        if(driver != null)
-            GUI.Label(new Rect(10, 30, 350, 20), "Driver: " + driver + ", axis: " + controlAxis);
+        //if(driver != null)
+           // GUI.Label(new Rect(10, 30, 350, 20), "Driver: " + driver + ", axis: " + controlAxis);
     }
 
     void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("Vehicle colliding with " + collision.gameObject.name);
         //
-        float vehicleVelocity = rigidbody.velocity.magnitude;
+        float vehicleVelocity = rb.velocity.magnitude;
         PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
         //
         //if (/*vehicleVelocity <= 3 || */playerController == driver || playerController == turretGuy)
@@ -61,8 +72,8 @@ public class VehicleController : NetworkBehaviour {
         //Debug.Log("Collided has HealthController " + healthController != null);
         if (healthController != null)
         {
-            Debug.Log("Hitting " + collision.gameObject + " with " + rigidbody.mass + " mass & " + vehicleVelocity + " speed");
-            healthController.TakeDamage((int)(rigidbody.mass * vehicleVelocity), driver.gameObject);
+            Debug.Log("Hitting " + collision.gameObject + " with " + rb.mass + " mass & " + vehicleVelocity + " speed");
+            healthController.TakeDamage((int)(rb.mass * vehicleVelocity), driver.gameObject);
         }
     }
 
@@ -102,6 +113,9 @@ public class VehicleController : NetworkBehaviour {
     {
         //
         PlayerController playerController = player.GetComponent<PlayerController>();
+
+        playerController.RpcEnterVehicle(gameObject, vehiclePlace);
+
         switch (vehiclePlace)
         {
             case VehiclePlace.Driver:
@@ -111,11 +125,6 @@ public class VehicleController : NetworkBehaviour {
                 turretGuy = playerController;
                 break;
         }
-        
-        playerController.RpcEnterVehicle(gameObject, vehiclePlace);
-        
-        
-        //
         
     }
 
@@ -151,5 +160,36 @@ public class VehicleController : NetworkBehaviour {
         else if (playerController.State == PlayerStates.InVehicleTurret) turretGuy = null;
         playerController.RpcQuitVehicle();
         
+    }
+
+    [Command]
+    public void CmdUseTurret(Quaternion weaponPointRotation, bool leftMouse)
+    {
+        turretWeapon.transform.rotation = weaponPointRotation * Quaternion.AngleAxis(90, Vector3.right);
+        if (leftMouse && turretWeaponFireCount >= Constants.bulletCooldown)
+        {
+            CmdFire();
+            turretWeaponFireCount = 0;
+        }
+    }
+
+    [Command]
+    void CmdFire()
+    {
+        GameObject newBullet = Instantiate(turretBulletPrefab, 
+            turretFirePoint.position + turretFirePoint.forward, 
+            turretFirePoint.rotation);
+        Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
+        bulletRB.velocity = newBullet.transform.forward * 20;
+        Debug.Log("Created " + newBullet);
+
+        effectManager.playEffect(0);
+        RpcShootSound();
+    }
+
+    [ClientRpc]
+    void RpcShootSound()
+    {
+        effectManager.playEffect(0);
     }
 }
