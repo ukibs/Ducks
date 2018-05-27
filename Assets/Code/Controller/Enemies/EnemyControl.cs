@@ -29,6 +29,10 @@ public class EnemyControl : NetworkBehaviour {
 
 	// Use this for initialization
 	protected virtual void Start () {
+        //
+        if (!isServer) return;
+
+        //
         cc = GetComponent<CharacterController>();
         players = new List<PlayerController>();
         GetPlayers();
@@ -43,6 +47,8 @@ public class EnemyControl : NetworkBehaviour {
 
     // Update is called once per frame
     protected virtual void Update () {
+        //
+        if (!isServer) return;
         //
         float dt = Time.deltaTime;
         //
