@@ -26,19 +26,21 @@ public class HUD : NetworkBehaviour {
     private WeaponController2 weapon;
 	private Scene currentScene;
 
+	private FadeInOut fade;
+
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<PlayerController> ();
 		life = GetComponent<HealthController> ();
         weapon = GetComponent<WeaponController2>();
+		fade = new FadeInOut();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		currentScene = SceneManager.GetActiveScene();
-
 	}
-
+		
 	private void OnGUI()
 	{
 		if (currentScene.name != "SelectorOfMaps") {
@@ -59,39 +61,51 @@ public class HUD : NetworkBehaviour {
 				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, Screen.width / 6, Screen.height / 9.5f), "Score: " + life.Score);
 
 				//Blind screen
-				if(player.getCooldown(4) != 0)
-					GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
+				if (player.getCooldown (4) != 0) 
+				{
+					GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black, ScaleMode.ScaleToFit, true, 10f);
 
+				}
+					
 				for (int i = 0; i < 4; i++) 
 				{
-					if (player.getCooldown (i) != 0) {
-						switch (i) {
+					if (player.getCooldown (i) != 0) 
+					{
+						switch (i) 
+						{
 						case 0:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.5f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), bombCooldown, ScaleMode.StretchToFill);
 							break;
 						case 1:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), claymoreCoolDown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.7f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), claymoreCoolDown, ScaleMode.StretchToFill);
 							break;
 						case 2:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), trapCoolDown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.7f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), trapCoolDown, ScaleMode.StretchToFill);
 							break;
 						case 3:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), flashbangCoolDown, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.7f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), flashbangCoolDown, ScaleMode.StretchToFill);
 							break;
 						}		
-					} else {
-						switch (i) {
+					} 
+					else 
+					{
+						switch (i) 
+						{
 						case 0:
 							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), bomb, ScaleMode.StretchToFill);
+							GUI.Label (new Rect (Screen.width * i * 1.2f /  10, Screen.height * 9.5f / 10, Screen.width / 17, Screen.height / 9.5f), "Righ Mouse");
 							break;
 						case 1:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), claymore, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.7f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), claymore, ScaleMode.StretchToFill);
+							GUI.Label (new Rect (Screen.width * i * 1.3f  / 10, Screen.height * 9.5f / 10, Screen.width / 17, Screen.height / 9.5f), "1");
 							break;
 						case 2:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), trap, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.7f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), trap, ScaleMode.StretchToFill);
+							GUI.Label (new Rect (Screen.width * i * 1f  / 10, Screen.height * 9.5f / 10, Screen.width / 17, Screen.height / 9.5f), "2");
 							break;
 						case 3:
-							GUI.DrawTexture (new Rect (Screen.width * i * 0.6f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), flashbang, ScaleMode.StretchToFill);
+							GUI.DrawTexture (new Rect (Screen.width * i * 0.7f / 10, Screen.height * 9 / 10, Screen.width / 17, Screen.height / 10), flashbang, ScaleMode.StretchToFill);
+							GUI.Label (new Rect (Screen.width * i * 0.9f  / 10, Screen.height * 9.5f / 10, Screen.width / 17, Screen.height / 9.5f), "3");
 							break;
 						}
 					}
