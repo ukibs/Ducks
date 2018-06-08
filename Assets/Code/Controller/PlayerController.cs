@@ -492,12 +492,16 @@ public class PlayerController : NetworkBehaviour {
                 // First, determine the point in front of the player size
                 Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
                 RaycastHit hit;
-                if(Physics.Raycast(ray, out hit))
+                Vector3 shootPoint = Vector3.zero;
+                if (cam.transform.position != camThirdPerson.position)
                 {
-
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        shootPoint = hit.point;
+                    }
                 }
                 //
-                weaponController.CmdShoot(hit.point);
+                weaponController.CmdShoot(shootPoint);
 				CmdCooldown (throwBulletIndex, Constants.bulletCooldown);
 
                 effectManager.playEffect(0);

@@ -151,13 +151,18 @@ public class WeaponController2 : NetworkBehaviour
     }
 
     [Command]
-    public void CmdShoot(Vector3 directionToPoint)
+    public void CmdShoot(Vector3 pointToLook)
     {
+        // Check if a point has been recived
         Quaternion directionToShoot;
-        if (directionToPoint != null) directionToShoot = Quaternion.LookRotation(directionToPoint, Vector3.up);
+        if (pointToLook != null && pointToLook != Vector3.zero) {
+            Vector3 pointDirection = pointToLook - CurrentWeapon.position;
+            directionToShoot = Quaternion.LookRotation(pointDirection, Vector3.up);
+        }
+        // If no take de weapon point rotation
         else directionToShoot = CurrentWeapon.rotation;
 
-        GameObject newBullet = Instantiate(bulletPrefab[currentWeaponIndex], CurrentWeapon.position, CurrentWeapon.rotation);
+        GameObject newBullet = Instantiate(bulletPrefab[currentWeaponIndex], CurrentWeapon.position, directionToShoot);
         newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 30f;
         newBullet.GetComponent<Bullet>().owner = gameObject;
 

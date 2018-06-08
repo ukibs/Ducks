@@ -64,7 +64,7 @@ public class VehicleController : BaseUsable {
     void OnCollisionEnter(Collision collision)
     {
         // Null reference control
-        //if (collision == null) return;
+        if (collision == null) return;
         //
         if (isServer)
         {
