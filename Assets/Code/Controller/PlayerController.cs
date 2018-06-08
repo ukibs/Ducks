@@ -74,7 +74,6 @@ public class PlayerController : NetworkBehaviour {
 
     #region Controllers
     private CustomNetworkManager networkManager;
-	private int playerId;
 	private VehicleController currentVehicle;
 	private CharacterController controller;
     private WeaponController2 weaponController;
@@ -147,7 +146,6 @@ public class PlayerController : NetworkBehaviour {
         if (isServer)
         {
             networkManager.RegisterPlayer(gameObject);
-            playerId = networkManager.GetId();
             networkManager.SetColorToPlayers();
         }
         
