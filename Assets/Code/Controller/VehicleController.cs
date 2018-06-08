@@ -39,10 +39,13 @@ public class VehicleController : BaseUsable {
 
     // Use this for initialization
     void Start () {
-        controlAxis = Vector2.zero;
-        rb = GetComponent<Rigidbody>();
-        effectManager = FindObjectOfType<Effects>();
-        turretFirePoint = turretWeapon.transform.GetChild(0);
+        if (isServer)
+        {
+            controlAxis = Vector2.zero;
+            rb = GetComponent<Rigidbody>();
+            effectManager = FindObjectOfType<Effects>();
+            turretFirePoint = turretWeapon.transform.GetChild(0);
+        }
 	}
 	
 	// Update is called once per frame

@@ -50,14 +50,16 @@ public class HUD : NetworkBehaviour {
         bomb = Resources.Load("Textures/granada") as Texture;
         bombCooldown = Resources.Load("Textures/granadaDesact") as Texture;
 
-    player = GetComponent<PlayerController> ();
+        player = GetComponent<PlayerController> ();
 		life = GetComponent<HealthController> ();
         weapon = GetComponent<WeaponController2>();
-	}
+
+        currentScene = SceneManager.GetActiveScene();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		currentScene = SceneManager.GetActiveScene();
+		
 
         alpha = player.getCooldown(4)/Constants.blindGrenadeCooldown;
         alpha = Mathf.Clamp01(alpha);

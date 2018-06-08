@@ -56,18 +56,21 @@ public class WeaponController2 : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        player = GetComponent<PlayerController>();
-        currentWeaponAmmo = new int[weaponPrefabs.Length];
-        currentReserveAmmo = new int[weaponPrefabs.Length];
-        weapons = new List<GameObject>(weaponPrefabs.Length);
-        for (int i = 0; i < weaponPrefabs.Length; i++)
+        if (isServer)
         {
-            GameObject newWeapon = Instantiate(weaponPrefabs[i], player.weaponPoint);
-            newWeapon.transform.localPosition = Vector3.zero;
-            if (i > 0) newWeapon.SetActive(false);
-            weapons.Add(newWeapon);
-            currentWeaponAmmo[i] = maxWeaponAmmo[i];
-            currentReserveAmmo[i] = maxReserveAmmo[i];
+            player = GetComponent<PlayerController>();
+            currentWeaponAmmo = new int[weaponPrefabs.Length];
+            currentReserveAmmo = new int[weaponPrefabs.Length];
+            weapons = new List<GameObject>(weaponPrefabs.Length);
+            for (int i = 0; i < weaponPrefabs.Length; i++)
+            {
+                GameObject newWeapon = Instantiate(weaponPrefabs[i], player.weaponPoint);
+                newWeapon.transform.localPosition = Vector3.zero;
+                if (i > 0) newWeapon.SetActive(false);
+                weapons.Add(newWeapon);
+                currentWeaponAmmo[i] = maxWeaponAmmo[i];
+                currentReserveAmmo[i] = maxReserveAmmo[i];
+            }
         }
     }
 
