@@ -75,7 +75,7 @@ public class VehicleController : BaseUsable {
 
             if (healthController != null)
             {
-                Debug.Log("Hitting " + collision.gameObject + " with " + rb.mass + " mass & " + vehicleVelocity + " speed");
+                // Debug.Log("Hitting " + collision.gameObject + " with " + rb.mass + " mass & " + vehicleVelocity + " speed");
                 healthController.TakeDamage((int)(rb.mass * vehicleVelocity), driver.gameObject);
             }
         }

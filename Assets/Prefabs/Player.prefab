@@ -966,8 +966,8 @@ MonoBehaviour:
   bulletPrefab:
   - {fileID: 1287825900861300, guid: b724d9ca27a08814bb9a3e4fba7d6046, type: 2}
   - {fileID: 1649190195679524, guid: 6664d64edeaa59e4688590b5ef1ff0fa, type: 2}
-  maxWeaponAmmo: 0a00000005000000
-  maxReserveAmmo: 140000000f000000
+  maxWeaponAmmo: 1e00000014000000
+  maxReserveAmmo: 3c00000014000000
 --- !u!114 &114828619055226966
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -489,7 +489,15 @@ public class PlayerController : NetworkBehaviour {
 		if (state == PlayerStates.Normal) 
 		{
 			if (weaponController.CurrentAmmo > 0) {
-                weaponController.CmdShoot();
+                // First, determine the point in front of the player size
+                Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+                RaycastHit hit;
+                if(Physics.Raycast(ray, out hit))
+                {
+
+                }
+                //
+                weaponController.CmdShoot(hit.point);
 				CmdCooldown (throwBulletIndex, Constants.bulletCooldown);
 
                 effectManager.playEffect(0);
