@@ -134,7 +134,7 @@ public class PlayerController : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        lifePrefab = Resources.Load("Prefabs/LifeItem") as GameObject;
+        lifePrefab = Resources.Load("Prefabs/Life") as GameObject;
         explosiveTrap = Resources.Load("Prefabs/Weapons/ExplosiveTrap") as GameObject;
         inmovilTrap = Resources.Load("Prefabs/Weapons/InmovilTrap") as GameObject;
         blindGrenadePrefab = Resources.Load("Prefabs/Weapons/blindGrenade") as GameObject;
