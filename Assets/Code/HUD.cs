@@ -68,14 +68,7 @@ public class HUD : NetworkBehaviour {
 				//Score
 				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, Screen.width / 6, Screen.height / 9.5f), "Score: " + life.Score);
 
-				//Blind screen
-				if (player.getCooldown (4) != 0) 
-				{
-                    GUI.color = fadeColor;
-                    GUI.depth = drawDepth;
-                    GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
-
-				}
+				
 
                 //Pointer
                 GUI.DrawTexture(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 50, 100, 100), pointer, ScaleMode.StretchToFill);
@@ -133,7 +126,17 @@ public class HUD : NetworkBehaviour {
 				//Life
 				GUI.DrawTexture(new Rect(Screen.width *3.5f/10, Screen.height*9.1f/10, Screen.width*3/10, Screen.height*0.8f/10), totalLife, ScaleMode.StretchToFill);
 				GUI.DrawTexture(new Rect(Screen.width *3.5f/10, Screen.height*9.1f/10, life.Health/100f * (Screen.width*3/10), Screen.height*0.8f/10), currentLife, ScaleMode.StretchToFill);
-			}
+
+                //Blind screen
+                Debug.Log(player.getCooldown(4));
+                if (player.getCooldown(4) != 0)
+                {
+                    GUI.color = fadeColor;
+                    GUI.depth = drawDepth;
+                    GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
+
+                }
+            }
 		
 		}
 
