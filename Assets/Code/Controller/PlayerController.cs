@@ -39,7 +39,7 @@ public class PlayerController : NetworkBehaviour {
     private float movementSpeed = 5.0f;
 	private float runSpeed = 10.0f;
 	private float crouchSpeed = 3.0f;
-	private float jumpForce = 5.0f;
+	private float jumpForce = 8.0f;
 	private Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 	private float verticalSpeed = 0.0f;
 	#endregion
