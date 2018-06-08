@@ -72,7 +72,7 @@ public class VehicleController : BaseUsable {
         if (isServer)
         {
             float vehicleVelocity = rb.velocity.magnitude;
-            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+            //PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
 
             HealthController healthController = collision.gameObject.GetComponent<HealthController>();
 

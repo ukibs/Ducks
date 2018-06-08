@@ -156,7 +156,7 @@ public class WeaponController2 : NetworkBehaviour
     {
         // Check if a point has been recived
         Quaternion directionToShoot;
-        if (pointToLook != null && pointToLook != Vector3.zero) {
+        if (pointToLook != Vector3.zero) {
             Vector3 pointDirection = pointToLook - CurrentWeapon.position;
             directionToShoot = Quaternion.LookRotation(pointDirection, Vector3.up);
         }
