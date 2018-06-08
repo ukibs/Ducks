@@ -6,21 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class HUD : NetworkBehaviour {
 
-	public Texture imageBullet; 
-	public Texture imageRecharge;
-	public Texture black;
-	public Texture bomb;
-	public Texture bombCooldown;
-	public Texture flashbangCoolDown;
-	public Texture flashbang;
-	public Texture claymoreCoolDown;
-	public Texture claymore;
-	public Texture trapCoolDown;
-	public Texture trap;
-	public Texture backgroundHud;
-	public Texture totalLife;
-	public Texture currentLife;
-    public Texture pointer;
+    private Texture imageBullet;
+    private Texture imageRecharge;
+    private Texture black;
+    private Texture bomb;
+    private Texture bombCooldown;
+    private Texture flashbangCoolDown;
+    private Texture flashbang;
+    private Texture claymoreCoolDown;
+    private Texture claymore;
+    private Texture trapCoolDown;
+    private Texture trap;
+    private Texture backgroundHud;
+    private Texture totalLife;
+    private Texture currentLife;
+    private Texture pointer;
 
 	private PlayerController player;
 	private HealthController life;
@@ -34,7 +34,23 @@ public class HUD : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-		player = GetComponent<PlayerController> ();
+        pointer = Resources.Load("Textures/crosshair") as Texture;
+        currentLife = Resources.Load("Textures/green") as Texture;
+        totalLife = Resources.Load("Textures/red") as Texture;
+        backgroundHud = Resources.Load("Textures/backgroundHUD") as Texture;
+        trap = Resources.Load("Textures/trampa") as Texture;
+        trapCoolDown = Resources.Load("Textures/trampaDesact") as Texture;
+        claymore = Resources.Load("Textures/Claymore") as Texture;
+        claymoreCoolDown = Resources.Load("Textures/ClaymoreDesact") as Texture;
+        flashbang = Resources.Load("Textures/Aturdidiora") as Texture;
+        flashbangCoolDown = Resources.Load("Textures/AturdidioraDesact") as Texture;
+        imageBullet = Resources.Load("Textures/bullet") as Texture;
+        imageRecharge = Resources.Load("Textures/recharge") as Texture;
+        black = Resources.Load("Textures/silver-metal-texture-vector") as Texture;
+        bomb = Resources.Load("Textures/granada") as Texture;
+        bombCooldown = Resources.Load("Textures/granadaDesact") as Texture;
+
+    player = GetComponent<PlayerController> ();
 		life = GetComponent<HealthController> ();
         weapon = GetComponent<WeaponController2>();
 	}
@@ -67,8 +83,6 @@ public class HUD : NetworkBehaviour {
 
 				//Score
 				GUI.Label (new Rect (Screen.width * 9 / 10, Screen.height * 0.7f / 10, Screen.width / 6, Screen.height / 9.5f), "Score: " + life.Score);
-
-				
 
                 //Pointer
                 GUI.DrawTexture(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 50, 100, 100), pointer, ScaleMode.StretchToFill);
@@ -128,7 +142,6 @@ public class HUD : NetworkBehaviour {
 				GUI.DrawTexture(new Rect(Screen.width *3.5f/10, Screen.height*9.1f/10, life.Health/100f * (Screen.width*3/10), Screen.height*0.8f/10), currentLife, ScaleMode.StretchToFill);
 
                 //Blind screen
-                Debug.Log(player.getCooldown(4));
                 if (player.getCooldown(4) != 0)
                 {
                     GUI.color = fadeColor;
