@@ -56,8 +56,7 @@ public class WeaponController2 : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (isServer)
-        {
+
             player = GetComponent<PlayerController>();
             currentWeaponAmmo = new int[weaponPrefabs.Length];
             currentReserveAmmo = new int[weaponPrefabs.Length];
@@ -71,7 +70,6 @@ public class WeaponController2 : NetworkBehaviour
                 currentWeaponAmmo[i] = maxWeaponAmmo[i];
                 currentReserveAmmo[i] = maxReserveAmmo[i];
             }
-        }
     }
 
     // Update is called once per frame

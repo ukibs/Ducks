@@ -59,8 +59,6 @@ public class HUD : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-
         alpha = player.getCooldown(4)/Constants.blindGrenadeCooldown;
         alpha = Mathf.Clamp01(alpha);
         fadeColor = GUI.color;
