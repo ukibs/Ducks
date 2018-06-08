@@ -35,27 +35,27 @@ public class PlayerController : NetworkBehaviour {
 	#endregion
 
 	#region Movement Attributes
-	public float slowerSpeed = 0.0f;
-    public float movementSpeed = 5.0f;
-	public float runSpeed = 10.0f;
-	public float crouchSpeed = 3.0f;
-	public float jumpForce = 5.0f;
-	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
+	private float slowerSpeed = 0.0f;
+    private float movementSpeed = 5.0f;
+	private float runSpeed = 10.0f;
+	private float crouchSpeed = 3.0f;
+	private float jumpForce = 5.0f;
+	private Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 	private float verticalSpeed = 0.0f;
 	#endregion
 
 	#region Camera Attributes
-    public Camera cam;
+    private Camera cam;
 	public Transform camFirstPerson;
 	public Transform camThirdPerson;
 	#endregion
 
 	#region Prefabs
-	public GameObject lifePrefab;
-	public GameObject explosiveTrap;
-	public GameObject inmovilTrap;
-	public GameObject blindGrenadePrefab;
-    public GameObject grenadePrefab;
+	private GameObject lifePrefab;
+    private GameObject explosiveTrap;
+    private GameObject inmovilTrap;
+    private GameObject blindGrenadePrefab;
+    private GameObject grenadePrefab;
 	#endregion
 
 	public Transform weaponPoint;
@@ -134,7 +134,13 @@ public class PlayerController : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-		cam = GetComponentInChildren<Camera> ();
+        lifePrefab = Resources.Load("Prefabs/LifeItem") as GameObject;
+        explosiveTrap = Resources.Load("Prefabs/Weapons/ExplosiveTrap") as GameObject;
+        inmovilTrap = Resources.Load("Prefabs/Weapons/InmovilTrap") as GameObject;
+        blindGrenadePrefab = Resources.Load("Prefabs/Weapons/blindGrenade") as GameObject;
+        grenadePrefab = Resources.Load("Prefabs/Weapons/Grenade") as GameObject;
+
+    cam = GetComponentInChildren<Camera> ();
         cam.transform.position = camFirstPerson.position;
 		cam.enabled = true;
 		controller = GetComponent<CharacterController>();
@@ -485,7 +491,7 @@ public class PlayerController : NetworkBehaviour {
 	}
 
     [Command]
-    void CmdFire()
+    private void CmdFire()
     {
 		if (state == PlayerStates.Normal) 
 		{
@@ -518,7 +524,7 @@ public class PlayerController : NetworkBehaviour {
     }
 
 	[Command]
-	void CmdThrowGrenade()
+    private void CmdThrowGrenade()
 	{
 		Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
 		Quaternion grenadeOrientation = weaponPoint.rotation;
@@ -535,7 +541,7 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdThrowBlindGrenade()
+    private void CmdThrowBlindGrenade()
 	{
 		Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
 		Quaternion grenadeOrientation = weaponPoint.rotation;
@@ -549,7 +555,7 @@ public class PlayerController : NetworkBehaviour {
 	}
 		
 	[Command]
-	void CmdThrowExplosiveTrap()
+    private void CmdThrowExplosiveTrap()
 	{
         GameObject newExplosiveTrap = Instantiate(explosiveTrap, weaponController.CurrentWeapon.position + transform.forward*5, weaponController.CurrentWeapon.rotation);
 
@@ -562,7 +568,7 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdThrowInmovilTrap()
+    private void CmdThrowInmovilTrap()
 	{
 		GameObject newInmovilTrap = Instantiate(inmovilTrap, weaponController.CurrentWeapon.position + transform.forward*5, weaponController.CurrentWeapon.rotation);
 
@@ -576,7 +582,7 @@ public class PlayerController : NetworkBehaviour {
 
     #region Elevator and Door
 
-    void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         // Chequeo adicional específico para el ascensor
         Elevator ele = other.gameObject.GetComponent<Elevator>();
@@ -652,13 +658,13 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [Command]
-    void CmdDriveVehicle(float hAxis, float vAxis)
+    private void CmdDriveVehicle(float hAxis, float vAxis)
     {
         currentVehicle.CmdMove(new Vector2(hAxis, vAxis));
     }
 
     [Command]
-    void CmdVehicleOptions(bool spaceKey, bool eKey)
+    private void CmdVehicleOptions(bool spaceKey, bool eKey)
     {
         if (spaceKey)
         {
@@ -671,7 +677,7 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [Command]
-    void CmdUseTurret(Quaternion weaponPointRotation, bool leftMouse)
+    private void CmdUseTurret(Quaternion weaponPointRotation, bool leftMouse)
     {
         currentVehicle.CmdUseTurret(weaponPointRotation, leftMouse);
     }

@@ -816,6 +816,7 @@ MonoBehaviour:
   backgroundHud: {fileID: 2800000, guid: 2cd4e26b6add3b64cb013e365dc9e5ef, type: 3}
   totalLife: {fileID: 2800000, guid: 0134950bf4afb4540bd3955f9ac8cbad, type: 3}
   currentLife: {fileID: 2800000, guid: 0157002ea325da846ac371326a3e6ed2, type: 3}
+  pointer: {fileID: 2800000, guid: 3a622d2289718894e97d5ad80c569de9, type: 3}
   alpha: 0
 --- !u!114 &114405965707297212
 MonoBehaviour:
