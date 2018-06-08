@@ -184,24 +184,27 @@ public class PlayerController : NetworkBehaviour {
     #region Input Functions
     void UpdateInput()
 	{
-		vAxis = Input.GetAxis("Vertical");
-		hAxis = Input.GetAxis("Horizontal");
-		shiftKey = Input.GetKeyDown (KeyCode.LeftShift);
-		ctrlKey = Input.GetKeyDown (KeyCode.LeftControl);
-		spaceKey = Input.GetKeyDown (KeyCode.Space);
-        tabKey = Input.GetKeyDown(KeyCode.Tab);
-		rKey = Input.GetKeyDown (KeyCode.R);
-        eKey = Input.GetKeyDown(KeyCode.E);
-		cKey = Input.GetKeyDown (KeyCode.C);
-		key1 = Input.GetKeyDown(KeyCode.Alpha1);
-		key2 = Input.GetKeyDown(KeyCode.Alpha2);
-		key3 = Input.GetKeyDown (KeyCode.Alpha3);
-        quitKey = Input.GetKeyDown(KeyCode.P);
+        if (isLocalPlayer)
+        {
+            vAxis = Input.GetAxis("Vertical");
+            hAxis = Input.GetAxis("Horizontal");
+            shiftKey = Input.GetKeyDown(KeyCode.LeftShift);
+            ctrlKey = Input.GetKeyDown(KeyCode.LeftControl);
+            spaceKey = Input.GetKeyDown(KeyCode.Space);
+            tabKey = Input.GetKeyDown(KeyCode.Tab);
+            rKey = Input.GetKeyDown(KeyCode.R);
+            eKey = Input.GetKeyDown(KeyCode.E);
+            cKey = Input.GetKeyDown(KeyCode.C);
+            key1 = Input.GetKeyDown(KeyCode.Alpha1);
+            key2 = Input.GetKeyDown(KeyCode.Alpha2);
+            key3 = Input.GetKeyDown(KeyCode.Alpha3);
+            quitKey = Input.GetKeyDown(KeyCode.P);
 
-		mouseX = Input.GetAxis ("Mouse X");
-		mouseY = Input.GetAxis ("Mouse Y");
-		mouseLeft = Input.GetMouseButton (0);
-		mouseRight = Input.GetMouseButtonDown (1);
+            mouseX = Input.GetAxis("Mouse X");
+            mouseY = Input.GetAxis("Mouse Y");
+            mouseLeft = Input.GetMouseButton(0);
+            mouseRight = Input.GetMouseButtonDown(1);
+        }
 	}
 
 	void checkInputs()

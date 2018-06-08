@@ -16,17 +16,20 @@ public class ZigZagEnemy : EnemyControl {
 
     // Update is called once per frame
     protected override void Update () {
-        base.Update();
-        //
-        float dt = Time.deltaTime;
-        //
-        zigZagCounter += dt;
-        if(zigZagCounter >= zigZagRate)
+        if (isServer)
         {
-            zigZagDirection *= -1;
-            zigZagCounter -= zigZagRate;
+            base.Update();
+            //
+            float dt = Time.deltaTime;
+            //
+            zigZagCounter += dt;
+            if (zigZagCounter >= zigZagRate)
+            {
+                zigZagDirection *= -1;
+                zigZagCounter -= zigZagRate;
+            }
+            //
+            cc.Move(transform.right * movementSpeed * dt * zigZagDirection);
         }
-        //
-        cc.Move(transform.right * movementSpeed * dt * zigZagDirection);
 	}
 }
