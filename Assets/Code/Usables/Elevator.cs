@@ -21,8 +21,11 @@ public class Elevator : BaseUsable
 
 	void Start()
 	{
-		originalPosition = transform.position;
-		displacedPosition += originalPosition;
+        if (isServer)
+        {
+            originalPosition = transform.position;
+            displacedPosition += originalPosition;
+        }
 	}
 
 	// Update is called once per frame

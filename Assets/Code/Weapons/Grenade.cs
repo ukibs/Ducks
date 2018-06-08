@@ -19,13 +19,16 @@ public class Grenade : NetworkBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        RaycastHit[] hitInfo = Physics.SphereCastAll(transform.position, range, transform.forward);
-        foreach(RaycastHit hit in hitInfo)
+        if (isServer)
         {
-            if (hit.transform.tag.Equals("Player") || hit.transform.tag.Equals("Enemy"))
+            RaycastHit[] hitInfo = Physics.SphereCastAll(transform.position, range, transform.forward);
+            foreach (RaycastHit hit in hitInfo)
             {
-                var health = hit.transform.GetComponent<HealthController>();
-				health.TakeDamage(damage, owner);
+                if (hit.transform.tag.Equals("Player") || hit.transform.tag.Equals("Enemy"))
+                {
+                    var health = hit.transform.GetComponent<HealthController>();
+                    health.TakeDamage(damage, owner);
+                }
             }
         }
         GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
