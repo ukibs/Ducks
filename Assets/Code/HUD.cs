@@ -20,6 +20,7 @@ public class HUD : NetworkBehaviour {
 	public Texture backgroundHud;
 	public Texture totalLife;
 	public Texture currentLife;
+    public Texture pointer;
 
 	private PlayerController player;
 	private HealthController life;
@@ -75,6 +76,9 @@ public class HUD : NetworkBehaviour {
                     GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
 
 				}
+
+                //Pointer
+                GUI.DrawTexture(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 50, 100, 100), pointer, ScaleMode.StretchToFill);
 
 				//Collision elevator or doors
 				if (player.CollisionObject)
