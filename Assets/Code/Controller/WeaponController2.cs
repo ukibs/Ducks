@@ -154,7 +154,7 @@ public class WeaponController2 : NetworkBehaviour
     public void CmdShoot()
     {
         GameObject newBullet = Instantiate(bulletPrefab[currentWeaponIndex], CurrentWeapon.position, CurrentWeapon.rotation);
-        newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 10f;
+        newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * 30f;
         newBullet.GetComponent<Bullet>().owner = gameObject;
 
         wasteBullet();

@@ -63,16 +63,21 @@ public class VehicleController : BaseUsable {
 
     void OnCollisionEnter(Collision collision)
     {
-        
-        float vehicleVelocity = rb.velocity.magnitude;
-        PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
-        
-        HealthController healthController = collision.gameObject.GetComponent<HealthController>();
-        
-        if (healthController != null)
+        // Null reference control
+        //if (collision == null) return;
+        //
+        if (isServer)
         {
-            Debug.Log("Hitting " + collision.gameObject + " with " + rb.mass + " mass & " + vehicleVelocity + " speed");
-            healthController.TakeDamage((int)(rb.mass * vehicleVelocity), driver.gameObject);
+            float vehicleVelocity = rb.velocity.magnitude;
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+
+            HealthController healthController = collision.gameObject.GetComponent<HealthController>();
+
+            if (healthController != null)
+            {
+                Debug.Log("Hitting " + collision.gameObject + " with " + rb.mass + " mass & " + vehicleVelocity + " speed");
+                healthController.TakeDamage((int)(rb.mass * vehicleVelocity), driver.gameObject);
+            }
         }
     }
 

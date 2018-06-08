@@ -39,7 +39,7 @@ public class PlayerController : NetworkBehaviour {
     public float movementSpeed = 5.0f;
 	public float runSpeed = 10.0f;
 	public float crouchSpeed = 3.0f;
-	public float jumpForce = 13.0f;
+	public float jumpForce = 5.0f;
 	public Vector3 gravity = new Vector3(0.0f, -9.81f, 0.0f);
 	private float verticalSpeed = 0.0f;
 	#endregion
@@ -200,7 +200,7 @@ public class PlayerController : NetworkBehaviour {
 
 		mouseX = Input.GetAxis ("Mouse X");
 		mouseY = Input.GetAxis ("Mouse Y");
-		mouseLeft = Input.GetMouseButtonDown (0);
+		mouseLeft = Input.GetMouseButton (0);
 		mouseRight = Input.GetMouseButtonDown (1);
 	}
 
@@ -306,7 +306,7 @@ public class PlayerController : NetworkBehaviour {
                 float change = mouseY * -90.0f;
                 transform.Rotate(0.0f, mouseX * 90.0f * dt, 0.0f);
                 aux += new Vector3(change * dt, 0, 0);
-                if (aux.x < 30 || aux.x > 330)
+                if (aux.x < 60 || aux.x > 300)
                 {
                     rotationPoint.transform.Rotate(change * dt, 0.0f, 0.0f);
                     CmdRotateWeapon(rotationPoint.rotation);
@@ -438,14 +438,14 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdCooldown(int timer, int time)
+	public void CmdCooldown(int timer, float time)
 	{
 		cooldown [timer] = time;
 		RpcCooldown (timer, time);
 	}
 
 	[ClientRpc]
-	private void RpcCooldown(int timer, int time)
+	private void RpcCooldown(int timer, float time)
 	{
 		cooldown [timer] = time;
 	}
@@ -509,7 +509,7 @@ public class PlayerController : NetworkBehaviour {
 	{
 		Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
 		Quaternion grenadeOrientation = weaponPoint.rotation;
-		grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
+		grenadeOrientation *= Quaternion.Euler(-30.0f, 0.0f, 0.0f);
 		GameObject newGrenade = Instantiate(grenadePrefab, grenadePosition, grenadeOrientation);
 		newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
 
@@ -526,7 +526,7 @@ public class PlayerController : NetworkBehaviour {
 	{
 		Vector3 grenadePosition = weaponPoint.position + weaponPoint.forward;
 		Quaternion grenadeOrientation = weaponPoint.rotation;
-		grenadeOrientation *= Quaternion.Euler(-45.0f, 0.0f, 0.0f);
+		grenadeOrientation *= Quaternion.Euler(-30.0f, 0.0f, 0.0f);
 		GameObject newGrenade = Instantiate(blindGrenadePrefab, grenadePosition, grenadeOrientation);
 		newGrenade.GetComponent<Rigidbody>().velocity = newGrenade.transform.forward * 20.0f;
 

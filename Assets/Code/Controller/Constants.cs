@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Constants : MonoBehaviour {
 	#region Cooldown
-	public const int bulletCooldown = 1;
+	public const float bulletCooldown = 0.2f;
 	public const int grenadeCooldown = 5;
 	public const int blindGrenadeCooldown = 3;
 	public const int trampExplosiveCooldown = 2;
