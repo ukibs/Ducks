@@ -165,11 +165,19 @@ public class VehicleController : BaseUsable {
     public void CmdUseTurret(Quaternion weaponPointRotation, bool leftMouse)
     {
         turretWeapon.transform.rotation = weaponPointRotation * Quaternion.AngleAxis(90, Vector3.right);
+        RpcMoveTurret(weaponPointRotation);
         if (leftMouse && turretWeaponFireCount >= Constants.bulletCooldown)
         {
             CmdFire();
             turretWeaponFireCount = 0;
+            
         }
+    }
+
+    [ClientRpc]
+    public void RpcMoveTurret(Quaternion weaponPointRotation)
+    {
+        turretWeapon.transform.rotation = weaponPointRotation * Quaternion.AngleAxis(90, Vector3.right);
     }
 
     [Command]

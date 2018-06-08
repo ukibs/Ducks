@@ -62,8 +62,9 @@ public class HealthController : NetworkBehaviour {
                         {
                             playerController.Score += 10;
                         }
-                        Destroy(gameObject);
+                        
                     }
+                    Destroy(gameObject);
                 }
                 else//You are a player
                 {
